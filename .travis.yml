@@ -1,0 +1,56 @@
+sudo: required
+
+language: android
+jdk: oraclejdk8
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache
+
+env:
+ global:
+ - ANDROID_API=26
+ - EMULATOR_API=26
+ - ANDROID_BUILD_TOOLS=26.0.2
+ - ANDROID_ABI=armeabi-v7a
+ - ADB_INSTALL_TIMEOUT=5 # Minutes.
+ - secure: "pTBak+zOuJoA+IKAJ5XtNqAVdMKr9TDQbV/z7ahSHFqM9LS2vx4679fWGTRCXew9Ml0yCKkMRr5BWqYLh5nyCeHUTgSsgWqwu1Fr+S3k5yUvsW85UOjnhv8BjE1+JqphjEeNM273zGfTxOfyLOr0Wcue0R0v2vjmtt7LDavp2oRlpPAo2g6nZoQ4H1oxzXtjrJ4eIPVrRkoilstdwXCxvPJOV4aiCqSRD45hFj/OKleDRo1yj1KgHZkbLwp6jbE/TtRcXFd6qwK4kNJfekGZv2IFv6bxkcPYjMOx6fOM6A5zxq267Zx40uP89Do0M7mfbaboVqfZgadNiaBFT04KCw/d3pu9QM1+LohDpv6Z05qHhhdCmEPzCtt679isNT1EnOBcVyCju+oXoU7l4RGdXZGEPKv3MhKA+cfYmA9Rjw+I2P04y/rO21zwGyqly9W3e9W1k7RZh5XvqW5GY/Y1xBbjZAF2P0+NfGtPe/EoPg1ca4jTsXi0GcagWFOS80Po+bmzB8BI0FcGVM7T4p9KQER7NAnzXYcOlEyVlnl/XPna4OrqwTkg8k4YqiJEo3kP/ZLEj/pQcttsu9pMdDzmOiO8Bda/T66vB6mrASMm2x9oD8yFwD3ISU6ND/h48yry9eO9Rm6klBg6LSy4WXgN2FpSC/bT/hSSeM9d3CHXXqw=" # storepass
+ - secure: "MUVM6HUjPtqThe+p8K1+Z1O/fRJ/5lrcRrwnGuXp4o61bTSbdgGsqZGxprgAg1PGRoKdrR5COL9EWr+NtF4e7fFvf96/LfitpqI2tqCkba76Qbf7ij6vn2CYbdLxTFH3T5SzgrxUB57pA4uBwKE1zN5IMsr0XDCNTguB50tsaAu5W7zDjOudS1dP8Eo5UYi9QJCKFQ1cdMXYr6IuX+MHfs1hw5rQpa7AGeMuDo8RleNZN6J29kcWJAmlhMuEfUvAZHCwFbDwv2kyzultEmOOVLLcb68Gev9ScjMvDut7VcpQgNvE2oZI1H3WuzDdfQ5dBm1fNdBIJX9XTwkNoTKDL8WX0BUWcTcqupEqeIcbQ7FxePE3RdA1tLnp8TznlrMsR1V+8wA4JEWsKNdd5OvTVTqUC1eQiR9yPDw/7kncd8gMZFg6SLBFp6rad33Udwd2t7NH5xbXCj3SIR7S3DW+FZsf68FOyrVp2OYnnNGax783nKgdTTABwfES2szQymMlhpEhB4/cLTKZXLG5SBk2ulbY8uHY9ne+DVxvyu+zrEQ828w2qH828e99reRxXVX6W1r4aNNGZ2mTg69oGDCzLXyr99Q9WPf4RjgmATguS488FjmXOcS/XYhEg5CkWg7hBKx0w9FAX9/qpPDw7nwlMvkMW+w4twHYQ/xuGKm0MTI=" # keypass
+ - secure: "l7hrn0CFEEjIJhYxM/zb7ioQtVJGdQNfOBRGAAHV6ILw9ZHq3JSUcsku6Ub/kyqqBQ87b4tLo8uz3JuaAAxpzzZiP3zpym+Inyebx20edynlgw+2oj1MUBWBR/60l1ah4xdk/Nc3da02GQniCodz2G5sB5SWFwsVHwWgsubgP3C27BDXgNpwnANIul9Zb0iL2bXat7WGOJby7eaPCqz/sccYWpYmCe6J3Dm9lXshdZeyU7Gg0tgckDGIs46H4vGAl9HKaIoIOUCHzzwGJYvUdf9dzA8lbCjDeCsULP/qvmC4qqcDPL8SRD4hqPFpp7CN4l0TyV4RXuYJvwuIu+nmQ5jY4UaTwAL39gchTG3ymSTDJN8oMEM1Flzw9KN0zA13zF3N0oSVz/cmsW5dHA/jyiurP4VRVpBBB+BT6g52Y4rsBQZfh5xuQlS+5EPax6LpFxMQ1kRW+ddExR45z2PcX35xKz6f3IAfjc8INXK0M8t/GMiizjVkgJRsYIobLw15bygmCH4L0KT/7cf7PO8hvxXTGt5QVRnGRr07vC1losExNhdp5lvccxsvetLEx37hbRfEkDMVaGlNbJ9MYsu7444fUSFzMCxjrWw9vvuR6dbu3izLzJqWnnqwezCwgjouZcHVnejm1w1rJJm44xDvlNgUYm+/xzgHIhUMwC3BBTg=" # GH_TOKEN
+
+android:
+  components:
+  - tools
+  - tools # Running this twice get's the latest build tools (https://github.com/pockethub/PocketHub/blob/master/.travis.yml)
+  - platform-tools
+  - android-${ANDROID_API}
+  - build-tools-${ANDROID_BUILD_TOOLS}
+  - extra
+
+script:
+- "./gradlew clean test build"
+
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_bd5e3cb98cc7_key -iv $encrypted_bd5e3cb98cc7_iv -in keystore.jks.enc -out keystore.jks -d
+- cd app/build/outputs/apk/release
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${TRAVIS_BUILD_DIR}/keystore.jks -storepass $storepass -keypass $keypass app-release-unsigned.apk keibai
+- jarsigner -verify app-release-unsigned.apk
+- "${ANDROID_HOME}/build-tools/${ANDROID_BUILD_TOOLS}/zipalign -v 4 app-release-unsigned.apk keibai.apk"
+- cd -
+- scripts/tag.sh
+
+deploy:
+  provider: releases
+  on:
+    branch: master
+  api_key:
+    secure: "Gmm+Mkq21EvL+xNFt0eeelY27h1no/WMP+womoqfwcBANDHMJ03wvZvR2aazzm4CN2ta189QkKXo8e5Y8ySXAwuTFMcrThg+v+9HoBiFv3ZxlixwNDvTzz6WkoAZ18Isir6yDWxNs1scXukrWdloeQimewknue/D/uVK95CbmO9F21nElwWgtV1UuILo397WqGPaHFuDerud2RxoxEliXc/y09MyQOPnVYBqneLdKqN14qq8S9+TnqqSKg5yGlFhHbRl6Zd2qU2GZuJNzBcyxRnxFvS3dAymblF0XQc0QjP8DfrD1zdjHgVqndt6kmM6+8MYgrex8QVn/OGhsjown11NsjZ1sXkxN1oorI/yGrhQZTLqpa61iTytxyBSrCvWYvRLJyBvnW2cvaBFSJQMGrTQVHvFoTvjBaUoG3onMa0RChvxOwbGMwRs9/QhfH/i99cyms2ZRSEt4syYVPi5Paq9U/uTKduHfz+9ZUIiww+0MA4X4XlTNhXTgu9aLitk0MFqPFG/Cs1qzOn3MtfAFu/ky/QKu+8BBu7efFlcqeaRLmVc2TjXZSLZdOGJMUhR+hVjmwHwmreTrBTOseSQXlLF/CapiKCukcdHWgCliaJZu1ZIX1bsTskFOsXi9G7nG0PPoaHsZ1CeF436eyB/ENMGvyLc34/8zf0lfiOeBw0="
+  file: "app/build/outputs/apk/release/keibai.apk"
+  overwrite: true
+  skip_cleanup: true
