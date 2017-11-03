@@ -1,5 +1,6 @@
 package io.github.keibai;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -35,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
             transaction.replace(R.id.main_frame_layout, HomeFragment.newInstance());
             transaction.commit();
         } else {
-            // Display welcome screen
-            setContentView(R.layout.activity_welcome);
+            // Change to welcome screen
+            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+            startActivity(intent);
         }
 
     }
