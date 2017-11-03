@@ -7,21 +7,36 @@
     android:layout_height="match_parent"
     tools:context="io.github.keibai.MainActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/colorPrimaryContrast"
+            app:theme="@style/AppTheme.ActionBar" />
+
+    </android.support.design.widget.AppBarLayout>
+
     <FrameLayout
         android:id="@+id/main_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/navigation"
+        android:layout_below="@id/appbar_main"
         android:animateLayoutChanges="true">
 
     </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
+        android:id="@+id/bottombar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation" />
+        app:menu="@menu/footer_main" />
 
 </RelativeLayout>
