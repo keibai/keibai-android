@@ -15,16 +15,10 @@ import io.github.keibai.profile.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean loggedIn = false;
-
-    public void setLoggedIn() {
-        this.loggedIn = true;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (loggedIn) {
+        if (SaveSharedPreference.getUserId(MainActivity.this) != -1) {
             // Display main activity
             setContentView(R.layout.activity_main);
 

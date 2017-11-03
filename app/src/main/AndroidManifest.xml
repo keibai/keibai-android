@@ -24,7 +24,7 @@
             android:parentActivityName=".WelcomeActivity" />
         <activity
             android:name=".signin.SignInActivity"
-            android:parentActivityName=".WelcomeActivity"/>
+            android:parentActivityName=".WelcomeActivity" />
     </application>
 
 </manifest>
