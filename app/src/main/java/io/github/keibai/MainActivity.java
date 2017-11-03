@@ -14,18 +14,31 @@ import io.github.keibai.profile.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean loggedIn = false;
+
+    public void setLoggedIn() {
+        this.loggedIn = true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        if (loggedIn) {
+            // Display main activity
+            setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+            BottomNavigationView navigation = findViewById(R.id.navigation);
+            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Display the first fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_frame_layout, HomeFragment.newInstance());
-        transaction.commit();
+            // Display the first fragment
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.main_frame_layout, HomeFragment.newInstance());
+            transaction.commit();
+        } else {
+            // Display welcome screen
+            setContentView(R.layout.activity_welcome);
+        }
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
