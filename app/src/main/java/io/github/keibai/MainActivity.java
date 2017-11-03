@@ -43,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.item_navbar_main_search:
-                Toast.makeText(getApplicationContext(), "Search existing event", Toast.LENGTH_LONG).show();
+            case R.id.item_navbar_main_create:
+                Toast.makeText(getApplicationContext(), "Create new event", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.item_navbar_main_new:
-                Toast.makeText(getApplicationContext(), "Create new event", Toast.LENGTH_LONG).show();
+            case R.id.item_navbar_main_search:
+                Toast.makeText(getApplicationContext(), "Search existing event", Toast.LENGTH_SHORT).show();
                 return true;
         }
 

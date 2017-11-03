@@ -4,4 +4,6 @@
     <string name="title_active_events">Active Events</string>
     <string name="title_activities">Activities</string>
     <string name="title_profile">Profile</string>
+    <string name="create">Create</string>
+    <string name="search">Search</string>
 </resources>
