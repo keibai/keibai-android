@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import io.github.keibai.R;
+import io.github.keibai.auction.CreateAuctionActivity;
 
 public class DetailEventActivity extends AppCompatActivity {
 
@@ -28,5 +29,18 @@ public class DetailEventActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_event_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.item_detail_event_create_auction: {
+                Intent intent = new Intent(getApplicationContext(), CreateAuctionActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
