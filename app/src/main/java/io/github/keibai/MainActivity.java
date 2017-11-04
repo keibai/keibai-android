@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import io.github.keibai.activity.ActivitiesFragment;
+import io.github.keibai.event.CreateEventActivity;
 import io.github.keibai.home.HomeFragment;
 import io.github.keibai.profile.ProfileFragment;
 
@@ -52,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.item_navbar_main_create:
-                Toast.makeText(getApplicationContext(), "Create new event", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), CreateEventActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.item_navbar_main_search:
                 Toast.makeText(getApplicationContext(), "Search existing event", Toast.LENGTH_SHORT).show();

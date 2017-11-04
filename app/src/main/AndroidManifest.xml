@@ -21,11 +21,26 @@
         </activity>
         <activity android:name=".WelcomeActivity" />
         <activity
-            android:name=".signup.SignUpActivity"
-            android:parentActivityName=".WelcomeActivity" />
-        <activity
             android:name=".signin.SignInActivity"
-            android:parentActivityName=".WelcomeActivity" />
+            android:label="@string/sign_in">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WelcomeActivity" />
+        </activity>
+        <activity
+            android:name=".signup.SignUpActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WelcomeActivity" />
+        </activity>
+        <activity
+            android:name=".event.CreateEventActivity"
+            android:label="@string/create_event"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>
