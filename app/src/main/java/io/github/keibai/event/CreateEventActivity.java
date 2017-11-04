@@ -39,7 +39,7 @@ public class CreateEventActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.item_create_event_save:
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DetailEventActivity.class);
                 startActivity(intent);
                 return true;
         }

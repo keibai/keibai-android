@@ -19,16 +19,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WelcomeActivity" />
+        <activity android:name=".WelcomeActivity">
+            <intent-filter>
+                <action android:name="com.keibai.WelcomeActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".signin.SignInActivity"
             android:label="@string/sign_in">
+            <intent-filter>
+                <action android:name="com.keibai.signin.SignInActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".WelcomeActivity" />
         </activity>
-        <activity
-            android:name=".signup.SignUpActivity">
+        <activity android:name=".signup.SignUpActivity">
+            <intent-filter>
+                <action android:name="com.keibai.signup.SignUpActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".WelcomeActivity" />
@@ -37,6 +54,24 @@
             android:name=".event.CreateEventActivity"
             android:label="@string/create_event"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="com.keibai.event.CreateEventActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".event.DetailEventActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="com.keibai.event.DetailEventActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
