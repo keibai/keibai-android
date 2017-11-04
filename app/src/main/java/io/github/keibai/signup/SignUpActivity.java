@@ -9,6 +9,7 @@ import android.widget.Button;
 import io.github.keibai.MainActivity;
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.WelcomeActivity;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -24,6 +25,16 @@ public class SignUpActivity extends AppCompatActivity {
                 // TODO: Change in next sprint, sign up logic here
                 SaveSharedPreference.setUserId(getApplicationContext(), 1);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Cancel button
+        Button cancelButton = findViewById(R.id.sign_in_cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
                 startActivity(intent);
             }
         });
