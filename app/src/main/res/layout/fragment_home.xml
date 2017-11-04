@@ -28,7 +28,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add"
-                android:layout_marginHorizontal="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
                 android:layout_marginTop="15dp"/>
 
         </LinearLayout>

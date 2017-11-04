@@ -26,6 +26,9 @@
     </string-array>
     <string name="location">Location</string>
     <string name="save">Save</string>
+    <string name="search_active_events">Search Active Events</string>
+    <string name="event_id">Event id</string>
+    <string name="test">Test</string>
     <string name="item_name">Item name</string>
     <string name="create_auction">Create auction</string>
     <string name="zero_money">€00.00</string>
