@@ -12,12 +12,12 @@
     <string name="create_event">Create event</string>
     <string name="search">Search</string>
     <string name="welcome_to_keibai">Welcome to Keibai</string>
-    <string name="enter_e_mail">Enter E-mail</string>
+    <string name="enter_email">Enter Email</string>
     <string name="password">Password</string>
     <string name="cancel">Cancel</string>
-    <string name="rpassword">Repeat Password</string>
-    <string name="LastName">Last Name</string>
-    <string name="Name">Name</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="last_name">Last Name</string>
+    <string name="name">Name</string>
     <string name="event_name">Event name</string>
     <string-array name="event_types_array">
         <item>English</item>
@@ -29,4 +29,8 @@
     <string name="search_active_events">Search Active Events</string>
     <string name="event_id">Event id</string>
     <string name="test">Test</string>
+    <string name="item_name">Item name</string>
+    <string name="create_auction">Create auction</string>
+    <string name="zero_money">€00.00</string>
+    <string name="add">Add</string>
 </resources>

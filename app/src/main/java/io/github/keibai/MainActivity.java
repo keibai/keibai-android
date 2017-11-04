@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import io.github.keibai.activity.ActivitiesFragment;
 import io.github.keibai.event.ActiveEventsActivity;
 import io.github.keibai.event.CreateEventActivity;
+import io.github.keibai.event.DetailEventActivity;
 import io.github.keibai.home.HomeFragment;
 import io.github.keibai.profile.ProfileFragment;
 
@@ -52,15 +53,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.item_navbar_main_create:
+            case R.id.item_navbar_main_create: {
                 Intent intent = new Intent(getApplicationContext(), CreateEventActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.item_navbar_main_search:
-                Intent activeEventsIntent = new Intent(getApplicationContext(),
-                        ActiveEventsActivity.class);
-                startActivity(activeEventsIntent);
+            }
+            case R.id.item_navbar_main_search: {
+                Intent intent = new Intent(getApplicationContext(), ActiveEventsActivity.class);
+                startActivity(intent);
                 return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
