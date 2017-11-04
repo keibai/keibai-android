@@ -22,8 +22,7 @@ public class HomeFragment extends Fragment {
     }
 
     public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
+        return new HomeFragment();
     }
 
     @Override
@@ -36,7 +35,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        TextView tmoney = (TextView) v.findViewById(R.id.textmoney);
+        TextView tmoney = v.findViewById(R.id.textmoney);
         tmoney.setText("€100.00");
 
         return v;
