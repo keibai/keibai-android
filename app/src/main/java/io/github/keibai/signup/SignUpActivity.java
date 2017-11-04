@@ -30,7 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         // Cancel button
-        Button cancelButton = findViewById(R.id.sign_in_cancel_button);
+        Button cancelButton = findViewById(R.id.sign_up_cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
