@@ -8,4 +8,6 @@
     <string name="ultimate_auction_app">The Ultimate Auction App</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_in">Sign In</string>
+    <string name="create">Create</string>
+    <string name="search">Search</string>
 </resources>

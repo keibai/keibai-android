@@ -7,7 +7,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import io.github.keibai.activity.ActivitiesFragment;
 import io.github.keibai.home.HomeFragment;
@@ -22,7 +25,10 @@ public class MainActivity extends AppCompatActivity {
             // Display main activity
             setContentView(R.layout.activity_main);
 
-            BottomNavigationView navigation = findViewById(R.id.navigation);
+            Toolbar toolbar = findViewById(R.id.toolbar_main);
+            setSupportActionBar(toolbar);
+
+            BottomNavigationView navigation = findViewById(R.id.bottombar_main);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
             // Display the first fragment
@@ -34,7 +40,26 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
             startActivity(intent);
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.navbar_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.item_navbar_main_create:
+                Toast.makeText(getApplicationContext(), "Create new event", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.item_navbar_main_search:
+                Toast.makeText(getApplicationContext(), "Search existing event", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
