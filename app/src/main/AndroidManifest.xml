@@ -68,6 +68,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="com.keibai.event.DetailEventActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -77,12 +78,14 @@
         </activity>
         <activity
             android:name=".auction.CreateAuctionActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/create_auction">
+            android:label="@string/create_auction"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="com.keibai.auction.CreateAuctionActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -93,6 +96,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".auction.DetailAuctionActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="com.keibai.auction.DetailAuctionActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
 
