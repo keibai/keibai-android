@@ -10,9 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import io.github.keibai.activity.ActivitiesFragment;
+import io.github.keibai.event.ActiveEventsActivity;
 import io.github.keibai.event.CreateEventActivity;
 import io.github.keibai.home.HomeFragment;
 import io.github.keibai.profile.ProfileFragment;
@@ -57,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.item_navbar_main_search:
-                Toast.makeText(getApplicationContext(), "Search existing event", Toast.LENGTH_SHORT).show();
+                Intent activeEventsIntent = new Intent(getApplicationContext(),
+                        ActiveEventsActivity.class);
+                startActivity(activeEventsIntent);
                 return true;
         }
 
