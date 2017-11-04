@@ -15,6 +15,9 @@
     <string name="enter_e_mail">Enter E-mail</string>
     <string name="password">Password</string>
     <string name="cancel">Cancel</string>
+    <string name="rpassword">Repeat Password</string>
+    <string name="LastName">Last Name</string>
+    <string name="Name">Name</string>
     <string name="event_name">Event name</string>
     <string-array name="event_types_array">
         <item>English</item>
