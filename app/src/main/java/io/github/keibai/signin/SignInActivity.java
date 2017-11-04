@@ -24,7 +24,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: Change in next sprint, sign in logic here
-                SaveSharedPreference.setUserId(getApplicationContext(), 1);
+                //SaveSharedPreference.setUserId(getApplicationContext(), 1);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
