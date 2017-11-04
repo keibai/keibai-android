@@ -27,7 +27,7 @@
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
         android:id = "@+id/editName"
-        android:hint = "@string/Name"
+        android:hint = "@string/name"
         android:focusable = "true"
         android:textColorHighlight = "#ff7eff15"
         android:textColorHint = "#000000"
@@ -42,7 +42,7 @@
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
         android:id = "@+id/editLName"
-        android:hint = "@string/LastName"
+        android:hint = "@string/last_name"
         android:focusable = "true"
         android:textColorHighlight = "#ff7eff15"
         android:textColorHint = "#000000"
@@ -56,7 +56,7 @@
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
         android:id = "@+id/editText"
-        android:hint = "@string/enter_e_mail"
+        android:hint = "@string/enter_email"
         android:focusable = "true"
         android:textColorHighlight = "#ff7eff15"
         android:textColorHint = "#000000"
@@ -102,7 +102,7 @@
         android:layout_alignRight="@+id/editText"
         android:layout_alignEnd="@+id/editText"
         android:textColorHint="#000000"
-        android:hint="@string/rpassword" />
+        android:hint="@string/repeat_password" />
 
     <Button
         android:layout_width="wrap_content"
