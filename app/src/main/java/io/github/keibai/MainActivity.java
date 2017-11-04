@@ -1,5 +1,6 @@
 package io.github.keibai;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -20,18 +21,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        if (SaveSharedPreference.getUserId(MainActivity.this) != -1) {
+            // Display main activity
+            setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+            Toolbar toolbar = findViewById(R.id.toolbar_main);
+            setSupportActionBar(toolbar);
 
-        BottomNavigationView navigation = findViewById(R.id.bottombar_main);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+            BottomNavigationView navigation = findViewById(R.id.bottombar_main);
+            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Display the first fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_frame_layout, HomeFragment.newInstance());
-        transaction.commit();
+            // Display the first fragment
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.main_frame_layout, HomeFragment.newInstance());
+            transaction.commit();
+        } else {
+            // Change to welcome screen
+            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
