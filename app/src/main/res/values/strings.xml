@@ -10,4 +10,8 @@
     <string name="sign_in">Sign In</string>
     <string name="create">Create</string>
     <string name="search">Search</string>
+    <string name="welcome_to_keibai">Welcome to Keibai</string>
+    <string name="enter_e_mail">Enter E-mail</string>
+    <string name="password">Password</string>
+    <string name="cancel">Cancel</string>
 </resources>
