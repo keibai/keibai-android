@@ -76,6 +76,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity
+            android:name=".auction.CreateAuctionActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/create_auction">
+            <intent-filter>
+                <action android:name="com.keibai.auction.CreateAuctionActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>
