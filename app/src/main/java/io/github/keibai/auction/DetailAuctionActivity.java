@@ -26,6 +26,7 @@ public class DetailAuctionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Item name");
 
         ViewPager viewPager = findViewById(R.id.viewpager_detail_auction);
         setupViewPager(viewPager);
