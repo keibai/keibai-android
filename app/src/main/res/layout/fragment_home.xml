@@ -10,13 +10,18 @@
         android:orientation="horizontal">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/euro"
+            android:textSize="55sp"
+            android:layout_marginLeft="25dp" />
+
+        <TextView
             android:id="@+id/textmoney"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/zero_money"
-            android:textSize="55sp"
-            android:textColor="#0000FF"
-            android:layout_marginLeft="25dp"/>
+            android:text="00.00"
+            android:textSize="55sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
