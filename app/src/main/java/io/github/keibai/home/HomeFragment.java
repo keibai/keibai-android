@@ -8,17 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import io.github.keibai.MainFragmentAbstract;
 import io.github.keibai.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends MainFragmentAbstract {
 
 
     public HomeFragment() {
-        // Required empty public constructor
+        // Constructor required by Android.
+        super(R.layout.fragment_home);
     }
 
     public static HomeFragment newInstance() {
@@ -34,11 +36,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
-        TextView tmoney = v.findViewById(R.id.textmoney);
-        tmoney.setText("100.00");
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        return v;
+        TextView textViewMoney = view.findViewById(R.id.text_money);
+        textViewMoney.setText("100.00");
+
+        return view;
     }
 
 }

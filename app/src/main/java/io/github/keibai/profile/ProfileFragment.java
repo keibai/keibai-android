@@ -7,17 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import io.github.keibai.MainFragmentAbstract;
 import io.github.keibai.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends MainFragmentAbstract {
 
 
     public ProfileFragment() {
-        // Required empty public constructor
+        super(R.layout.fragment_profile);
     }
 
     public static ProfileFragment newInstance() {
@@ -34,7 +35,9 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        return view;
     }
 
 }
