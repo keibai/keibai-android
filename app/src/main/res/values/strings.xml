@@ -2,7 +2,7 @@
     <string name="app_name">Keibai</string>
     <string name="title_home">Home</string>
     <string name="title_active_events">Active Events</string>
-    <string name="title_activities">Activities</string>
+    <string name="title_activity">Activity</string>
     <string name="title_profile">Profile</string>
     <string name="welcome_text">Welcome to</string>
     <string name="ultimate_auction_app">The Ultimate Auction App</string>

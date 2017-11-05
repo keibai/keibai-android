@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="io.github.keibai.activities.ActivitiesFragment">
+    tools:context="io.github.keibai.activity.ActivityFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             <include layout="@layout/toolbar_main" />
 
             <android.support.design.widget.TabLayout
-                android:id="@+id/tabs_activities"
+                android:id="@+id/tabs_activity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tabMode="fixed"
@@ -27,7 +27,7 @@
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager_activities"
+            android:id="@+id/viewpager_activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"  />

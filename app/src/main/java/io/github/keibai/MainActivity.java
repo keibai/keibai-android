@@ -7,10 +7,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import io.github.keibai.activities.ActivitiesFragment;
+import io.github.keibai.activity.ActivityFragment;
 import io.github.keibai.home.HomeFragment;
 import io.github.keibai.profile.ProfileFragment;
 
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = HomeFragment.newInstance();
                     break;
                 case R.id.navigation_activities:
-                    selectedFragment = ActivitiesFragment.newInstance();
+                    selectedFragment = ActivityFragment.newInstance();
                     break;
                 case R.id.navigation_profile:
                     selectedFragment = ProfileFragment.newInstance();

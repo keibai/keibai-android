@@ -1,4 +1,4 @@
-package io.github.keibai.activities;
+package io.github.keibai.activity;
 
 
 import android.os.Bundle;
@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +21,15 @@ import io.github.keibai.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ActivitiesFragment extends MainFragmentAbstract {
+public class ActivityFragment extends MainFragmentAbstract {
 
-    public ActivitiesFragment() {
+    public ActivityFragment() {
         // Constructor required by Android.
-        super(R.layout.fragment_activities);
+        super(R.layout.fragment_activity);
     }
 
-    public static ActivitiesFragment newInstance() {
-        ActivitiesFragment fragment = new ActivitiesFragment();
+    public static ActivityFragment newInstance() {
+        ActivityFragment fragment = new ActivityFragment();
         return fragment;
     }
 
@@ -45,19 +43,19 @@ public class ActivitiesFragment extends MainFragmentAbstract {
                              Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        ViewPager viewPager = view.findViewById(R.id.viewpager_activities);
+        ViewPager viewPager = view.findViewById(R.id.viewpager_activity);
         setupViewPager(viewPager);
 
-        TabLayout tabLayout = view.findViewById(R.id.tabs_activities);
+        TabLayout tabLayout = view.findViewById(R.id.tabs_activity);
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ActivitiesFragment.ViewPagerAdapter adapter = new ActivitiesFragment.ViewPagerAdapter(getFragmentManager());
-        adapter.addFragment(new ActivitiesBidFragment(), getString(R.string.bid));
-        adapter.addFragment(new ActivitiesWonFragment(), getString(R.string.won));
+        ActivityFragment.ViewPagerAdapter adapter = new ActivityFragment.ViewPagerAdapter(getFragmentManager());
+        adapter.addFragment(new ActivityBidFragment(), getString(R.string.bid));
+        adapter.addFragment(new ActivityWonFragment(), getString(R.string.won));
         viewPager.setAdapter(adapter);
     }
 
