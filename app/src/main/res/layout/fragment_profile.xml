@@ -12,6 +12,15 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <include layout="@layout/toolbar_main" />
+
+        </android.support.design.widget.AppBarLayout>
+
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="100dp"

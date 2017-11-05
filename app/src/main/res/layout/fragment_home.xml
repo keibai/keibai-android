@@ -9,6 +9,15 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <include layout="@layout/toolbar_main" />
+
+        </android.support.design.widget.AppBarLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -17,7 +26,7 @@
             android:layout_marginLeft="25dp" />
 
         <TextView
-            android:id="@+id/textmoney"
+            android:id="@+id/text_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00.00"

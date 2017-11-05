@@ -26,6 +26,7 @@ import io.github.keibai.R;
 public class ActivitiesFragment extends MainFragmentAbstract {
 
     public ActivitiesFragment() {
+        // Constructor required by Android.
         super(R.layout.fragment_activities);
     }
 
