@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     tools:context="io.github.keibai.auction.DetailAuctionActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/transactions"
-        android:layout_centerInParent="true" />
+    <ListView
+        android:id="@+id/auction_transaction_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
 
 </RelativeLayout>
