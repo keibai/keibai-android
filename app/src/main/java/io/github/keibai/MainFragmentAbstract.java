@@ -32,7 +32,7 @@ public abstract class MainFragmentAbstract extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_activities, container, false);
+        View view = inflater.inflate(resource, container, false);
 
         Toolbar toolbar = view.findViewById(R.id.toolbar_main);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
