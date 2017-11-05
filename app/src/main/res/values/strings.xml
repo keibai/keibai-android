@@ -33,4 +33,6 @@
     <string name="create_auction">Create auction</string>
     <string name="zero_money">€00.00</string>
     <string name="add">Add</string>
+    <string name="bid">Bid</string>
+    <string name="transactions">Transactions</string>
 </resources>
