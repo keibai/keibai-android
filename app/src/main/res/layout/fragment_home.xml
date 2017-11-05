@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -18,35 +18,43 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/euro"
-            android:textSize="55sp"
-            android:layout_marginLeft="25dp" />
-
-        <TextView
-            android:id="@+id/text_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00.00"
-            android:textSize="55sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/add_button"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add"
-                android:layout_marginRight="50dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="15dp"/>
+                android:text="@string/euro"
+                android:textSize="55sp"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:id="@+id/text_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00.00"
+                android:textSize="55sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/add_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="15dp"/>
+
+            </LinearLayout>
 
         </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>
