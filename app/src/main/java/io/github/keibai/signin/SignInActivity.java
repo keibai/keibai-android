@@ -26,6 +26,7 @@ public class SignInActivity extends AppCompatActivity {
                 // TODO: Change in next sprint, sign in logic here
                 SaveSharedPreference.setUserId(getApplicationContext(), 1);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
