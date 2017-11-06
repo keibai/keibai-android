@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         if (SaveSharedPreference.getUserId(getApplicationContext()) == -1) {
             // Not signed in. Go to welcome screen.
             Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             return;
         }

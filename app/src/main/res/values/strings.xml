@@ -12,7 +12,7 @@
     <string name="create_event">Create event</string>
     <string name="search">Search</string>
     <string name="welcome_to_keibai">Welcome to Keibai</string>
-    <string name="enter_email">Enter Email</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="cancel">Cancel</string>
     <string name="repeat_password">Repeat Password</string>
