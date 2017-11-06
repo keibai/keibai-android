@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Keibai</string>
+    <string name="title_home">Inicio</string>
+    <string name="title_active_events">Eventos activos</string>
+    <string name="title_activity">Actividad</string>
+    <string name="title_profile">Perfil</string>
+    <string name="welcome_text">Bienvenido a</string>
+    <string name="ultimate_auction_app">La Aplicación Ultimate de Subastas</string>
+    <string name="sign_up">Registro</string>
+    <string name="sign_in">Entrar</string>
+    <string name="create">Crear</string>
+    <string name="create_event">Crear evento</string>
+    <string name="search">Buscar</string>
+    <string name="welcome_to_keibai">Bienvenido a Keibai</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="cancel">Cancelar</string>
+    <string name="repeat_password">Repetir contraseña</string>
+    <string name="last_name">Apellido</string>
+    <string name="name">Nombre</string>
+    <string name="event_name">Nombre del evento</string>
+    <string-array name="event_types_array">
+        <item>Inglés</item>
+        <item>Holandés</item>
+        <item>Combinatória</item>
+    </string-array>
+    <string name="location">Localización</string>
+    <string name="save">Guardar</string>
+    <string name="search_active_events">Buscar eventos activos</string>
+    <string name="event_id">Id evento</string>
+    <string name="test">Test</string>
+    <string name="item_name">Nombre del objecto</string>
+    <string name="create_auction">Crear subasta</string>
+    <string name="euro">€</string>
+    <string name="add">Añadir</string>
+    <string name="bid">Apostar</string>
+    <string name="transactions">Transacciones</string>
+    <string name="won">Ganadas</string>
+    <string name="minimum_short">Min</string>
+</resources>
