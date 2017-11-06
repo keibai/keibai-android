@@ -36,10 +36,10 @@ public class DetailAuctionTransactionsFragment extends Fragment{
         List<Transaction> transactions = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
 
-        transactions.add(new Transaction("Gerard", 10.31f, calendar));
-        transactions.add(new Transaction("Eduard", 10.45f, calendar));
-        transactions.add(new Transaction("Mark", 12.31f, calendar));
-        transactions.add(new Transaction("Mirza", 15.31f, calendar));
+        transactions.add(new Transaction("Gerard", 10.31f, calendar, Transaction.BID_MESSAGE));
+        transactions.add(new Transaction("Eduard", 10.45f, calendar, Transaction.BID_MESSAGE));
+        transactions.add(new Transaction("Mark", 12.31f, calendar, Transaction.BID_MESSAGE));
+        transactions.add(new Transaction("Mirza", 15.31f, calendar, Transaction.BID_MESSAGE));
 
         TransactionAdapter transactionAdapter = new TransactionAdapter(getContext(), transactions);
         listView.setAdapter(transactionAdapter);
