@@ -1,4 +1,8 @@
-# keibai-android
+# Keibai Android
+
+[![Build Status](https://travis-ci.org/keibai/keibai-android.svg?branch=master)](https://travis-ci.org/keibai/keibai-android)
+[![GitHub Release Date](https://img.shields.io/github/release-date/keibai/keibai-android.svg)](https://github.com/keibai/keibai-android/releases)
+
 Ultimate auction app :sunglasses:
 One Paragraph of project description goes here
 
