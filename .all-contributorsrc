@@ -1,0 +1,51 @@
+{
+  "projectName": "keibai-android",
+  "projectOwner": "keibai",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "etorres404",
+      "name": "Eduard Torres",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/10367037?v=4",
+      "profile": "https://github.com/etorres404",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "zurfyx",
+      "name": "Gerard Rovira",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/193447?v=4",
+      "profile": "https://twitter.com/_zurfyx",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "TProject2013",
+      "name": "TProject2013",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5012645?v=4",
+      "profile": "https://github.com/TProject2013",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "Puric",
+      "name": "Puric",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/29785111?v=4",
+      "profile": "https://github.com/Puric",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
+  ]
+}
