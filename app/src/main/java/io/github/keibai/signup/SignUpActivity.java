@@ -18,23 +18,13 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        Button signUpButton = findViewById(R.id.sign_up_button);
+        Button signUpButton = findViewById(R.id.button_sign_up_submit);
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: Change in next sprint, sign up logic here
                 SaveSharedPreference.setUserId(getApplicationContext(), 1);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        // Cancel button
-        Button cancelButton = findViewById(R.id.sign_up_cancel_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
                 startActivity(intent);
             }
         });

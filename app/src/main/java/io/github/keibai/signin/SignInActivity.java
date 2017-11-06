@@ -19,23 +19,13 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         // Sign In button
-        Button signInButton = findViewById(R.id.sign_in_button);
+        Button signInButton = findViewById(R.id.button_sign_in_submit);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: Change in next sprint, sign in logic here
                 SaveSharedPreference.setUserId(getApplicationContext(), 1);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        // Cancel button
-        Button cancelButton = findViewById(R.id.sign_in_cancel_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
                 startActivity(intent);
             }
         });
