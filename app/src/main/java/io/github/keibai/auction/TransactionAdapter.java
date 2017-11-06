@@ -41,8 +41,7 @@ public class TransactionAdapter extends ArrayAdapter {
         timeTextView.setText(currentTransaction.getTime());
 
         TextView text = listItemView.findViewById(R.id.transaction_text);
-        text.setText("User " + currentTransaction.getUser() +
-                " bidded € " + currentTransaction.getMoney());
+        text.setText(currentTransaction.getMessage());
 
         return listItemView;
     }
