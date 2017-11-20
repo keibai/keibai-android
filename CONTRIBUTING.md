@@ -6,7 +6,7 @@ Please translate only string resources specified in [`strings.xml`](app/src/main
 
 **Lint checking**
 
-Lint is turned on and has been set to be very strict, failing build for either warnings or errors. Please make sure your changes do not violate any Lint checks. Exceptions (ignore/severity override) can be made on case by case basis.
+Lint is turned on, failing build for either warnings or errors. Please make sure your changes do not violate any Lint checks. Exceptions (ignore/severity override) can be made on case by case basis.
 
 **Code style**
 
