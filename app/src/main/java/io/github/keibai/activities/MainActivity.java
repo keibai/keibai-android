@@ -9,26 +9,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import java.io.IOException;
-
 import io.github.keibai.activities.welcome.WelcomeActivity;
-import io.github.keibai.http.Http;
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.activity.ActivityFragment;
 import io.github.keibai.activities.home.HomeFragment;
 import io.github.keibai.activities.profile.ProfileFragment;
-import io.github.keibai.http.HttpCallback;
-import io.github.keibai.models.Bid;
-import io.github.keibai.models.User;
-import io.github.keibai.models.meta.Error;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,28 +40,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_frame_layout, HomeFragment.newInstance());
         transaction.commit();
-
-        try {
-            new Http<>().get("https://keibai.herokuapp.com/bids/search?id=1", new HttpCallback<Bid>() {
-                @Override
-                public Class<Bid> model() {
-                    return Bid.class;
-                }
-
-                @Override
-                public void onError(Error error) throws IOException {
-                    System.out.println("this is an error");
-                    System.out.println(error);
-                }
-
-                @Override
-                public void onSuccess(Bid response) throws IOException {
-                    System.out.println(response);
-                }
-            });
-        } catch (Exception e) {
-            System.out.println(e);
-        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

@@ -43,13 +43,10 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/add_button"
+                    android:id="@+id/button_home_add_credit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/add"
-                    android:layout_marginRight="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginTop="15dp"/>
+                    android:text="@string/add" />
 
             </LinearLayout>
 
