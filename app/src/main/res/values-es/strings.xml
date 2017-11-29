@@ -37,4 +37,5 @@
     <string name="transactions">Transacciones</string>
     <string name="won">Ganadas</string>
     <string name="minimum_short">Min</string>
+    <string name="repeat_email">Repetir email</string>
 </resources>
