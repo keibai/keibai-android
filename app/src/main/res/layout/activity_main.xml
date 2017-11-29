@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.keibai.MainActivity">
+    tools:context="io.github.keibai.activities.MainActivity">
 
     <FrameLayout
         android:id="@+id/main_frame_layout"
