@@ -6,22 +6,40 @@
     tools:context = ".activities.signin.SignInActivity">
 
     <EditText
+        android:id="@+id/sign_up_edit_text_name"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         android:hint = "@string/name" />
 
     <EditText
+        android:id="@+id/sign_up_edit_text_last_name"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         android:hint = "@string/last_name" />
 
     <EditText
+        android:id="@+id/sign_up_edit_text_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="@string/email"/>
+
+    <EditText
+        android:id="@+id/sign_up_edit_text_repeat_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="@string/repeat_email"/>
+
+    <EditText
+        android:id="@+id/sign_up_edit_text_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:hint="@string/password" />
 
     <EditText
+        android:id="@+id/sign_up_edit_text_repeat_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
