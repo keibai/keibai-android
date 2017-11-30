@@ -14,11 +14,6 @@ import okhttp3.ResponseBody;
 public abstract class HttpCallback<T extends Model> implements Callback {
 
     @Override
-    public void onFailure(Call call, IOException e) {
-        e.printStackTrace();
-    }
-
-    @Override
     public void onResponse(Call call, Response response) throws IOException {
         ResponseBody responseBody = response.body();
         if (!response.isSuccessful()) {

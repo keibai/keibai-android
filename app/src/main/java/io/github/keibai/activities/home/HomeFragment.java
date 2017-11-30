@@ -19,6 +19,7 @@ import io.github.keibai.models.Bid;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.models.meta.Msg;
+import okhttp3.Call;
 
 
 /**
@@ -73,6 +74,12 @@ public class HomeFragment extends MainFragmentAbstract {
 
             new Http(getContext()).post("https://keibai.herokuapp.com/users/authenticate", user, new HttpCallback<Msg>() {
                 @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println("HTTP Error");
+                    System.out.println(e.toString());
+                }
+
+                @Override
                 public Class<Msg> model() {
                     return Msg.class;
                 }
@@ -96,23 +103,29 @@ public class HomeFragment extends MainFragmentAbstract {
         @Override
         public void onClick(View v) {
 
-                new Http(getContext()).post("https://keibai.herokuapp.com/bids/new", new Bid(), new HttpCallback<Bid>() {
-                    @Override
-                    public Class<Bid> model() {
-                        return Bid.class;
-                    }
+            new Http(getContext()).post("https://keibai.herokuapp.com/bids/new", new Bid(), new HttpCallback<Bid>() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println("HTTP Error");
+                    System.out.println(e.toString());
+                }
 
-                    @Override
-                    public void onError(Error error) throws IOException {
-                        System.out.println("this is an error");
-                        System.out.println(error);
-                    }
+                @Override
+                public Class<Bid> model() {
+                    return Bid.class;
+                }
 
-                    @Override
-                    public void onSuccess(Bid response) throws IOException {
-                        System.out.println(response);
-                    }
-                });
+                @Override
+                public void onError(Error error) throws IOException {
+                    System.out.println("this is an error");
+                    System.out.println(error);
+                }
+
+                @Override
+                public void onSuccess(Bid response) throws IOException {
+                    System.out.println(response);
+                }
+            });
         }
     }
 
@@ -122,6 +135,12 @@ public class HomeFragment extends MainFragmentAbstract {
         public void onClick(View v) {
 
             new Http(getContext()).post("https://keibai.herokuapp.com/users/deauthenticate", null, new HttpCallback<Msg>() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println("HTTP Error");
+                    System.out.println(e.toString());
+                }
+
                 @Override
                 public Class<Msg> model() {
                     return Msg.class;
