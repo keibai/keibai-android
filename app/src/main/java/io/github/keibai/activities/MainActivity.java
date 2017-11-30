@@ -22,13 +22,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (SaveSharedPreference.getUserId(getApplicationContext()) == -1) {
-            // Not signed in. Go to welcome screen.
-            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            return;
-        }
+//        if (SaveSharedPreference.getUserId(getApplicationContext()) == -1) {
+//            // Not signed in. Go to welcome screen.
+//            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+//            return;
+//        }
 
         // Display main activity
         setContentView(R.layout.activity_main);

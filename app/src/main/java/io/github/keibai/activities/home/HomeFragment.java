@@ -16,7 +16,9 @@ import io.github.keibai.R;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.models.Bid;
+import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
+import io.github.keibai.models.meta.Msg;
 
 
 /**
@@ -48,18 +50,53 @@ public class HomeFragment extends MainFragmentAbstract {
         TextView textViewMoney = view.findViewById(R.id.text_money);
         textViewMoney.setText("100.00");
 
+        Button fooButton = view.findViewById(R.id.button_home_foo);
+        fooButton.setOnClickListener(new Foo());
+
         Button addButton = view.findViewById(R.id.button_home_add_credit);
         addButton.setOnClickListener(new AddCredit());
 
+        Button barButton= view.findViewById(R.id.button_home_bar);
+        barButton.setOnClickListener(new Bar());
+
         return view;
+    }
+
+    private class Foo implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            User user = new User();
+            user.email = "zurfyx@gmail.com";
+            user.password = "1234";
+
+            new Http(getContext()).post("https://keibai.herokuapp.com/users/authenticate", user, new HttpCallback<Msg>() {
+                @Override
+                public Class<Msg> model() {
+                    return Msg.class;
+                }
+
+                @Override
+                public void onError(Error error) throws IOException {
+                    System.out.println("this is an error");
+                    System.out.println(error);
+                }
+
+                @Override
+                public void onSuccess(Msg response) throws IOException {
+                    System.out.println(response);
+                }
+            });
+        }
     }
 
     private class AddCredit implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            try {
-                new Http<>().get("https://keibai.herokuapp.com/bids/search?id=1", new HttpCallback<Bid>() {
+
+                new Http(getContext()).post("https://keibai.herokuapp.com/bids/new", new Bid(), new HttpCallback<Bid>() {
                     @Override
                     public Class<Bid> model() {
                         return Bid.class;
@@ -76,9 +113,31 @@ public class HomeFragment extends MainFragmentAbstract {
                         System.out.println(response);
                     }
                 });
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+        }
+    }
+
+    private class Bar implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            new Http(getContext()).post("https://keibai.herokuapp.com/users/deauthenticate", null, new HttpCallback<Msg>() {
+                @Override
+                public Class<Msg> model() {
+                    return Msg.class;
+                }
+
+                @Override
+                public void onError(Error error) throws IOException {
+                    System.out.println("this is an error");
+                    System.out.println(error);
+                }
+
+                @Override
+                public void onSuccess(Msg response) throws IOException {
+                    System.out.println(response);
+                }
+            });
         }
     }
 }

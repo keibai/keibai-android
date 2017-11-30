@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 public class SaveSharedPreference {
 
     static final String PREF_USER_ID = "user_id";
+    static final String PREF_COOKIES = "cookies";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -25,5 +26,15 @@ public class SaveSharedPreference {
 
     public static long getUserId(Context ctx) {
         return getSharedPreferences(ctx).getLong(PREF_USER_ID, -1);
+    }
+
+    public static void setCookies(Context ctx, String cookies) {
+        Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_COOKIES, cookies);
+        editor.apply();
+    }
+
+    public static String getCookies(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_COOKIES, "");
     }
 }

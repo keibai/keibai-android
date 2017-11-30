@@ -4,14 +4,14 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import io.github.keibai.models.ModelAbstract;
+import io.github.keibai.models.Model;
 import io.github.keibai.models.meta.Error;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public abstract class HttpCallback<T extends ModelAbstract> implements Callback {
+public abstract class HttpCallback<T extends Model> implements Callback {
 
     @Override
     public void onFailure(Call call, IOException e) {

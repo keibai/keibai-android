@@ -8,10 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import io.github.keibai.activities.MainActivity;
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.http.Http;
+import io.github.keibai.http.HttpCallback;
+import io.github.keibai.models.Bid;
 import io.github.keibai.models.User;
+import io.github.keibai.models.meta.Error;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -58,12 +64,32 @@ public class SignUpActivity extends AppCompatActivity {
                 attemptUser.email = etEmail.getText().toString();
                 attemptUser.password = etPassword.getText().toString();
 
-                // TODO: Connection with the server here
-                Toast.makeText(getApplicationContext(), attemptUser.toString(), Toast.LENGTH_LONG).show();
 //                SaveSharedPreference.setUserId(getApplicationContext(), 1);
 //                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivity(intent);
+
+                try {
+                    new Http(getApplicationContext()).post("https://keibai.herokuapp.com/users/new", attemptUser, new HttpCallback<User>() {
+                        @Override
+                        public Class<User> model() {
+                            return User.class;
+                        }
+
+                        @Override
+                        public void onError(Error error) throws IOException {
+                            System.out.println("this is an error");
+                            System.out.println(error);
+                        }
+
+                        @Override
+                        public void onSuccess(User response) throws IOException {
+                            System.out.println(response);
+                        }
+                    });
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
         });
     }
