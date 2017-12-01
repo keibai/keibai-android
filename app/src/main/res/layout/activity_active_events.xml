@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.keibai.event.ActiveEventsActivity">
+    tools:context=".activities.event.ActiveEventsActivity">
 
     <EditText
         android:id="@+id/search_edit_text"

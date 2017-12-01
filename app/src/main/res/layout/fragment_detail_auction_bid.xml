@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="io.github.keibai.auction.DetailAuctionBidFragment">
+    tools:context=".activities.auction.DetailAuctionBidFragment">
 
     <TextView
         android:id="@+id/fragment_detail_auction_bid_item_name"

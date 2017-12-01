@@ -4,15 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height = "match_parent"
     android:orientation="vertical"
-    tools:context = "io.github.keibai.signin.SignInActivity">
+    tools:context = ".activities.signin.SignInActivity">
 
     <EditText
+        android:id="@+id/sign_in_edit_text_email"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
+        android:inputType="textEmailAddress"
         android:hint = "@string/email"
         android:focusable = "true" />
 
     <EditText
+        android:id="@+id/sign_in_edit_text_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"

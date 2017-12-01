@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.keibai.home.HomeFragment">
+    tools:context=".activities.home.HomeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,16 +40,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/add_button"
+                    android:id="@+id/button_home_foo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/add"
-                    android:layout_marginRight="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginTop="15dp"/>
+                    android:text="foo" />
+
+                <Button
+                    android:id="@+id/button_home_add_credit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add" />
+
+                <Button
+                    android:id="@+id/button_home_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="bar" />
 
             </LinearLayout>
 
