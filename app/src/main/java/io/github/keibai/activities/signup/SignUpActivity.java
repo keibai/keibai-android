@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.MainActivity;
 import io.github.keibai.R;
 import io.github.keibai.http.Http;
@@ -64,11 +65,6 @@ public class SignUpActivity extends AppCompatActivity {
                 attemptUser.email = etEmail.getText().toString();
                 attemptUser.password = etPassword.getText().toString();
 
-//                SaveSharedPreference.setUserId(getApplicationContext(), 1);
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-
                 new Http(getApplicationContext()).post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -88,7 +84,10 @@ public class SignUpActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(User response) throws IOException {
-                        System.out.println(response);
+                        SaveSharedPreference.setUserId(getApplicationContext(), response.id);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                     }
                 });
             }
