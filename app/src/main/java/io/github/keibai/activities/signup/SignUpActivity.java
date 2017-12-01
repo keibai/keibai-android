@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.BuildConfig;
 import io.github.keibai.activities.MainActivity;
 import io.github.keibai.R;
 import io.github.keibai.http.Http;

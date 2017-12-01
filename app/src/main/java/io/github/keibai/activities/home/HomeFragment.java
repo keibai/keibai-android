@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
+import io.github.keibai.BuildConfig;
 import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
 import io.github.keibai.http.Http;

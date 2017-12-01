@@ -1,8 +1,10 @@
 package io.github.keibai.http;
 
+import io.github.keibai.BuildConfig;
+
 public class HttpUrl {
 
-    private static final String baseUrl = "https://keibai.herokuapp.com";
+    private static final String baseUrl = BuildConfig.API_URL;
 
     private static final String newUser = "/users/new";
     private static final String userByIdUrl = "/users/search?id=";

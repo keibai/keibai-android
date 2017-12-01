@@ -13,11 +13,30 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
+        // Debug: ENV Variable > Localhost
+        def debugUrl = '\"' + (localProperty('DEBUG_API_URL')?: DEBUG_API_URL)+'\"'
+        debug {
+            buildConfigField "String", "API_URL", debugUrl
+        }
+
+        // Production: ENV Variable > Heroku
+        def releaseUrl =  '\"' + (localProperty('RELEASE_API_URL')?: RELEASE_API_URL)+'\"'
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_URL", releaseUrl
         }
     }
+}
+
+def localProperty(String propertyName) {
+    def propertiesFile = rootProject.file("local.properties")
+    if (propertiesFile.exists()) {
+        def properties = new Properties()
+        properties.load(new FileInputStream(propertiesFile))
+        return properties[propertyName]
+    }
+    return ""
 }
 
 dependencies {
