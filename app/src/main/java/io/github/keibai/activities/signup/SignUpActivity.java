@@ -14,6 +14,7 @@ import io.github.keibai.activities.MainActivity;
 import io.github.keibai.R;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
+import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
 import okhttp3.Call;
@@ -68,7 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivity(intent);
 
-                new Http(getApplicationContext()).post("https://keibai.herokuapp.com/users/new", attemptUser, new HttpCallback<User>() {
+                new Http(getApplicationContext()).post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();

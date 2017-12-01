@@ -15,6 +15,7 @@ import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
+import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Bid;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
@@ -72,7 +73,7 @@ public class HomeFragment extends MainFragmentAbstract {
             user.email = "zurfyx@gmail.com";
             user.password = "1234";
 
-            new Http(getContext()).post("https://keibai.herokuapp.com/users/authenticate", user, new HttpCallback<Msg>() {
+            new Http(getContext()).post(HttpUrl.getUserAuthenticateUrl(), user, new HttpCallback<Msg>() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     System.out.println("HTTP Error");
@@ -103,7 +104,7 @@ public class HomeFragment extends MainFragmentAbstract {
         @Override
         public void onClick(View v) {
 
-            new Http(getContext()).post("https://keibai.herokuapp.com/bids/new", new Bid(), new HttpCallback<Bid>() {
+            new Http(getContext()).post(HttpUrl.newBidUrl(), new Bid(), new HttpCallback<Bid>() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     System.out.println("HTTP Error");
@@ -134,7 +135,7 @@ public class HomeFragment extends MainFragmentAbstract {
         @Override
         public void onClick(View v) {
 
-            new Http(getContext()).post("https://keibai.herokuapp.com/users/deauthenticate", null, new HttpCallback<Msg>() {
+            new Http(getContext()).post(HttpUrl.getUserDeauthenticateUrl(), null, new HttpCallback<Msg>() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     System.out.println("HTTP Error");
