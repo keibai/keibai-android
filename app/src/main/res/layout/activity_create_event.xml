@@ -29,7 +29,9 @@
     <Spinner
         android:id="@+id/spinner_event_type"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/event_types_array"
+        android:prompt="@string/event_type" />
 
     <EditText
         android:layout_width="match_parent"

@@ -19,6 +19,7 @@
     <string name="last_name">Last Name</string>
     <string name="name">Name</string>
     <string name="event_name">Event name</string>
+    <string name="event_type">Event type</string>
     <string-array name="event_types_array">
         <item>English</item>
         <item>Dutch</item>

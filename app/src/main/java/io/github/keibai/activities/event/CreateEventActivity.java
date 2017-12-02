@@ -23,8 +23,6 @@ public class CreateEventActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        feedSpinner();
     }
 
     @Override
@@ -43,13 +41,5 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void feedSpinner() {
-        Spinner spinner = findViewById(R.id.spinner_event_type);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                getApplicationContext(), R.array.event_types_array, R.layout.support_simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
     }
 }
