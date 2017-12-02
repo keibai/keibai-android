@@ -4,11 +4,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
 
 import io.github.keibai.R;
+import io.github.keibai.http.Http;
+import io.github.keibai.http.HttpCallback;
+import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Event;
+import io.github.keibai.models.meta.Error;
+import io.github.keibai.models.meta.ModelList;
+import io.github.keibai.runnable.RunnableToast;
+import okhttp3.Call;
 
 public class ActiveEventsActivity extends AppCompatActivity {
 
@@ -17,21 +25,28 @@ public class ActiveEventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_events);
 
-        // TODO: Change in next sprint, events will be retrieved using the API
-        List<Event> events = new ArrayList<>();
+        new Http(getApplicationContext()).get(HttpUrl.getEventListUrl(), new HttpCallback<ModelList<Event>>() {
+            @Override
+            public TypeToken<ModelList<Event>> model() {
+                return new TypeToken<ModelList<Event>>(){};
+            }
 
-//        events.add(new Event(0, "Event 0", "Location 0"));
-//        events.add(new Event(1, "Event 1", "Location 1"));
-//        events.add(new Event(2, "Event 2", "Location 2"));
-//        events.add(new Event(3, "Event 3", "Location 3"));
-//        events.add(new Event(4, "Event 4", "Location 4"));
-//        events.add(new Event(5, "Event 5", "Location 5"));
-//        events.add(new Event(6, "Event 6", "Location 6"));
-//        events.add(new Event(7, "Event 7", "Location 7"));
+            @Override
+            public void onError(Error error) throws IOException {
+                runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
+            }
 
-        EventAdapter eventsAdapter = new EventAdapter(this, events);
-        ListView listView = findViewById(R.id.active_events_list);
-        listView.setAdapter(eventsAdapter);
+            @Override
+            public void onSuccess(ModelList<Event> response) throws IOException {
+                EventAdapter eventsAdapter = new EventAdapter(getApplicationContext(), response.list);
+                ListView listView = findViewById(R.id.active_events_list);
+                listView.setAdapter(eventsAdapter);
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
+            }
+        });
     }
-
 }
