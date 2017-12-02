@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 
 import io.github.keibai.BuildConfig;
@@ -82,8 +84,8 @@ public class HomeFragment extends MainFragmentAbstract {
                 }
 
                 @Override
-                public Class<Msg> model() {
-                    return Msg.class;
+                public TypeToken<Msg> model() {
+                    return new TypeToken<Msg>(){};
                 }
 
                 @Override
@@ -113,8 +115,8 @@ public class HomeFragment extends MainFragmentAbstract {
                 }
 
                 @Override
-                public Class<Bid> model() {
-                    return Bid.class;
+                public TypeToken<Bid> model() {
+                    return new TypeToken<Bid>(){};
                 }
 
                 @Override
@@ -144,8 +146,8 @@ public class HomeFragment extends MainFragmentAbstract {
                 }
 
                 @Override
-                public Class<Msg> model() {
-                    return Msg.class;
+                public TypeToken<Msg> model() {
+                    return new TypeToken<Msg>(){};
                 }
 
                 @Override

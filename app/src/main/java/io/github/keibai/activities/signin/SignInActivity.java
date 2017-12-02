@@ -8,7 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import io.github.keibai.activities.MainActivity;
 import io.github.keibai.R;
@@ -42,8 +45,8 @@ public class SignInActivity extends AppCompatActivity {
 
                 new Http(getApplicationContext()).post(HttpUrl.getUserAuthenticateUrl(), attemptUser, new HttpCallback<User>() {
                     @Override
-                    public Class<User> model() {
-                        return User.class;
+                    public TypeToken<User> model() {
+                        return new TypeToken<User>(){};
                     }
 
                     @Override

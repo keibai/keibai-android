@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 
 import io.github.keibai.R;
@@ -87,8 +89,8 @@ public class CreateEventActivity extends AppCompatActivity {
         Event attemptEvent = eventFromForm();
         new Http(getApplicationContext()).post(HttpUrl.newEventUrl(), attemptEvent, new HttpCallback<Event>() {
             @Override
-            public Class model() {
-                return Event.class;
+            public TypeToken<Event> model() {
+                return new TypeToken<Event>(){};
             }
 
             @Override

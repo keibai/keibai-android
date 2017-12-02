@@ -1,6 +1,7 @@
 package io.github.keibai.http;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 
@@ -21,12 +22,11 @@ public abstract class HttpCallback<T extends Model> implements Callback {
             onError(error);
             return;
         }
-
-        T obj = new Gson().fromJson(responseBody.string(), model());
+        T obj = new Gson().fromJson(responseBody.string(), model().getType());
         onSuccess(obj);
     }
 
-    public abstract Class<T> model();
+    public abstract TypeToken<T> model();
 
     public abstract void onError(Error error) throws IOException;
 
