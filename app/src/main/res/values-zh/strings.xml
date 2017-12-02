@@ -19,6 +19,7 @@
     <string name="last_name">姓名</string>
     <string name="name">名字</string>
     <string name="event_name">拍卖名字</string>
+    <string name="event_type">A???</string>
     <string-array name="event_types_array">
         <item>英式</item>
         <item>降价</item>
