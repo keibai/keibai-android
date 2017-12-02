@@ -1,6 +1,7 @@
 package io.github.keibai.activities.home;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 import java.io.IOException;
 
 import io.github.keibai.BuildConfig;
+import io.github.keibai.activities.MainActivity;
 import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
+import io.github.keibai.activities.credit.CreditActivity;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
@@ -51,16 +54,12 @@ public class HomeFragment extends MainFragmentAbstract {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         TextView textViewMoney = view.findViewById(R.id.text_money);
+        //TODO:getUserCredit()
         textViewMoney.setText("100.00");
 
-        Button fooButton = view.findViewById(R.id.button_home_foo);
-        fooButton.setOnClickListener(new Foo());
 
         Button addButton = view.findViewById(R.id.button_home_add_credit);
         addButton.setOnClickListener(new AddCredit());
-
-        Button barButton= view.findViewById(R.id.button_home_bar);
-        barButton.setOnClickListener(new Bar());
 
         return view;
     }
@@ -105,29 +104,8 @@ public class HomeFragment extends MainFragmentAbstract {
         @Override
         public void onClick(View v) {
 
-            new Http(getContext()).post(HttpUrl.newBidUrl(), new Bid(), new HttpCallback<Bid>() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    System.out.println("HTTP Error");
-                    System.out.println(e.toString());
-                }
-
-                @Override
-                public Class<Bid> model() {
-                    return Bid.class;
-                }
-
-                @Override
-                public void onError(Error error) throws IOException {
-                    System.out.println("this is an error");
-                    System.out.println(error);
-                }
-
-                @Override
-                public void onSuccess(Bid response) throws IOException {
-                    System.out.println(response);
-                }
-            });
+            Intent intent = new Intent(getContext(), CreditActivity.class);
+            startActivity(intent);
         }
     }
 

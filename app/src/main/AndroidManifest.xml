@@ -111,6 +111,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.event.DetailEventActivity" />
         </activity>
+        <activity
+            android:name=".activities.credit.CreditActivity"
+            android:label="@string/sign_in">
+            <intent-filter>
+                <action android:name="com.keibai.credit.CreditActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
