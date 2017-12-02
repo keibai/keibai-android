@@ -45,4 +45,5 @@
     <string name="won">Won</string>
     <string name="minimum_short">Min</string>
     <string name="repeat_email">Repeat email</string>
+    <string name="submitting">Submitting</string>
 </resources>
