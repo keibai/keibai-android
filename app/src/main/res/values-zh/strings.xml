@@ -19,6 +19,7 @@
     <string name="last_name">姓名</string>
     <string name="name">名字</string>
     <string name="event_name">拍卖名字</string>
+    <string name="event_name_error">A???</string>
     <string name="event_type">A???</string>
     <string-array name="event_types_array">
         <item>英式</item>
@@ -26,7 +27,11 @@
         <item>组合</item>
     </string-array>
     <string name="location">位置</string>
+    <string name="location_error">A???</string>
     <string name="event_time_seconds">A???</string>
+    <string name="event_time_seconds_error">A???</string>
+    <string name="category">A???</string>
+    <string name="category_error">A???</string>
     <string name="save">保存</string>
     <string name="search_active_events">搜索进行中拍卖</string>
     <string name="event_id">拍卖ID</string>

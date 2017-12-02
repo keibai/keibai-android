@@ -1,30 +1,29 @@
 package io.github.keibai.activities.event;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.io.IOException;
 
 import io.github.keibai.R;
+import io.github.keibai.form.DefaultAwesomeValidation;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Event;
-import io.github.keibai.models.Model;
 import io.github.keibai.models.meta.Error;
-import io.github.keibai.models.meta.Msg;
 import okhttp3.Call;
 
 public class CreateEventActivity extends AppCompatActivity {
+
+    DefaultAwesomeValidation validation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +34,12 @@ public class CreateEventActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        validation = new DefaultAwesomeValidation(getApplicationContext());
+        validation.addValidation(this, R.id.edit_event_create_name, "[a-zA-Z0-9\\s]+", R.string.event_name_error);
+        validation.addValidation(this, R.id.edit_event_create_time, "[0-9]+", R.string.event_time_seconds_error);
+        validation.addValidation(this, R.id.edit_event_create_category, "[a-zA-Z0-9\\s]+", R.string.category_error);
+        validation.addValidation(this, R.id.edit_event_create_location, "[a-zA-Z0-9\\s]+", R.string.location_error);
     }
 
     @Override
@@ -55,10 +60,10 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     public Event eventFromForm() {
-        EditText formName = findViewById(R.id.edit_activity_create_name);
-        Spinner formAuctionType = findViewById(R.id.spinner_event_type);
-        EditText formTime = findViewById(R.id.edit_auction_create_time);
-        EditText formLocation = findViewById(R.id.edit_activity_create_location);
+        EditText formName = findViewById(R.id.edit_event_create_name);
+        Spinner formAuctionType = findViewById(R.id.spinner_event_create_type);
+        EditText formTime = findViewById(R.id.edit_event_create_time);
+        EditText formLocation = findViewById(R.id.edit_event_create_location);
 
         Event event = new Event();
         event.name = formName.getText().toString();
@@ -70,38 +75,8 @@ public class CreateEventActivity extends AppCompatActivity {
         return event;
     }
 
-    public boolean validateForm() {
-        EditText formName = findViewById(R.id.edit_activity_create_name);
-        Spinner formAuctionType = findViewById(R.id.spinner_event_type);
-        EditText formTime = findViewById(R.id.edit_auction_create_time);
-        EditText formLocation = findViewById(R.id.edit_activity_create_location);
-
-        if (formName.getText().toString().length() == 0) {
-            formName.setError(formName.getHint() + " is required.");
-            return false;
-        } else {
-            formName.setError(null);
-        }
-
-        if (formTime.getText().toString().length() == 0) {
-            formTime.setError(formTime.getHint() + " is required.");
-            return false;
-        } else {
-            formTime.setError(null);
-        }
-
-        if (formLocation.getText().toString().length() == 0) {
-            formLocation.setError(formLocation.getHint() + " is required.");
-            return false;
-        } else {
-            formLocation.setError(null);
-        }
-
-        return true;
-    }
-
     public void onSave() {
-        if (!validateForm()) {
+        if (!validation.validate()) {
             return;
         }
 

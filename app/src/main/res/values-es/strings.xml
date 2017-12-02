@@ -19,6 +19,7 @@
     <string name="last_name">Apellido</string>
     <string name="name">Nombre</string>
     <string name="event_name">Nombre del evento</string>
+    <string name="event_name_error">Nombre del evento inválido</string>
     <string name="event_type">Tipo del evento</string>
     <string-array name="event_types_array">
         <item>Inglés</item>
@@ -26,7 +27,11 @@
         <item>Combinatória</item>
     </string-array>
     <string name="location">Localización</string>
+    <string name="location_error">Localización inválida</string>
     <string name="event_time_seconds">Tiempo evento (segundos)</string>
+    <string name="event_time_seconds_error">Tiempo evento inválido</string>
+    <string name="category">Categoría</string>
+    <string name="category_error">Categoría inválida</string>
     <string name="save">Guardar</string>
     <string name="search_active_events">Buscar eventos activos</string>
     <string name="event_id">Id evento</string>
