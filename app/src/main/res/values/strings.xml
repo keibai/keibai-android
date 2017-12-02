@@ -19,12 +19,14 @@
     <string name="last_name">Last Name</string>
     <string name="name">Name</string>
     <string name="event_name">Event name</string>
+    <string name="event_type">Event type</string>
     <string-array name="event_types_array">
         <item>English</item>
         <item>Dutch</item>
         <item>Combinatorial</item>
     </string-array>
     <string name="location">Location</string>
+    <string name="event_time_seconds">Event time (seconds)</string>
     <string name="save">Save</string>
     <string name="search_active_events">Search Active Events</string>
     <string name="event_id">Event id</string>

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import io.github.keibai.R;
+import io.github.keibai.models.Event;
 
 /**
  * EventAdapter class
@@ -35,13 +36,13 @@ public class EventAdapter extends ArrayAdapter {
         Event currentEvent = (Event) getItem(position);
 
         TextView idTextView = listItemView.findViewById(R.id.text_event_id);
-        idTextView.setText(String.valueOf(currentEvent.getId()));
+        idTextView.setText(String.valueOf(currentEvent.id));
 
         TextView nameTextView = listItemView.findViewById(R.id.text_event_name);
-        nameTextView.setText(currentEvent.getName());
+        nameTextView.setText(currentEvent.name);
 
         TextView locationTextView = listItemView.findViewById(R.id.text_event_location);
-        locationTextView.setText(currentEvent.getLocation());
+        locationTextView.setText(currentEvent.location);
 
         return listItemView;
     }

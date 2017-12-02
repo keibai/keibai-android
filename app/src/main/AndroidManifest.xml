@@ -54,7 +54,8 @@
         <activity
             android:name=".activities.event.CreateEventActivity"
             android:label="@string/create_event"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="com.keibai.event.CreateEventActivity" />
 

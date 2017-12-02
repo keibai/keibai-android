@@ -22,6 +22,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <EditText
+        android:id="@+id/edit_activity_create_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/event_name"/>
@@ -29,9 +30,25 @@
     <Spinner
         android:id="@+id/spinner_event_type"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/event_types_array"
+        android:prompt="@string/event_type" />
 
     <EditText
+        android:id="@+id/edit_auction_create_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/event_time_seconds"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/edit_activity_create_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Category" />
+
+    <EditText
+        android:id="@+id/edit_activity_create_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/location"/>
