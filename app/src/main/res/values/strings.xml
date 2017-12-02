@@ -26,6 +26,7 @@
         <item>Combinatorial</item>
     </string-array>
     <string name="location">Location</string>
+    <string name="event_time_seconds">Event time (seconds)</string>
     <string name="save">Save</string>
     <string name="search_active_events">Search Active Events</string>
     <string name="event_id">Event id</string>

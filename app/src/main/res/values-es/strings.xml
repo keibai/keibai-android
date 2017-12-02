@@ -25,6 +25,7 @@
         <item>Combinatória</item>
     </string-array>
     <string name="location">Localización</string>
+    <string name="event_time_seconds">Tiempo evento (segundos)</string>
     <string name="save">Guardar</string>
     <string name="search_active_events">Buscar eventos activos</string>
     <string name="event_id">Id evento</string>
