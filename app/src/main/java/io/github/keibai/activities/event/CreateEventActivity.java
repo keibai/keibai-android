@@ -70,9 +70,42 @@ public class CreateEventActivity extends AppCompatActivity {
         return event;
     }
 
+    public boolean validateForm() {
+        EditText formName = findViewById(R.id.edit_activity_create_name);
+        Spinner formAuctionType = findViewById(R.id.spinner_event_type);
+        EditText formTime = findViewById(R.id.edit_auction_create_time);
+        EditText formLocation = findViewById(R.id.edit_activity_create_location);
+
+        if (formName.getText().toString().length() == 0) {
+            formName.setError(formName.getHint() + " is required.");
+            return false;
+        } else {
+            formName.setError(null);
+        }
+
+        if (formTime.getText().toString().length() == 0) {
+            formTime.setError(formTime.getHint() + " is required.");
+            return false;
+        } else {
+            formTime.setError(null);
+        }
+
+        if (formLocation.getText().toString().length() == 0) {
+            formLocation.setError(formLocation.getHint() + " is required.");
+            return false;
+        } else {
+            formLocation.setError(null);
+        }
+
+        return true;
+    }
+
     public void onSave() {
+        if (!validateForm()) {
+            return;
+        }
+
         Event attemptEvent = eventFromForm();
-        System.out.println(attemptEvent);
         new Http(getApplicationContext()).post(HttpUrl.newEventUrl(), attemptEvent, new HttpCallback<Event>() {
             @Override
             public Class model() {
