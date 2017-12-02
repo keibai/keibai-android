@@ -1,6 +1,7 @@
 package io.github.keibai.activities.event;
 
 import android.content.Intent;
+import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -19,6 +21,7 @@ import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Event;
 import io.github.keibai.models.meta.Error;
+import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
 
 public class CreateEventActivity extends AppCompatActivity {
@@ -80,6 +83,7 @@ public class CreateEventActivity extends AppCompatActivity {
             return;
         }
 
+        Toast.makeText(getApplicationContext(), R.string.submitting, Toast.LENGTH_SHORT).show();
         Event attemptEvent = eventFromForm();
         new Http(getApplicationContext()).post(HttpUrl.newEventUrl(), attemptEvent, new HttpCallback<Event>() {
             @Override
@@ -88,20 +92,19 @@ public class CreateEventActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(Error error) throws IOException {
-                System.out.println("Error " + error);
+            public void onError(final Error error) throws IOException {
+                runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
             }
 
             @Override
             public void onSuccess(Event response) throws IOException {
-                System.out.println(response);
                 Intent intent = new Intent(getApplicationContext(), DetailEventActivity.class);
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(Call call, IOException  e) {
-                System.out.println("Unexpected error " + e.toString());
+                runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
             }
         });
     }
