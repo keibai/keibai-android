@@ -45,5 +45,8 @@
     <string name="won">Won</string>
     <string name="minimum_short">Min</string>
     <string name="repeat_email">Repeat email</string>
+    <string name="submit">Submit</string>
     <string name="submitting">Submitting</string>
+    <string name="add_credit">Add credit</string>
+    <string name="credit_invalid">Invalid credit value</string>
 </resources>

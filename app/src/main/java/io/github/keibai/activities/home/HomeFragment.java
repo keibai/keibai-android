@@ -31,7 +31,7 @@ import okhttp3.Call;
  */
 public class HomeFragment extends MainFragmentAbstract {
 
-    private TextView textViewMoney;
+    private View view;
 
     public HomeFragment() {
         // Constructor required by Android.
@@ -51,10 +51,7 @@ public class HomeFragment extends MainFragmentAbstract {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        textViewMoney = view.findViewById(R.id.text_money);
-        fetchUser();
+        view = super.onCreateView(inflater, container, savedInstanceState);
 
         Button addButton = view.findViewById(R.id.button_home_add_credit);
         addButton.setOnClickListener(new AddCredit());
@@ -62,8 +59,17 @@ public class HomeFragment extends MainFragmentAbstract {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        fetchUser();
+    }
+
     public void renderUser(User user) {
-        textViewMoney.setText(String.format("%.2f", user.credit));
+        TextView credit = view.findViewById(R.id.text_home_credit);
+
+        credit.setText(String.format("%.2f", user.credit));
     }
 
     private class AddCredit implements View.OnClickListener {

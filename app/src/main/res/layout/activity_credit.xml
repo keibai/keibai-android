@@ -3,14 +3,7 @@
     xmlns:tools = "http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height = "match_parent"
     android:orientation="vertical"
-    tools:context = ".activities.signin.SignInActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Credit"
-        android:textSize="30sp"
-        android:layout_marginTop="20dp"/>
+    tools:context = ".activities.credit.CreditActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,24 +13,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/euro"
-            android:textSize="55sp" />
+            android:text="@string/euro" />
 
         <EditText
-            android:id="@+id/add_credit"
+            android:id="@+id/edit_credit_credit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:inputType="numberDecimal|numberSigned"
-            android:textSize="55sp"/>
+            android:inputType="numberDecimal|numberSigned" />
 
     </LinearLayout>
 
 
     <Button
-        android:id="@+id/button_submit"
+        android:id="@+id/button_credit_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit" />
+        android:text="@string/submit" />
 
 </LinearLayout>
