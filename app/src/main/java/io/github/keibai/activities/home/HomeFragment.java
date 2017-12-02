@@ -22,6 +22,7 @@ import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
 
+import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
 
 
@@ -88,9 +89,7 @@ public class HomeFragment extends MainFragmentAbstract {
 
         @Override
         public void onError(Error error) throws IOException {
-            // TODO: Change this
-            System.out.println("User by id error");
-            System.out.println(error);
+            getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
         }
 
         @Override
@@ -105,8 +104,7 @@ public class HomeFragment extends MainFragmentAbstract {
 
         @Override
         public void onFailure(Call call, IOException e) {
-            // TODO: Change this
-            System.out.println(e.toString());
+            getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
         }
     }
 }
