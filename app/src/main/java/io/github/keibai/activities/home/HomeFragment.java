@@ -85,11 +85,17 @@ public class HomeFragment extends MainFragmentAbstract {
 
             @Override
             public void onError(Error error) throws IOException {
+                if (getActivity() ==  null) {
+                    return;
+                }
                 getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
             }
 
             @Override
             public void onSuccess(final User user) throws IOException {
+                if (getActivity() ==  null) {
+                    return;
+                }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -100,6 +106,9 @@ public class HomeFragment extends MainFragmentAbstract {
 
             @Override
             public void onFailure(Call call, IOException e) {
+                if (getActivity() ==  null) {
+                    return;
+                }
                 getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
             }
         });
