@@ -1,9 +1,13 @@
 package io.github.keibai.activities.signup;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +36,11 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        Toolbar toolbar = findViewById(R.id.toolbar_sign_up);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         validation = new DefaultAwesomeValidation(getApplicationContext());
         validation.addValidation(this, R.id.edit_sign_up_name, "[a-zA-Z\\s]+", R.string.name_invalid);
         validation.addValidation(this, R.id.edit_sign_up_last_name, "[a-zA-Z\\s]+", R.string.last_name_invalid);
@@ -39,9 +48,23 @@ public class SignUpActivity extends AppCompatActivity {
         validation.addValidation(this, R.id.edit_sign_up_repeat_password, R.id.edit_sign_up_password, R.string.repeat_email_invalid);
         validation.addValidation(this, R.id.edit_sign_up_password, ".{4,}", R.string.password_invalid);
         validation.addValidation(this, R.id.edit_sign_up_repeat_password, R.id.edit_sign_up_password, R.string.password_invalid);
+    }
 
-        Button signUpButton = findViewById(R.id.button_sign_up_submit);
-        signUpButton.setOnClickListener(new SignUp());
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.create_event_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.item_create_event_save:
+                onSignUp();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public User userFromForm() {
@@ -59,33 +82,30 @@ public class SignUpActivity extends AppCompatActivity {
         return user;
     }
 
-    private class SignUp implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (!validation.validate()) {
-                return;
+    public void onSignUp() {
+        if (!validation.validate()) {
+            return;
+        }
+
+        User attemptUser = userFromForm();
+        new Http(getApplicationContext()).post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>(User.class) {
+            @Override
+            public void onError(Error error) throws IOException {
+                runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
             }
 
-            User attemptUser = userFromForm();
-            new Http(getApplicationContext()).post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>(User.class) {
-                @Override
-                public void onError(Error error) throws IOException {
-                    runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
-                }
+            @Override
+            public void onSuccess(User response) throws IOException {
+                SaveSharedPreference.setUserId(getApplicationContext(), response.id);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
 
-                @Override
-                public void onSuccess(User response) throws IOException {
-                    SaveSharedPreference.setUserId(getApplicationContext(), response.id);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
