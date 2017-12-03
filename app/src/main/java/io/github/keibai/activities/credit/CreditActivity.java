@@ -56,11 +56,7 @@ public class CreditActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), R.string.submitting, Toast.LENGTH_SHORT).show();
             User attemptUser = userFromForm();
-            new Http(getApplicationContext()).post(HttpUrl.userUpdateCreditUrl(), attemptUser, new HttpCallback<User>() {
-                @Override
-                public Class<User> model() {
-                    return User.class;
-                }
+            new Http(getApplicationContext()).post(HttpUrl.userUpdateCreditUrl(), attemptUser, new HttpCallback<User>(User.class) {
 
                 @Override
                 public void onError(Error error) throws IOException {

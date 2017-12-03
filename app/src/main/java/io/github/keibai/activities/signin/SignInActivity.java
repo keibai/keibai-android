@@ -40,11 +40,7 @@ public class SignInActivity extends AppCompatActivity {
                 attemptUser.email = etEmail.getText().toString();
                 attemptUser.password = etPassword.getText().toString();
 
-                new Http(getApplicationContext()).post(HttpUrl.getUserAuthenticateUrl(), attemptUser, new HttpCallback<User>() {
-                    @Override
-                    public Class<User> model() {
-                        return User.class;
-                    }
+                new Http(getApplicationContext()).post(HttpUrl.getUserAuthenticateUrl(), attemptUser, new HttpCallback<User>(User.class) {
 
                     @Override
                     public void onError(Error error) throws IOException {
