@@ -81,8 +81,7 @@ public class HomeFragment extends MainFragmentAbstract {
     }
 
     private void fetchUser() {
-        int userId = (int) SaveSharedPreference.getUserId(getContext());
-        new Http(getContext()).get(HttpUrl.getUserByIdUrl(userId), new HttpCallback<User>(User.class) {
+        new Http(getContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
             public void onError(Error error) throws IOException {
