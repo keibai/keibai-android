@@ -93,7 +93,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(Event response) throws IOException {
-                Intent intent = new Intent(getApplicationContext(), DetailEventActivity.class);
+                Intent intent = ActiveEventsActivity.getEventDetailIntent(getApplicationContext(), response);
                 startActivity(intent);
             }
 

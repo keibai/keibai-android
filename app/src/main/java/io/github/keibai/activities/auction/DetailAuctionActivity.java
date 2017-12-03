@@ -27,7 +27,7 @@ public class DetailAuctionActivity extends AppCompatActivity {
         // To change auction name
         Intent intent = getIntent();
 
-        String auctionName = intent.getStringExtra(DetailEventActivity.EXTRA_NAME);
+        String auctionName = intent.getStringExtra(DetailEventActivity.EXTRA_AUCTION_NAME);
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_auction);
         setSupportActionBar(toolbar);
