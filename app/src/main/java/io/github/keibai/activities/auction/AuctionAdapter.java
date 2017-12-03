@@ -1,6 +1,7 @@
 package io.github.keibai.activities.auction;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import io.github.keibai.R;
+import io.github.keibai.models.Auction;
 
 /**
  * Auction adapter class
@@ -33,16 +35,19 @@ public class AuctionAdapter extends ArrayAdapter {
                     parent, false);
         }
 
+        Resources res = parent.getResources();
+
         Auction currentAuction = (Auction) getItem(position);
-
+        System.out.println(currentAuction);
         TextView nameTextView = listItemView.findViewById(R.id.auction_name);
-        nameTextView.setText(currentAuction.getName());
+        nameTextView.setText(currentAuction.name);
 
-        TextView ownerTextView = listItemView.findViewById(R.id.auction_owner);
-        ownerTextView.setText(currentAuction.getOwner());
+        TextView startingPriceTextView = listItemView.findViewById(R.id.auction_starting_price);
+        String startingPrice = String.format(res.getString(R.string.starting_price_placeholder), currentAuction.startingPrice);
+        startingPriceTextView.setText(startingPrice);
 
         ImageView imageView = listItemView.findViewById(R.id.auction_img);
-        imageView.setImageResource(currentAuction.getAuctionImageId());
+        imageView.setImageResource(R.drawable.ic_dori);
 
         return listItemView;
     }

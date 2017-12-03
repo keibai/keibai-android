@@ -22,8 +22,24 @@
     </android.support.design.widget.AppBarLayout>
 
     <EditText
+        android:id="@+id/create_auction_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/item_name" />
+        android:hint="@string/auction_name" />
+
+    <EditText
+        android:id="@+id/create_auction_starting_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="@string/starting_price"/>
+
+    <EditText
+        android:id="@+id/create_auction_good_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/good_name"/>
+
+    <!-- TODO: Image and list of goods when auction type is combinatorial -->
 
 </LinearLayout>

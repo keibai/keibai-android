@@ -21,15 +21,15 @@
         android:layout_height="wrap_content"
         android:text="@string/test"
         android:textSize="20sp"
-        android:padding="10dp"/>
+        android:padding="8dp"/>
 
     <TextView
-        android:id="@+id/auction_owner"
+        android:id="@+id/auction_starting_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/test"
         android:textSize="15sp"
-        android:padding="15dp"/>
+        android:padding="10dp"/>
 
     </LinearLayout>
 

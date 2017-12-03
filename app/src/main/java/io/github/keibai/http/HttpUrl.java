@@ -18,6 +18,7 @@ public class HttpUrl {
 
     private static final String newAuction = "/auctions/new";
     private static final String auctionByIdUrl = "/auctions/search?id=";
+    private static final String auctionListByEventId = "/auctions/list?eventid=";
 
     private static final String newGood = "/goods/new";
     private static final String goodByIdUrl = "/goods/search?id=";
@@ -65,6 +66,10 @@ public class HttpUrl {
 
     public static String getAuctionByIdUrl(int auctionId) {
         return baseUrl + auctionByIdUrl + auctionId;
+    }
+
+    public static String getAuctionListByEventId(int eventId) {
+        return baseUrl + auctionListByEventId + eventId;
     }
 
     // Good
