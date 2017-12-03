@@ -1,7 +1,10 @@
 package io.github.keibai.activities.event;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.IOException;
@@ -40,6 +43,15 @@ public class ActiveEventsActivity extends AppCompatActivity {
                         EventAdapter eventsAdapter = new EventAdapter(getApplicationContext(), Arrays.asList(response));
                         ListView listView = findViewById(R.id.active_events_list);
                         listView.setAdapter(eventsAdapter);
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Event eventClicked = (Event) adapterView.getItemAtPosition(i);
+                                Intent intent = new Intent(getApplicationContext(), DetailEventActivity.class);
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
             }
