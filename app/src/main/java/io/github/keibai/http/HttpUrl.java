@@ -7,6 +7,7 @@ public class HttpUrl {
     private static final String baseUrl = BuildConfig.API_URL;
 
     private static final String newUser = "/users/new";
+    private static final String userWhoami = "/users/whoami";
     private static final String userByIdUrl = "/users/search?id=";
     private static final String userAuthenticateUrl = "/users/authenticate";
     private static final String userDeauthenticateUrl = "/users/deauthenticate";
@@ -30,6 +31,10 @@ public class HttpUrl {
     // User
     public static String newUserUrl() {
         return baseUrl + newUser;
+    }
+
+    public static String userWhoami() {
+        return baseUrl + userWhoami;
     }
 
     public static String getUserByIdUrl(int userId) {

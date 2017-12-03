@@ -30,7 +30,8 @@
         </activity>
         <activity
             android:name=".activities.signin.SignInActivity"
-            android:label="@string/sign_in">
+            android:label="@string/sign_in"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="com.keibai.signin.SignInActivity" />
 
@@ -41,7 +42,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.welcome.WelcomeActivity" />
         </activity>
-        <activity android:name=".activities.signup.SignUpActivity">
+        <activity
+            android:name=".activities.signup.SignUpActivity"
+            android:label="@string/sign_up"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="com.keibai.signup.SignUpActivity" />
 
