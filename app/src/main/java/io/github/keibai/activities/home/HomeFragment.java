@@ -19,7 +19,6 @@ import io.github.keibai.activities.credit.CreditActivity;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
-import io.github.keibai.models.Event;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
 
@@ -56,13 +55,6 @@ public class HomeFragment extends MainFragmentAbstract {
 
         Button addButton = view.findViewById(R.id.button_home_add_credit);
         addButton.setOnClickListener(new AddCredit());
-//        addButton.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                foo();
-//            }
-//        });
 
         return view;
     }
@@ -72,26 +64,6 @@ public class HomeFragment extends MainFragmentAbstract {
         super.onResume();
 
         fetchUser();
-    }
-
-    public void foo() {
-        new Http(getContext()).get(HttpUrl.getEventListUrl(), new HttpCallback<Event[]>(Event[].class) {
-
-            @Override
-            public void onError(Error error) throws IOException {
-            }
-
-            @Override
-            public void onSuccess(Event[] events) throws IOException {
-                for (Event event: events) {
-                    System.out.println(event);
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-            }
-        });
     }
 
     public void renderUser(User user) {
