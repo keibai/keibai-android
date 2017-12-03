@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,20 @@ public class DetailEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
 
+        Intent intent = getIntent();
+
         Toolbar toolbar = findViewById(R.id.toolbar_detail_event);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Event name");
+        actionBar.setTitle(intent.getStringExtra(ActiveEventsActivity.EXTRA_EVENT_NAME));
+
+        TextView textViewLocation = findViewById(R.id.event_detail_location);
+        textViewLocation.setText(intent.getStringExtra(ActiveEventsActivity.EXTRA_EVENT_LOCATION));
+
+        TextView textViewTimestamp = findViewById(R.id.event_detail_friendly_timestamp);
+        CharSequence friendlyTimestamp = intent.getCharSequenceExtra(ActiveEventsActivity.EXTRA_EVENT_CREATED_AT);
+        textViewTimestamp.setText(friendlyTimestamp);
 
         // TODO: Auctions will be related with the event, change in next sprint
         List<Auction> auctions = new ArrayList<>();
