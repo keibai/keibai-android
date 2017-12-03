@@ -1,6 +1,7 @@
 package io.github.keibai.activities.event;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class DetailEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_event);
 
         Intent intent = getIntent();
+        Resources res = getResources();
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_event);
         setSupportActionBar(toolbar);
@@ -42,8 +44,14 @@ public class DetailEventActivity extends AppCompatActivity {
         textViewLocation.setText(intent.getStringExtra(ActiveEventsActivity.EXTRA_EVENT_LOCATION));
 
         TextView textViewTimestamp = findViewById(R.id.event_detail_friendly_timestamp);
-        CharSequence friendlyTimestamp = intent.getCharSequenceExtra(ActiveEventsActivity.EXTRA_EVENT_CREATED_AT);
+        CharSequence timestamp = intent.getCharSequenceExtra(ActiveEventsActivity.EXTRA_EVENT_CREATED_AT);
+        String friendlyTimestamp = String.format(res.getString(R.string.created_at_placeholder), timestamp);
         textViewTimestamp.setText(friendlyTimestamp);
+
+        TextView textViewAuctionType = findViewById(R.id.event_detail_auction_type);
+        String auctionType = String.format(res.getString(R.string.auction_type_placeholder),
+                intent.getStringExtra(ActiveEventsActivity.EXTRA_EVENT_AUCTION_TYPE));
+        textViewAuctionType.setText(auctionType);
 
         // TODO: Auctions will be related with the event, change in next sprint
         List<Auction> auctions = new ArrayList<>();

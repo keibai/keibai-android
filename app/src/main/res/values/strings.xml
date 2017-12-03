@@ -49,4 +49,6 @@
     <string name="submitting">Submitting</string>
     <string name="add_credit">Add credit</string>
     <string name="credit_invalid">Invalid credit value</string>
+    <string name="auction_type_placeholder">%1$s auction</string>
+    <string name="created_at_placeholder">Created %1$s</string>
 </resources>
