@@ -1,16 +1,14 @@
 package io.github.keibai.activities.signin;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.basgeekball.awesomevalidation.AwesomeValidation;
-import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 
 import java.io.IOException;
 
@@ -35,13 +33,31 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        Toolbar toolbar = findViewById(R.id.toolbar_sign_in);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         validation = new DefaultAwesomeValidation(getApplicationContext());
         validation.addValidation(this, R.id.edit_sign_in_email, Patterns.EMAIL_ADDRESS, R.string.email_invalid);
         validation.addValidation(this, R.id.edit_sign_in_password, ".+", R.string.password_invalid);
+    }
 
-        // Sign In button
-        Button signInButton = findViewById(R.id.button_sign_in_submit);
-        signInButton.setOnClickListener(new SignIn());
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sign_in_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.item_sign_in:
+                onSignIn();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public User userFromForm() {
@@ -55,34 +71,30 @@ public class SignInActivity extends AppCompatActivity {
         return user;
     }
 
-    private class SignIn implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (!validation.validate()) {
-                return;
+    public void onSignIn() {
+        if (!validation.validate()) {
+            return;
+        }
+
+        User attemptUser = userFromForm();
+        new Http(getApplicationContext()).post(HttpUrl.getUserAuthenticateUrl(), attemptUser, new HttpCallback<User>(User.class) {
+            @Override
+            public void onError(Error error) throws IOException {
+                runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
             }
 
-            User attemptUser = userFromForm();
-            new Http(getApplicationContext()).post(HttpUrl.getUserAuthenticateUrl(), attemptUser, new HttpCallback<User>(User.class) {
+            @Override
+            public void onSuccess(User response) throws IOException {
+                SaveSharedPreference.setUserId(getApplicationContext(), response.id);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
 
-                @Override
-                public void onError(Error error) throws IOException {
-                    runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
-                }
-
-                @Override
-                public void onSuccess(User response) throws IOException {
-                    SaveSharedPreference.setUserId(getApplicationContext(), response.id);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
+            }
+        });
     }
 }

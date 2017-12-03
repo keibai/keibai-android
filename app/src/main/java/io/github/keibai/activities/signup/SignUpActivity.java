@@ -8,8 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -52,14 +50,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_event_menu, menu);
+        getMenuInflater().inflate(R.menu.sign_up_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.item_create_event_save:
+            case R.id.item_sign_up:
                 onSignUp();
                 return true;
         }
