@@ -7,7 +7,7 @@
     tools:context = ".activities.signin.SignInActivity">
 
     <EditText
-        android:id="@+id/sign_in_edit_text_email"
+        android:id="@+id/edit_sign_in_email"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         android:inputType="textEmailAddress"
@@ -15,7 +15,7 @@
         android:focusable = "true" />
 
     <EditText
-        android:id="@+id/sign_in_edit_text_password"
+        android:id="@+id/edit_sign_in_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"

@@ -13,7 +13,9 @@
     <string name="search">Search</string>
     <string name="welcome_to_keibai">Welcome to Keibai</string>
     <string name="email">Email</string>
+    <string name="email_invalid">Invalid email</string>
     <string name="password">Password</string>
+    <string name="password_invalid">Invalid password</string>
     <string name="cancel">Cancel</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="last_name">Last Name</string>
