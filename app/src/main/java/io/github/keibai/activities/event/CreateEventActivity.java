@@ -84,11 +84,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(), R.string.submitting, Toast.LENGTH_SHORT).show();
         Event attemptEvent = eventFromForm();
-        new Http(getApplicationContext()).post(HttpUrl.newEventUrl(), attemptEvent, new HttpCallback<Event>() {
-            @Override
-            public Class model() {
-                return Event.class;
-            }
+        new Http(getApplicationContext()).post(HttpUrl.newEventUrl(), attemptEvent, new HttpCallback<Event>(Event.class) {
 
             @Override
             public void onError(final Error error) throws IOException {

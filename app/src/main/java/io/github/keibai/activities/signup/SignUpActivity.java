@@ -66,15 +66,10 @@ public class SignUpActivity extends AppCompatActivity {
                 attemptUser.email = etEmail.getText().toString();
                 attemptUser.password = etPassword.getText().toString();
 
-                new Http(getApplicationContext()).post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>() {
+                new Http(getApplicationContext()).post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>(User.class) {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public Class<User> model() {
-                        return User.class;
                     }
 
                     @Override
