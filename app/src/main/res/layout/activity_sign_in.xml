@@ -1,13 +1,28 @@
 <?xml version = "1.0" encoding = "utf-8"?>
-<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
-    xmlns:tools = "http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height = "match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context = ".activities.signin.SignInActivity">
+    tools:context=".activities.signin.SignInActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/colorPrimaryContrast"
+            app:theme="@style/AppTheme.ActionBar" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <EditText
-        android:id="@+id/sign_in_edit_text_email"
+        android:id="@+id/edit_sign_in_email"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         android:inputType="textEmailAddress"
@@ -15,17 +30,11 @@
         android:focusable = "true" />
 
     <EditText
-        android:id="@+id/sign_in_edit_text_password"
+        android:id="@+id/edit_sign_in_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
         android:hint="@string/password" />
-
-    <Button
-        android:id="@+id/button_sign_in_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_in" />
 
 </LinearLayout>

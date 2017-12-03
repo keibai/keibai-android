@@ -13,11 +13,18 @@
     <string name="search">Search</string>
     <string name="welcome_to_keibai">Welcome to Keibai</string>
     <string name="email">Email</string>
+    <string name="email_invalid">Invalid email</string>
+    <string name="repeat_email">Repeat email</string>
+    <string name="repeat_email_invalid">Repeat email invalid</string>
     <string name="password">Password</string>
+    <string name="password_invalid">Invalid password</string>
     <string name="cancel">Cancel</string>
-    <string name="repeat_password">Repeat Password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="repeat_password_invalid">Repeat password invalid</string>
     <string name="last_name">Last Name</string>
+    <string name="last_name_invalid">Last name invalid</string>
     <string name="name">Name</string>
+    <string name="name_invalid">Name invalid</string>
     <string name="event_name">Event name</string>
     <string name="event_name_error">Invalid event name</string>
     <string name="event_type">Event type</string>
@@ -44,7 +51,6 @@
     <string name="transactions">Transactions</string>
     <string name="won">Won</string>
     <string name="minimum_short">Min</string>
-    <string name="repeat_email">Repeat email</string>
     <string name="submit">Submit</string>
     <string name="submitting">Submitting</string>
     <string name="add_credit">Add credit</string>
