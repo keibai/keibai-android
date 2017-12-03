@@ -60,25 +60,18 @@ public class ProfileFragment extends MainFragmentAbstract {
     }
 
     public void renderUser(User user) {
+        TextView name = view.findViewById(R.id.text_profile_name);
+        TextView lastName = view.findViewById(R.id.text_profile_last_name);
+        TextView email = view.findViewById(R.id.text_profile_email);
 
-        System.out.println(user.name);
-
-        TextView firstname = view.findViewById(R.id.profile_name);
-        firstname.setText(user.name);
-
-        TextView lastname = view.findViewById(R.id.profile_last_name);
-        lastname.setText(user.lastName);
-
-        TextView email = view.findViewById(R.id.profile_email);
+        name.setText(user.name);
+        lastName.setText(user.lastName);
         email.setText(user.email);
 
-        TextView credit = view.findViewById(R.id.profile_credit);
-        credit.setText(String.format("%.2f", user.credit));
     }
 
     private void fetchUser() {
-        int userId = (int) SaveSharedPreference.getUserId(getContext());
-        new Http(getContext()).get(HttpUrl.getUserByIdUrl(userId), new HttpCallback<User>(User.class) {
+        new Http(getContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
             public void onError(Error error) throws IOException {
