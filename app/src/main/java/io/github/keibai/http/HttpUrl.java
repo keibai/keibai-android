@@ -10,6 +10,7 @@ public class HttpUrl {
     private static final String userByIdUrl = "/users/search?id=";
     private static final String userAuthenticateUrl = "/users/authenticate";
     private static final String userDeauthenticateUrl = "/users/deauthenticate";
+    private static final String userUpdateCreditUrl = "/users/update/credit";
 
     private static final String newEvent = "/events/new";
     private static final String eventByIdUrl = "/events/search?id=";
@@ -22,6 +23,7 @@ public class HttpUrl {
 
     private static final String newBid = "/bids/new";
     private static final String bidByIdUrl = "/bids/search?id=";
+
 
     // User
     public static String newUserUrl() {
@@ -39,6 +41,8 @@ public class HttpUrl {
     public static String getUserDeauthenticateUrl() {
         return baseUrl + userDeauthenticateUrl;
     }
+
+    public static String userUpdateCreditUrl() { return baseUrl + userUpdateCreditUrl; }
 
     // Event
     public static String newEventUrl() {

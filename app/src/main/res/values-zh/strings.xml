@@ -45,5 +45,8 @@
     <string name="won">获胜</string>
     <string name="minimum_short">分钟</string>
     <string name="repeat_email">A??? :(</string>
+    <string name="submit">A???</string>
     <string name="submitting">A???</string>
+    <string name="add_credit">A???</string>
+    <string name="credit_invalid">A???</string>
 </resources>

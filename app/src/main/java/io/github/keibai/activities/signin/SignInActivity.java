@@ -48,12 +48,14 @@ public class SignInActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Error error) throws IOException {
-                        System.out.println("this is an error");
+                        // TODO: Change this
+                        System.out.println("Sign in error");
                         System.out.println(error);
                     }
 
                     @Override
                     public void onSuccess(User response) throws IOException {
+                        System.out.println(response.toString());
                         SaveSharedPreference.setUserId(getApplicationContext(), response.id);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -62,13 +64,11 @@ public class SignInActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                        // TODO: Change this
+                        System.out.println("Sign in exception");
+                        System.out.println(e.toString());
                     }
                 });
-//                SaveSharedPreference.setUserId(getApplicationContext(), 1);
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
             }
         });
     }

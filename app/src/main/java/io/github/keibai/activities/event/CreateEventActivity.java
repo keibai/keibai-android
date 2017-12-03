@@ -1,7 +1,6 @@
 package io.github.keibai.activities.event;
 
 import android.content.Intent;
-import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,7 +25,7 @@ import okhttp3.Call;
 
 public class CreateEventActivity extends AppCompatActivity {
 
-    DefaultAwesomeValidation validation;
+    private DefaultAwesomeValidation validation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

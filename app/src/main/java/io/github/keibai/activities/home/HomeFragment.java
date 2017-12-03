@@ -1,6 +1,7 @@
 package io.github.keibai.activities.home;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,16 +12,17 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
-import io.github.keibai.BuildConfig;
+import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
+import io.github.keibai.activities.credit.CreditActivity;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
-import io.github.keibai.models.Bid;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
-import io.github.keibai.models.meta.Msg;
+
+import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
 
 
@@ -29,6 +31,7 @@ import okhttp3.Call;
  */
 public class HomeFragment extends MainFragmentAbstract {
 
+    private View view;
 
     public HomeFragment() {
         // Constructor required by Android.
@@ -48,117 +51,66 @@ public class HomeFragment extends MainFragmentAbstract {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        TextView textViewMoney = view.findViewById(R.id.text_money);
-        textViewMoney.setText("100.00");
-
-        Button fooButton = view.findViewById(R.id.button_home_foo);
-        fooButton.setOnClickListener(new Foo());
+        view = super.onCreateView(inflater, container, savedInstanceState);
 
         Button addButton = view.findViewById(R.id.button_home_add_credit);
         addButton.setOnClickListener(new AddCredit());
 
-        Button barButton= view.findViewById(R.id.button_home_bar);
-        barButton.setOnClickListener(new Bar());
-
         return view;
     }
 
-    private class Foo implements View.OnClickListener {
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        @Override
-        public void onClick(View v) {
+        fetchUser();
+    }
 
-            User user = new User();
-            user.email = "zurfyx@gmail.com";
-            user.password = "1234";
+    public void renderUser(User user) {
+        TextView credit = view.findViewById(R.id.text_home_credit);
 
-            new Http(getContext()).post(HttpUrl.getUserAuthenticateUrl(), user, new HttpCallback<Msg>() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    System.out.println("HTTP Error");
-                    System.out.println(e.toString());
-                }
-
-                @Override
-                public Class<Msg> model() {
-                    return Msg.class;
-                }
-
-                @Override
-                public void onError(Error error) throws IOException {
-                    System.out.println("this is an error");
-                    System.out.println(error);
-                }
-
-                @Override
-                public void onSuccess(Msg response) throws IOException {
-                    System.out.println(response);
-                }
-            });
-        }
+        credit.setText(String.format("%.2f", user.credit));
     }
 
     private class AddCredit implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
-
-            new Http(getContext()).post(HttpUrl.newBidUrl(), new Bid(), new HttpCallback<Bid>() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    System.out.println("HTTP Error");
-                    System.out.println(e.toString());
-                }
-
-                @Override
-                public Class<Bid> model() {
-                    return Bid.class;
-                }
-
-                @Override
-                public void onError(Error error) throws IOException {
-                    System.out.println("this is an error");
-                    System.out.println(error);
-                }
-
-                @Override
-                public void onSuccess(Bid response) throws IOException {
-                    System.out.println(response);
-                }
-            });
+            Intent intent = new Intent(getContext(), CreditActivity.class);
+            startActivity(intent);
         }
     }
 
-    private class Bar implements View.OnClickListener {
+    private void fetchUser() {
+        int userId = (int) SaveSharedPreference.getUserId(getContext());
+        UserCreditHttpCallback callback = new UserCreditHttpCallback();
+        new Http(getContext()).get(HttpUrl.getUserByIdUrl(userId), callback);
+    }
+
+    private class UserCreditHttpCallback extends HttpCallback<User> {
 
         @Override
-        public void onClick(View v) {
+        public Class<User> model() {
+            return User.class;
+        }
 
-            new Http(getContext()).post(HttpUrl.getUserDeauthenticateUrl(), null, new HttpCallback<Msg>() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    System.out.println("HTTP Error");
-                    System.out.println(e.toString());
-                }
+        @Override
+        public void onError(Error error) throws IOException {
+            getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
+        }
 
+        @Override
+        public void onSuccess(final User response) throws IOException {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
-                public Class<Msg> model() {
-                    return Msg.class;
-                }
-
-                @Override
-                public void onError(Error error) throws IOException {
-                    System.out.println("this is an error");
-                    System.out.println(error);
-                }
-
-                @Override
-                public void onSuccess(Msg response) throws IOException {
-                    System.out.println(response);
+                public void run() {
+                    renderUser(response);
                 }
             });
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
         }
     }
 }

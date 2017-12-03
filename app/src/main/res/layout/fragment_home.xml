@@ -21,7 +21,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -31,10 +31,10 @@
                 android:layout_marginLeft="25dp" />
 
             <TextView
-                android:id="@+id/text_money"
+                android:id="@+id/text_home_credit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00.00"
+                android:text="0.00"
                 android:textSize="55sp" />
 
             <LinearLayout
@@ -43,22 +43,10 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/button_home_foo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="foo" />
-
-                <Button
                     android:id="@+id/button_home_add_credit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add" />
-
-                <Button
-                    android:id="@+id/button_home_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="bar" />
 
             </LinearLayout>
 
