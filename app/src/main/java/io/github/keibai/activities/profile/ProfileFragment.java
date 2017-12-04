@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
-
 import java.io.IOException;
 
 import io.github.keibai.activities.MainFragmentAbstract;
@@ -24,6 +21,7 @@ import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.runnable.RunnableToast;
+import io.github.keibai.utils.Gravatar;
 import okhttp3.Call;
 
 
@@ -65,6 +63,7 @@ public class ProfileFragment extends MainFragmentAbstract {
     }
 
     public void renderUser(User user) {
+        ImageView avatarView = view.findViewById(R.id.image_profile_avatar);
         TextView name = view.findViewById(R.id.text_profile_name);
         TextView lastName = view.findViewById(R.id.text_profile_last_name);
         TextView email = view.findViewById(R.id.text_profile_email);
@@ -73,14 +72,7 @@ public class ProfileFragment extends MainFragmentAbstract {
         lastName.setText(user.lastName);
         email.setText(user.email);
 
-        renderGravatar(user.email);
-    }
-
-    private void renderGravatar(String email) {
-        String md5Email = new String(Hex.encodeHex(DigestUtils.md5(email)));
-        String gravatarUrl = String.format("https://www.gravatar.com/avatar/%s?s=%d", md5Email, 256);
-
-        ImageView avatarView = view.findViewById(R.id.image_profile_avatar);
+        String gravatarUrl = new Gravatar(user.email).setSize(R.dimen.profile_gravatar_size).generateUrl();
         Picasso.with(getContext()).load(gravatarUrl).into(avatarView);
     }
 

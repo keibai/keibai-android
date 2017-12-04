@@ -25,8 +25,8 @@
 
             <ImageView
                 android:id="@+id/image_profile_avatar"
-                android:layout_width="256px"
-                android:layout_height="256px" />
+                android:layout_width="@dimen/profile_gravatar_size"
+                android:layout_height="@dimen/profile_gravatar_size" />
 
             <TextView
                 android:layout_width="wrap_content"
