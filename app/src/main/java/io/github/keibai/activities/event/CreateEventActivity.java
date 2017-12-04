@@ -66,13 +66,14 @@ public class CreateEventActivity extends AppCompatActivity {
         Spinner formAuctionType = findViewById(R.id.spinner_event_create_type);
         EditText formTime = findViewById(R.id.edit_event_create_time);
         EditText formLocation = findViewById(R.id.edit_event_create_location);
+        EditText formCategory = findViewById(R.id.edit_event_create_category);
 
         Event event = new Event();
         event.name = formName.getText().toString();
         event.auctionType = String.valueOf(formAuctionType.getSelectedItem());
         event.auctionTime = Integer.valueOf(formTime.getText().toString());
         event.location = formLocation.getText().toString();
-        event.category = formLocation.getText().toString();
+        event.category = formCategory.getText().toString();
 
         return event;
     }
