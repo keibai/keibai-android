@@ -6,11 +6,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 
-import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
 import io.github.keibai.http.Http;
@@ -68,6 +73,15 @@ public class ProfileFragment extends MainFragmentAbstract {
         lastName.setText(user.lastName);
         email.setText(user.email);
 
+        renderGravatar(user.email);
+    }
+
+    private void renderGravatar(String email) {
+        String md5Email = new String(Hex.encodeHex(DigestUtils.md5(email)));
+        String gravatarUrl = String.format("https://www.gravatar.com/avatar/%s?s=%d", md5Email, 256);
+
+        ImageView avatarView = view.findViewById(R.id.image_profile_avatar);
+        Picasso.with(getContext()).load(gravatarUrl).into(avatarView);
     }
 
     private void fetchUser() {
