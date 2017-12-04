@@ -6,11 +6,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
-import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
 import io.github.keibai.http.Http;
@@ -19,6 +21,7 @@ import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.runnable.RunnableToast;
+import io.github.keibai.utils.Gravatar;
 import okhttp3.Call;
 
 
@@ -60,6 +63,7 @@ public class ProfileFragment extends MainFragmentAbstract {
     }
 
     public void renderUser(User user) {
+        ImageView avatarView = view.findViewById(R.id.image_profile_avatar);
         TextView name = view.findViewById(R.id.text_profile_name);
         TextView lastName = view.findViewById(R.id.text_profile_last_name);
         TextView email = view.findViewById(R.id.text_profile_email);
@@ -68,6 +72,8 @@ public class ProfileFragment extends MainFragmentAbstract {
         lastName.setText(user.lastName);
         email.setText(user.email);
 
+        String gravatarUrl = new Gravatar(user.email).setSize(R.dimen.profile_gravatar_size).generateUrl();
+        Picasso.with(getContext()).load(gravatarUrl).into(avatarView);
     }
 
     private void fetchUser() {
