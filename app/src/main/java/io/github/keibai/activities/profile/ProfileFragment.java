@@ -13,7 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
-import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
@@ -28,7 +27,7 @@ import okhttp3.Call;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends MainFragmentAbstract {
+public class ProfileFragment extends ProfileMenuFragmentAbstract {
 
     private View view;
 
