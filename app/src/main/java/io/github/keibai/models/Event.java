@@ -6,6 +6,12 @@ public class Event extends ModelAbstract {
 
     public static final String[] AUCTION_TYPES = {"English", "Dutch", "Combinatorial"};
 
+    public static final String ACTIVE = "ACTIVE";
+    public static final String CLOSED = "CLOSED";
+    public static final String IN_PROGRESS = "IN_PROGRESS";
+    public static final String FINISHED = "FINISHED";
+    public static final String[] EVENT_STATUS = {ACTIVE, CLOSED, IN_PROGRESS, FINISHED};
+
     public String name;
     public int auctionTime;
     public String location;
@@ -14,11 +20,12 @@ public class Event extends ModelAbstract {
     public String auctionType;
     public String category;
     public int ownerId;
+    public String status;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Event)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Event event = (Event) o;
 
@@ -30,12 +37,14 @@ public class Event extends ModelAbstract {
         if (createdAt != null ? !createdAt.equals(event.createdAt) : event.createdAt != null) return false;
         if (updatedAt != null ? !updatedAt.equals(event.updatedAt) : event.updatedAt != null) return false;
         if (!auctionType.equals(event.auctionType)) return false;
-        return category != null ? category.equals(event.category) : event.category == null;
+        if (category != null ? !category.equals(event.category) : event.category != null) return false;
+        return status.equals(event.status);
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
+        result = 31 * result + id;
         result = 31 * result + auctionTime;
         result = 31 * result + location.hashCode();
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
@@ -43,6 +52,7 @@ public class Event extends ModelAbstract {
         result = 31 * result + auctionType.hashCode();
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + ownerId;
+        result = 31 * result + status.hashCode();
         return result;
     }
 
@@ -57,9 +67,8 @@ public class Event extends ModelAbstract {
                 ", auctionType='" + auctionType + '\'' +
                 ", category='" + category + '\'' +
                 ", ownerId=" + ownerId +
+                ", status='" + status + '\'' +
                 ", id=" + id +
                 '}';
     }
 }
-
-
