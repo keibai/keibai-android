@@ -76,7 +76,6 @@ public class CreateAuctionActivity extends AppCompatActivity {
         auction.ownerId = (int) SaveSharedPreference.getUserId(getApplicationContext());
         auction.status = Auction.OPENED;
         auction.winnerId = 0;
-        auction.isValid = false;
 
         new Http(getApplicationContext()).post(HttpUrl.newAuctionUrl(), auction, new HttpCallback<Auction>(Auction.class) {
             @Override

@@ -49,6 +49,9 @@ public class AuctionAdapter extends ArrayAdapter {
         ImageView imageView = listItemView.findViewById(R.id.auction_img);
         imageView.setImageResource(R.drawable.ic_dori);
 
+        TextView isValidStatusTextView = listItemView.findViewById(R.id.text_auction_is_valid_status);
+        isValidStatusTextView.setText(currentAuction.valid);
+
         return listItemView;
     }
 }

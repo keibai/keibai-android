@@ -1,6 +1,7 @@
 package io.github.keibai.models;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class Auction extends ModelAbstract {
 
@@ -10,10 +11,15 @@ public class Auction extends ModelAbstract {
 
     public static final String[] AUCTION_STATUSES = {OPENED, CLOSED, IN_PROGRESS};
 
+    public static final String PENDING = "PENDING";
+    public static final String ACCEPTED = "ACCEPTED";
+    public static final String DENIED = "DENIED";
+    public static final String[] AUCTION_VALID_STATES = {PENDING, ACCEPTED, DENIED};
+
     public String name;
     public double startingPrice;
     public Timestamp startTime;
-    public boolean isValid;
+    public String valid;
     public int eventId;
     public int ownerId;
     public String status;
@@ -28,7 +34,7 @@ public class Auction extends ModelAbstract {
 
         if (id != auction.id) return false;
         if (Double.compare(auction.startingPrice, startingPrice) != 0) return false;
-        if (isValid != auction.isValid) return false;
+        if (!Objects.equals(valid, auction.valid)) return false;
         if (eventId != auction.eventId) return false;
         if (ownerId != auction.ownerId) return false;
         if (winnerId != auction.winnerId) return false;
@@ -45,7 +51,7 @@ public class Auction extends ModelAbstract {
         temp = Double.doubleToLongBits(startingPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
-        result = 31 * result + (isValid ? 1 : 0);
+        result = 31 * result + valid.hashCode();
         result = 31 * result + eventId;
         result = 31 * result + ownerId;
         result = 31 * result + status.hashCode();
@@ -59,7 +65,7 @@ public class Auction extends ModelAbstract {
                 "name='" + name + '\'' +
                 ", startingPrice=" + startingPrice +
                 ", startTime=" + startTime +
-                ", isValid=" + isValid +
+                ", valid=" + valid +
                 ", eventId=" + eventId +
                 ", ownerId=" + ownerId +
                 ", status='" + status + '\'' +
