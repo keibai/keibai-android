@@ -4,15 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import io.github.keibai.R;
 import io.github.keibai.http.Http;
@@ -25,11 +24,7 @@ import okhttp3.Call;
 
 public class ActiveEventsActivity extends AppCompatActivity {
 
-    public static final String EXTRA_EVENT_NAME = "EXTRA_EVENT_NAME";
-    public static final String EXTRA_EVENT_LOCATION = "EXTRA_EVENT_LOCATION";
-    public static final String EXTRA_EVENT_CREATED_AT = "EXTRA_EVENT_CREATED_AT";
-    public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
-    public static final String EXTRA_EVENT_AUCTION_TYPE = "EXTRA_EVENT_AUCTION_TYPE";
+    public static final String EXTRA_JSON_EVENT = "EXTRA_JSON_EVENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +72,7 @@ public class ActiveEventsActivity extends AppCompatActivity {
 
     public static Intent getEventDetailIntent(Context context, Event event) {
         Intent intent = new Intent(context, DetailEventActivity.class);
-        intent.putExtra(EXTRA_EVENT_NAME, event.name);
-        intent.putExtra(EXTRA_EVENT_LOCATION, event.location);
-        intent.putExtra(EXTRA_EVENT_AUCTION_TYPE, event.auctionType);
-
-        long now = System.currentTimeMillis();
-        CharSequence friendlyTimestamp = DateUtils.getRelativeTimeSpanString(event.createdAt.getTime(), now, DateUtils.DAY_IN_MILLIS);
-        intent.putExtra(EXTRA_EVENT_CREATED_AT, friendlyTimestamp);
-        intent.putExtra(EXTRA_EVENT_ID, event.id);
+        intent.putExtra(EXTRA_JSON_EVENT, new Gson().toJson(event));
         return intent;
     }
 

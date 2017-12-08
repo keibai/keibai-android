@@ -6,21 +6,29 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import io.github.keibai.R;
+import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.auction.AuctionAdapter;
 import io.github.keibai.activities.auction.CreateAuctionActivity;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Auction;
+import io.github.keibai.models.Event;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
@@ -30,7 +38,14 @@ public class DetailEventActivity extends AppCompatActivity {
     public static final String EXTRA_AUCTION_NAME = "EXTRA_AUCTION_NAME";
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
 
-    private int eventId;
+    private TextView textViewLocation;
+    private TextView textViewTimestamp;
+    private TextView textViewAuctionType;
+    private TextView textEventStatus;
+    private Button closeButton;
+    private Button startButton;
+
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,32 +55,107 @@ public class DetailEventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final Resources res = getResources();
 
-        this.eventId = intent.getIntExtra(ActiveEventsActivity.EXTRA_EVENT_ID, 0);
+        this.event = new Gson().fromJson(
+                intent.getStringExtra(ActiveEventsActivity.EXTRA_JSON_EVENT), Event.class);
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_event);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(intent.getStringExtra(ActiveEventsActivity.EXTRA_EVENT_NAME));
+        actionBar.setTitle(this.event.name);
 
-        TextView textViewLocation = findViewById(R.id.event_detail_location);
-        textViewLocation.setText(intent.getStringExtra(ActiveEventsActivity.EXTRA_EVENT_LOCATION));
+        // Retrieve text views
+        textViewLocation = findViewById(R.id.event_detail_location);
+        textViewTimestamp = findViewById(R.id.event_detail_friendly_timestamp);
+        textViewAuctionType = findViewById(R.id.event_detail_auction_type);
+        textEventStatus = findViewById(R.id.text_event_status);
+        closeButton = findViewById(R.id.event_detail_close_button);
+        startButton = findViewById(R.id.event_detail_start_button);
 
-        TextView textViewTimestamp = findViewById(R.id.event_detail_friendly_timestamp);
-        CharSequence timestamp = intent.getCharSequenceExtra(ActiveEventsActivity.EXTRA_EVENT_CREATED_AT);
-        String friendlyTimestamp = String.format(res.getString(R.string.created_at_placeholder), timestamp);
+        // Set UI data
+        textViewLocation.setText(this.event.location);
+
+        long now = System.currentTimeMillis();
+        CharSequence friendlyTimestamp = DateUtils.getRelativeTimeSpanString(
+                event.createdAt.getTime(), now, DateUtils.DAY_IN_MILLIS);
         textViewTimestamp.setText(friendlyTimestamp);
 
-        TextView textViewAuctionType = findViewById(R.id.event_detail_auction_type);
-        String auctionType = String.format(res.getString(R.string.auction_type_placeholder),
-                intent.getStringExtra(ActiveEventsActivity.EXTRA_EVENT_AUCTION_TYPE));
+        String auctionType = String.format(res.getString(R.string.auction_type_placeholder), event.auctionType);
         textViewAuctionType.setText(auctionType);
+
+        textEventStatus.setText(event.status);
+
+        if (SaveSharedPreference.getUserId(getApplicationContext()) == event.ownerId &&
+                event.status.equals(Event.ACTIVE)) {
+            // Show close button
+            closeButton.setVisibility(View.VISIBLE);
+        }
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Event updatedEvent = new Event();
+                updatedEvent.id = event.id;
+                updatedEvent.status = Event.CLOSED;
+                updateEventStatus(updatedEvent);
+            }
+        });
+
+        if (SaveSharedPreference.getUserId(getApplicationContext()) == event.ownerId &&
+                event.status.equals(Event.CLOSED)) {
+            // Show start button
+            startButton.setVisibility(View.VISIBLE);
+        }
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Event updatedEvent = new Event();
+                updatedEvent.id = event.id;
+                updatedEvent.status = Event.IN_PROGRESS;
+                updateEventStatus(updatedEvent);
+            }
+        });
 
         fetchAuctionList();
     }
 
+    private void updateEventStatus(Event event) {
+        new Http(getApplicationContext()).post(HttpUrl.eventUpdateStatusUrl(), event,
+                new HttpCallback<Event>(Event.class) {
+            @Override
+            public void onError(Error error) throws IOException {
+                runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
+            }
+
+            @Override
+            public void onSuccess(final Event response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textEventStatus.setText(response.status);
+
+                        if (response.status.equals(Event.CLOSED)) {
+                            closeButton.setVisibility(View.GONE);
+                            startButton.setVisibility(View.VISIBLE);
+                        }
+
+                        if (response.status.equals(Event.IN_PROGRESS)) {
+                            startButton.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
+            }
+        });
+    }
+
     private void fetchAuctionList() {
-        new Http(getApplicationContext()).get(HttpUrl.getAuctionListByEventId(this.eventId),
+        new Http(getApplicationContext()).get(HttpUrl.getAuctionListByEventId(this.event.id),
                 new HttpCallback<Auction[]>(Auction[].class) {
                     @Override
                     public void onError(Error error) throws IOException {
@@ -108,6 +198,13 @@ public class DetailEventActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_event_menu, menu);
+
+        if (!event.status.equals(Event.ACTIVE)) {
+            // Hide create auction button, event is no longer active
+            MenuItem item = menu.findItem(R.id.item_detail_event_create_auction);
+            item.setVisible(false);
+        }
+
         return true;
     }
 
@@ -116,7 +213,7 @@ public class DetailEventActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.item_detail_event_create_auction: {
                 Intent intent = new Intent(getApplicationContext(), CreateAuctionActivity.class);
-                intent.putExtra(EXTRA_EVENT_ID, this.eventId);
+                intent.putExtra(EXTRA_EVENT_ID, this.event.id);
                 startActivity(intent);
                 return true;
             }
