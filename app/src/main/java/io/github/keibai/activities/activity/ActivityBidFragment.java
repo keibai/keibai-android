@@ -7,15 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.io.IOException;
+import java.util.Arrays;
 
 import io.github.keibai.R;
-import io.github.keibai.activities.auction.Transaction;
-import io.github.keibai.activities.auction.TransactionAdapter;
+import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.activities.bid.BidAdapter;
+import io.github.keibai.activities.bid.BidLog;
+import io.github.keibai.http.Http;
+import io.github.keibai.http.HttpCallback;
+import io.github.keibai.http.HttpUrl;
+import io.github.keibai.models.meta.Error;
+import io.github.keibai.runnable.RunnableToast;
+import okhttp3.Call;
 
-public class ActivityBidFragment extends Fragment{
+public class ActivityBidFragment extends Fragment {
+
+    private View view;
 
     public ActivityBidFragment() {
         // Required empty public constructor
@@ -24,31 +32,50 @@ public class ActivityBidFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_activities_bid, container, false);
-        ListView listView = view.findViewById(R.id.activities_bid_list);
-
-        // TODO: Change in next sprint, transactions will be retrieved using the API
-        List<Transaction> transactions = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-
-        transactions.add(new Transaction("You", 10.31f,
-                calendar, "Auction1", Transaction.BID_MESSAGE));
-        transactions.add(new Transaction("You", 10.45f,
-                calendar, "Auction 2", Transaction.BID_MESSAGE));
-        transactions.add(new Transaction("You", 12.31f,
-                calendar, "Auction 3", Transaction.BID_MESSAGE));
-        transactions.add(new Transaction("You", 15.31f,
-                calendar, "Auction 4", Transaction.BID_MESSAGE));
-
-        TransactionAdapter transactionAdapter = new TransactionAdapter(getContext(), transactions);
-        listView.setAdapter(transactionAdapter);
+        view = inflater.inflate(R.layout.fragment_activities_bid, container, false);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        fetchBidList();
+    }
+
+    private void fetchBidList() {
+        new Http(getContext()).get(HttpUrl.getBidListByOwnerId((int) SaveSharedPreference.getUserId(getContext())),
+                new HttpCallback<BidLog[]>(BidLog[].class) {
+                    @Override
+                    public void onError(Error error) throws IOException {
+                        getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
+                    }
+
+                    @Override
+                    public void onSuccess(final BidLog[] response) throws IOException {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                BidAdapter bidAdapter = new BidAdapter(getContext(), Arrays.asList(response));
+                                ListView listView = view.findViewById(R.id.activities_bid_list);
+                                listView.setAdapter(bidAdapter);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+                    }
+                });
     }
 
 }
