@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,8 +18,10 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import io.github.keibai.R;
+import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.auction.AuctionAdapter;
 import io.github.keibai.activities.auction.CreateAuctionActivity;
 import io.github.keibai.http.Http;
@@ -33,6 +37,12 @@ public class DetailEventActivity extends AppCompatActivity {
 
     public static final String EXTRA_AUCTION_NAME = "EXTRA_AUCTION_NAME";
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
+
+    private TextView textViewLocation;
+    private TextView textViewTimestamp;
+    private TextView textViewAuctionType;
+    private TextView textEventStatus;
+    private Button closeButton;
 
     private Event event;
 
@@ -52,21 +62,67 @@ public class DetailEventActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(this.event.name);
 
-        TextView textViewLocation = findViewById(R.id.event_detail_location);
-        textViewLocation.setText(this.event.location);
+        textViewLocation = findViewById(R.id.event_detail_location);
+        textViewTimestamp = findViewById(R.id.event_detail_friendly_timestamp);
+        textViewAuctionType = findViewById(R.id.event_detail_auction_type);
+        textEventStatus = findViewById(R.id.text_event_status);
 
-        TextView textViewTimestamp = findViewById(R.id.event_detail_friendly_timestamp);
+        textViewLocation.setText(this.event.location);
 
         long now = System.currentTimeMillis();
         CharSequence friendlyTimestamp = DateUtils.getRelativeTimeSpanString(
                 event.createdAt.getTime(), now, DateUtils.DAY_IN_MILLIS);
         textViewTimestamp.setText(friendlyTimestamp);
 
-        TextView textViewAuctionType = findViewById(R.id.event_detail_auction_type);
         String auctionType = String.format(res.getString(R.string.auction_type_placeholder), event.auctionType);
         textViewAuctionType.setText(auctionType);
 
+        textEventStatus.setText(event.status);
+
+        closeButton = findViewById(R.id.event_detail_close_button);
+        if (SaveSharedPreference.getUserId(getApplicationContext()) == event.ownerId &&
+                !event.status.equals(Event.CLOSED)) {
+            // Show management button
+            closeButton.setVisibility(View.VISIBLE);
+        }
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Event updatedEvent = new Event();
+                updatedEvent.id = event.id;
+                updatedEvent.status = Event.CLOSED;
+                updateEventStatus(updatedEvent);
+            }
+        });
+
         fetchAuctionList();
+    }
+
+    private void updateEventStatus(Event event) {
+        new Http(getApplicationContext()).post(HttpUrl.eventUpdateStatusUrl(), event,
+                new HttpCallback<Event>(Event.class) {
+            @Override
+            public void onError(Error error) throws IOException {
+                runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
+            }
+
+            @Override
+            public void onSuccess(final Event response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textEventStatus.setText(response.status);
+                        closeButton.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
+            }
+        });
     }
 
     private void fetchAuctionList() {
