@@ -169,6 +169,13 @@ public class DetailEventActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_event_menu, menu);
+
+        if (!event.status.equals(Event.ACTIVE)) {
+            // Hide create auction button, event is no longer active
+            MenuItem item = menu.findItem(R.id.item_detail_event_create_auction);
+            item.setVisible(false);
+        }
+
         return true;
     }
 
