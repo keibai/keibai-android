@@ -26,7 +26,7 @@ public class HttpUrl {
 
     private static final String newBid = "/bids/new";
     private static final String bidByIdUrl = "/bids/search?id=";
-
+    private static final String bidListByOwnerId = "/bids/list?ownerid=";
 
     // User
     public static String newUserUrl() {
@@ -93,5 +93,9 @@ public class HttpUrl {
 
     public static String getBidByIdUrl(int bidId) {
         return baseUrl + bidByIdUrl + bidId;
+    }
+
+    public static String getBidListByOwnerId(int ownerId) {
+        return baseUrl + bidListByOwnerId + ownerId;
     }
 }
