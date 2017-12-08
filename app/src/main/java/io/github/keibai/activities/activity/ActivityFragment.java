@@ -53,7 +53,7 @@ public class ActivityFragment extends MainFragmentAbstract {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ActivityFragment.ViewPagerAdapter adapter = new ActivityFragment.ViewPagerAdapter(getFragmentManager());
+        ActivityFragment.ViewPagerAdapter adapter = new ActivityFragment.ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new ActivityBidFragment(), getString(R.string.bid));
         adapter.addFragment(new ActivityWonFragment(), getString(R.string.won));
         viewPager.setAdapter(adapter);

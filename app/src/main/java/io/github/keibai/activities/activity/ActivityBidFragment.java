@@ -8,29 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
 
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
-import io.github.keibai.activities.auction.AuctionAdapter;
-import io.github.keibai.activities.auction.Transaction;
-import io.github.keibai.activities.auction.TransactionAdapter;
 import io.github.keibai.activities.bid.BidAdapter;
 import io.github.keibai.activities.bid.BidLog;
-import io.github.keibai.activities.event.EventAdapter;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
-import io.github.keibai.models.Auction;
-import io.github.keibai.models.Bid;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
 
-public class ActivityBidFragment extends Fragment{
+public class ActivityBidFragment extends Fragment {
 
     private View view;
 
