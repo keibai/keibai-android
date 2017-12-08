@@ -71,8 +71,10 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
         lastName.setText(user.lastName);
         email.setText(user.email);
 
-        String gravatarUrl = new Gravatar(user.email).setSize(R.dimen.profile_gravatar_size).generateUrl();
-        Picasso.with(getContext()).load(gravatarUrl).into(avatarView);
+        if (user.email != null) {
+            String gravatarUrl = new Gravatar(user.email).setSize(R.dimen.profile_gravatar_size).generateUrl();
+            Picasso.with(getContext()).load(gravatarUrl).into(avatarView);
+        }
     }
 
     private void fetchUser() {
