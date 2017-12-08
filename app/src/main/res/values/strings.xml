@@ -66,4 +66,5 @@
     <string name="good_name_invalid">Invalid good name</string>
     <string name="starting_price_placeholder">Starting at %1$.2f€</string>
     <string name="close">Close</string>
+    <string name="start">Start</string>
 </resources>

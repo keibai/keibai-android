@@ -43,6 +43,7 @@ public class DetailEventActivity extends AppCompatActivity {
     private TextView textViewAuctionType;
     private TextView textEventStatus;
     private Button closeButton;
+    private Button startButton;
 
     private Event event;
 
@@ -54,7 +55,8 @@ public class DetailEventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final Resources res = getResources();
 
-        this.event = new Gson().fromJson(intent.getStringExtra(ActiveEventsActivity.EXTRA_JSON_EVENT), Event.class);
+        this.event = new Gson().fromJson(
+                intent.getStringExtra(ActiveEventsActivity.EXTRA_JSON_EVENT), Event.class);
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_event);
         setSupportActionBar(toolbar);
@@ -62,11 +64,15 @@ public class DetailEventActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(this.event.name);
 
+        // Retrieve text views
         textViewLocation = findViewById(R.id.event_detail_location);
         textViewTimestamp = findViewById(R.id.event_detail_friendly_timestamp);
         textViewAuctionType = findViewById(R.id.event_detail_auction_type);
         textEventStatus = findViewById(R.id.text_event_status);
+        closeButton = findViewById(R.id.event_detail_close_button);
+        startButton = findViewById(R.id.event_detail_start_button);
 
+        // Set UI data
         textViewLocation.setText(this.event.location);
 
         long now = System.currentTimeMillis();
@@ -79,10 +85,9 @@ public class DetailEventActivity extends AppCompatActivity {
 
         textEventStatus.setText(event.status);
 
-        closeButton = findViewById(R.id.event_detail_close_button);
         if (SaveSharedPreference.getUserId(getApplicationContext()) == event.ownerId &&
-                !event.status.equals(Event.CLOSED)) {
-            // Show management button
+                event.status.equals(Event.ACTIVE)) {
+            // Show close button
             closeButton.setVisibility(View.VISIBLE);
         }
 
@@ -92,6 +97,22 @@ public class DetailEventActivity extends AppCompatActivity {
                 Event updatedEvent = new Event();
                 updatedEvent.id = event.id;
                 updatedEvent.status = Event.CLOSED;
+                updateEventStatus(updatedEvent);
+            }
+        });
+
+        if (SaveSharedPreference.getUserId(getApplicationContext()) == event.ownerId &&
+                event.status.equals(Event.CLOSED)) {
+            // Show start button
+            startButton.setVisibility(View.VISIBLE);
+        }
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Event updatedEvent = new Event();
+                updatedEvent.id = event.id;
+                updatedEvent.status = Event.IN_PROGRESS;
                 updateEventStatus(updatedEvent);
             }
         });
@@ -113,7 +134,15 @@ public class DetailEventActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         textEventStatus.setText(response.status);
-                        closeButton.setVisibility(View.GONE);
+
+                        if (response.status.equals(Event.CLOSED)) {
+                            closeButton.setVisibility(View.GONE);
+                            startButton.setVisibility(View.VISIBLE);
+                        }
+
+                        if (response.status.equals(Event.IN_PROGRESS)) {
+                            startButton.setVisibility(View.GONE);
+                        }
                     }
                 });
             }
