@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="150" src="assets/logo-round.png" alt="Keibai">
+</p>
+
 # Keibai Android
 
 [![Build Status](https://travis-ci.org/keibai/keibai-android.svg?branch=master)](https://travis-ci.org/keibai/keibai-android)
