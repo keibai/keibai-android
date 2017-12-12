@@ -73,4 +73,12 @@ public class Auction extends ModelAbstract {
                 ", id=" + id +
                 '}';
     }
+
+    public String getWinnerMessage() {
+        return "You have won in Auction " + this.id;
+    }
+
+    public String getStartTime() {
+        return this.startTime.toString();
+    }
 }
