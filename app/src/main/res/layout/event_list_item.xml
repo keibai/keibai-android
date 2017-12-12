@@ -13,17 +13,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/event_id"
-            android:textStyle="italic"
             android:textSize="20sp"
             android:paddingRight="10dp"
-            android:paddingLeft="10dp" />
+            android:paddingLeft="10dp"
+            android:textColor="#333"/>
 
         <TextView
             android:id="@+id/text_event_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/test"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#333"/>
 
         <View
             android:layout_width="0dp"
@@ -34,7 +35,8 @@
             android:id="@+id/text_event_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="STATUS" />
+            android:text="STATUS"
+            android:textColor="#333"/>
 
     </LinearLayout>
 
@@ -47,17 +49,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/event_name"
-            android:textStyle="italic"
             android:textSize="20sp"
             android:paddingRight="10dp"
-            android:paddingLeft="10dp"/>
+            android:paddingLeft="10dp"
+            android:textColor="#333"/>
 
         <TextView
             android:id="@+id/text_event_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/test"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#333"/>
     </LinearLayout>
 
     <LinearLayout
@@ -69,17 +72,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/location"
-            android:textStyle="italic"
             android:textSize="20sp"
             android:paddingRight="10dp"
-            android:paddingLeft="10dp"/>
+            android:paddingLeft="10dp"
+            android:textColor="#333"/>
 
         <TextView
             android:id="@+id/text_event_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/test"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#333"/>
     </LinearLayout>
 
 </LinearLayout>
