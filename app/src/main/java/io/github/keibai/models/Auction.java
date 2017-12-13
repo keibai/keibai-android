@@ -74,9 +74,4 @@ public class Auction extends ModelAbstract {
                 '}';
     }
 
-    public Timestamp getStartTime() {
-        return this.startTime;
-    }
-
-
 }

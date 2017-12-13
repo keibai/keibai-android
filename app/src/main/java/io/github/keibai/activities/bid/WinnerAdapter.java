@@ -37,7 +37,7 @@ public class WinnerAdapter extends ArrayAdapter {
         Auction currentTransaction = (Auction) getItem(position);
 
         TextView dateTextView = listItemView.findViewById(R.id.transaction_date);
-        dateTextView.setText(currentTransaction.getStartTime().toString());
+        dateTextView.setText(currentTransaction.startTime.toString());
 
         /*
         TextView timeTextView = listItemView.findViewById(R.id.transaction_time);
