@@ -1,6 +1,7 @@
 package io.github.keibai.activities.bid;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,16 +37,20 @@ public class WinnerAdapter extends ArrayAdapter {
         Auction currentTransaction = (Auction) getItem(position);
 
         TextView dateTextView = listItemView.findViewById(R.id.transaction_date);
-        dateTextView.setText(currentTransaction.getStartTime());
+        dateTextView.setText(currentTransaction.getStartTime().toString());
 
         /*
         TextView timeTextView = listItemView.findViewById(R.id.transaction_time);
         timeTextView.setText(currentTransaction.getTime());
         */
+        Resources res = parent.getResources();
+
+        String winningmessage = String.format(res.getString(R.string.winmessage), currentTransaction.id);
 
         TextView text = listItemView.findViewById(R.id.transaction_text);
-        text.setText(currentTransaction.getWinnerMessage());
+        text.setText(winningmessage);
 
         return listItemView;
     }
+
 }
