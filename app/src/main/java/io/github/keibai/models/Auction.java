@@ -73,4 +73,5 @@ public class Auction extends ModelAbstract {
                 ", id=" + id +
                 '}';
     }
+
 }
