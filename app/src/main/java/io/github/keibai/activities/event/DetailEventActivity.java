@@ -111,6 +111,7 @@ public class DetailEventActivity extends AppCompatActivity {
 
     private void renderAuctionList(Auction[] auctions) {
         AuctionAdapter auctionAdapter = new AuctionAdapter(this, Arrays.asList(auctions));
+        auctionAdapter.setEvent(event);
         ListView listView = findViewById(R.id.event_auctions_list);
         listView.setAdapter(auctionAdapter);
 
