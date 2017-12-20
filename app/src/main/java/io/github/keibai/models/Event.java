@@ -4,13 +4,12 @@ import java.sql.Timestamp;
 
 public class Event extends ModelAbstract {
 
-    public static final String[] AUCTION_TYPES = {"English", "Dutch", "Combinatorial"};
+    public static final String[] AUCTION_TYPES = {"English", "Combinatorial"};
 
-    public static final String ACTIVE = "ACTIVE";
-    public static final String CLOSED = "CLOSED";
+    public static final String OPENED = "OPENED";
     public static final String IN_PROGRESS = "IN_PROGRESS";
     public static final String FINISHED = "FINISHED";
-    public static final String[] EVENT_STATUS = {ACTIVE, CLOSED, IN_PROGRESS, FINISHED};
+    public static final String[] EVENT_STATUS = {OPENED, IN_PROGRESS, FINISHED};
 
     public String name;
     public int auctionTime;

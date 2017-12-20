@@ -42,8 +42,6 @@ public class DetailEventActivity extends AppCompatActivity {
     private TextView textViewTimestamp;
     private TextView textViewAuctionType;
     private TextView textEventStatus;
-    private Button closeButton;
-    private Button startButton;
 
     private Event event;
 
@@ -69,8 +67,6 @@ public class DetailEventActivity extends AppCompatActivity {
         textViewTimestamp = findViewById(R.id.event_detail_friendly_timestamp);
         textViewAuctionType = findViewById(R.id.event_detail_auction_type);
         textEventStatus = findViewById(R.id.text_event_status);
-        closeButton = findViewById(R.id.event_detail_close_button);
-        startButton = findViewById(R.id.event_detail_start_button);
 
         // Set UI data
         textViewLocation.setText(this.event.location);
@@ -85,73 +81,7 @@ public class DetailEventActivity extends AppCompatActivity {
 
         textEventStatus.setText(event.status);
 
-        if (SaveSharedPreference.getUserId(getApplicationContext()) == event.ownerId &&
-                event.status.equals(Event.ACTIVE)) {
-            // Show close button
-            closeButton.setVisibility(View.VISIBLE);
-        }
-
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Event updatedEvent = new Event();
-                updatedEvent.id = event.id;
-                updatedEvent.status = Event.CLOSED;
-                updateEventStatus(updatedEvent);
-            }
-        });
-
-        if (SaveSharedPreference.getUserId(getApplicationContext()) == event.ownerId &&
-                event.status.equals(Event.CLOSED)) {
-            // Show start button
-            startButton.setVisibility(View.VISIBLE);
-        }
-
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Event updatedEvent = new Event();
-                updatedEvent.id = event.id;
-                updatedEvent.status = Event.IN_PROGRESS;
-                updateEventStatus(updatedEvent);
-            }
-        });
-
         fetchAuctionList();
-    }
-
-    private void updateEventStatus(Event event) {
-        new Http(getApplicationContext()).post(HttpUrl.eventUpdateStatusUrl(), event,
-                new HttpCallback<Event>(Event.class) {
-            @Override
-            public void onError(Error error) throws IOException {
-                runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
-            }
-
-            @Override
-            public void onSuccess(final Event response) throws IOException {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        textEventStatus.setText(response.status);
-
-                        if (response.status.equals(Event.CLOSED)) {
-                            closeButton.setVisibility(View.GONE);
-                            startButton.setVisibility(View.VISIBLE);
-                        }
-
-                        if (response.status.equals(Event.IN_PROGRESS)) {
-                            startButton.setVisibility(View.GONE);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
-            }
-        });
     }
 
     private void fetchAuctionList() {
@@ -199,7 +129,7 @@ public class DetailEventActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_event_menu, menu);
 
-        if (!event.status.equals(Event.ACTIVE)) {
+        if (!event.status.equals(Event.OPENED)) {
             // Hide create auction button, event is no longer active
             MenuItem item = menu.findItem(R.id.item_detail_event_create_auction);
             item.setVisible(false);

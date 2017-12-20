@@ -74,7 +74,7 @@ public class CreateEventActivity extends AppCompatActivity {
         event.auctionTime = Integer.valueOf(formTime.getText().toString());
         event.location = formLocation.getText().toString();
         event.category = formCategory.getText().toString();
-        event.status = Event.ACTIVE;
+        event.status = Event.OPENED;
 
         return event;
     }
