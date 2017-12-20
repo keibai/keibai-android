@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/transaction_datetime_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="0px"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/transaction_date"
@@ -28,16 +28,13 @@
             android:textSize="15sp"
             android:layout_below="@id/transaction_date"
             android:layout_centerHorizontal="true" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/transaction_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:text="Paquito bidded €34.56"
         android:textSize="15sp"
-        android:layout_toRightOf="@id/transaction_datetime_layout"
-        android:layout_toEndOf="@id/transaction_datetime_layout"
-        android:padding="14dp"/>
+        android:layout_weight="3"/>
 
-</RelativeLayout>
+</LinearLayout>
