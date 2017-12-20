@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import io.github.keibai.R;
 import io.github.keibai.models.Auction;
@@ -51,6 +53,14 @@ public class AuctionAdapter extends ArrayAdapter {
 
         TextView isValidStatusTextView = listItemView.findViewById(R.id.text_auction_is_valid_status);
         isValidStatusTextView.setText(currentAuction.status);
+
+        Button acceptButton = listItemView.findViewById(R.id.button_accept_auction);
+        Button denyButton = listItemView.findViewById(R.id.button_deny_auction);
+
+        if (!Objects.equals(currentAuction.status, Auction.PENDING)) {
+            acceptButton.setVisibility(View.INVISIBLE);
+            denyButton.setVisibility(View.INVISIBLE);
+        }
 
         return listItemView;
     }
