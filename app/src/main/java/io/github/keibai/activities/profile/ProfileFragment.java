@@ -3,6 +3,7 @@ package io.github.keibai.activities.profile;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,10 +67,17 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
         TextView name = view.findViewById(R.id.text_profile_name);
         TextView lastName = view.findViewById(R.id.text_profile_last_name);
         TextView email = view.findViewById(R.id.text_profile_email);
+        TextView creation_date = view.findViewById(R.id.creation_date);
 
         name.setText(user.name);
         lastName.setText(user.lastName);
         email.setText(user.email);
+
+
+        long now = System.currentTimeMillis();
+        CharSequence friendlyTimestamp = DateUtils.getRelativeTimeSpanString(
+                user.createdAt.getTime(), now, DateUtils.DAY_IN_MILLIS);
+        creation_date.setText(friendlyTimestamp);
 
         if (user.email != null) {
             String gravatarUrl = new Gravatar(user.email).setSize(R.dimen.profile_gravatar_size).generateUrl();

@@ -26,37 +26,64 @@
             <ImageView
                 android:id="@+id/image_profile_avatar"
                 android:layout_width="@dimen/profile_gravatar_size"
-                android:layout_height="@dimen/profile_gravatar_size" />
+                android:layout_height="@dimen/profile_gravatar_size"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/name"/>
+                android:text="@string/name"
+                android:textStyle="bold"
+                android:layout_marginTop="18dp"
+                android:textSize="30sp"/>
 
             <TextView
                 android:id="@+id/text_profile_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="30sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/last_name" />
+                android:text="@string/last_name"
+                android:textStyle="bold"
+                android:layout_marginTop="18dp"
+                android:textSize="30sp"/>
 
             <TextView
                 android:id="@+id/text_profile_last_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="30sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/email" />
+                android:text="@string/email"
+                android:textStyle="bold"
+                android:layout_marginTop="18dp"
+                android:textSize="30sp"/>
 
             <TextView
                 android:id="@+id/text_profile_email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="30sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/usercreated"
+                android:textStyle="bold"
+                android:layout_marginTop="18dp"
+                android:textSize="30sp"/>
+
+            <TextView
+                android:id="@+id/creation_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"/>
 
         </LinearLayout>
 

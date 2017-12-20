@@ -68,5 +68,6 @@
     <string name="close">Close</string>
     <string name="start">Start</string>
     <string name="winmessage">You have won in Auction %1$d</string>
+    <string name="usercreated">Creation Date</string>
     }"
 </resources>
