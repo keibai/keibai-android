@@ -3,6 +3,7 @@ package io.github.keibai.activities.bid;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,10 @@ public class WinnerAdapter extends ArrayAdapter {
         Auction currentTransaction = (Auction) getItem(position);
 
         TextView dateTextView = listItemView.findViewById(R.id.transaction_date);
-        dateTextView.setText(currentTransaction.startTime.toString());
+        long now = System.currentTimeMillis();
+        CharSequence friendlyTimestamp = DateUtils.getRelativeTimeSpanString(
+                currentTransaction.startTime.getTime(), now, DateUtils.DAY_IN_MILLIS);
+        dateTextView.setText(friendlyTimestamp);
 
         /*
         TextView timeTextView = listItemView.findViewById(R.id.transaction_time);
@@ -45,7 +49,7 @@ public class WinnerAdapter extends ArrayAdapter {
         */
         Resources res = parent.getResources();
 
-        String winningmessage = String.format(res.getString(R.string.winmessage), currentTransaction.id);
+        String winningmessage = String.format(res.getString(R.string.winmessage), currentTransaction.name);
 
         TextView text = listItemView.findViewById(R.id.transaction_text);
         text.setText(winningmessage);

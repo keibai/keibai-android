@@ -32,12 +32,16 @@ public class BidLog {
         return amount;
     }
 
+    public int getAuctionId() {
+        return auctionId;
+    }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public String getBidMessage() {
+    public String getBidMessage(String auctionName) {
         //TODO: ownerId + " bidded " + amount + " in " + auctionId;
-        return "You bidded " + amount + " in Auction " + auctionId;
+        return "You bidded " + amount + " in Auction " + auctionName;
     }
 }
