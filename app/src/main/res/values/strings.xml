@@ -70,4 +70,9 @@
     <string name="auction_delete_placeholder">Do you want to delete %1$s?</string>
     <string name="winmessage">You have won in Auction %1$s</string>
     <string name="usercreated">Creation Date</string>
+    <string name="participate_activity">Participated Activity:</string>
+    <string name="personal_statistics">Personal Statistics:</string>
+    <string name="auction_won">Auction Won:\t</string>
+    <string name="made_bid">Total Bids Made:\t</string>
+    <string name="max_bid">Highest Bid Made:\t</string>
 </resources>
