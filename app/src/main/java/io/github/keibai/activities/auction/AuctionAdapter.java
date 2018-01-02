@@ -1,6 +1,8 @@
 package io.github.keibai.activities.auction;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -10,9 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +28,7 @@ import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Event;
 import io.github.keibai.models.meta.Error;
+import io.github.keibai.models.meta.Msg;
 import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
 
@@ -36,10 +40,12 @@ public class AuctionAdapter extends ArrayAdapter {
 
     private Context context;
     private Event event;
+    private List<Auction> auctionList;
 
     public AuctionAdapter(@NonNull Context context, @NonNull List<Auction> objects) {
         super(context, 0, objects);
         this.context = context;
+        this.auctionList = objects;
     }
 
     public void setEvent(Event event) {
@@ -48,7 +54,7 @@ public class AuctionAdapter extends ArrayAdapter {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         View listItemView = convertView;
 
         if (listItemView == null) {
@@ -56,7 +62,20 @@ public class AuctionAdapter extends ArrayAdapter {
                     parent, false);
         }
 
-        Resources res = parent.getResources();
+        Collections.sort(this.auctionList, new Comparator<Auction>() {
+            @Override
+            public int compare(Auction auction1, Auction auction2) {
+                if (auction1.status.equals(auction2.status)) {
+                    return 0;
+                }
+                if (auction1.status.equals(Auction.PENDING)) {
+                    return -1;
+                }
+                return 1;
+            }
+        });
+
+        final Resources res = parent.getResources();
 
         final Auction currentAuction = (Auction) getItem(position);
         System.out.println(currentAuction);
@@ -103,9 +122,8 @@ public class AuctionAdapter extends ArrayAdapter {
                         ((DetailEventActivity) context).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                acceptButton.setVisibility(View.INVISIBLE);
-                                denyButton.setVisibility(View.INVISIBLE);
-                                isValidStatusTextView.setText(response.status);
+                                auctionList.get(position).status = response.status;
+                                notifyDataSetChanged();
                             }
                         });
                     }
@@ -118,6 +136,50 @@ public class AuctionAdapter extends ArrayAdapter {
             }
         });
 
+        denyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder adb=new AlertDialog.Builder(context);
+                adb.setTitle(res.getString(R.string.auction_delete));
+                adb.setMessage(String.format(res.getString(R.string.auction_delete_placeholder),
+                        currentAuction.name));
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteAuction(currentAuction, position);
+                    }
+                });
+                adb.show();
+            }
+        });
+
         return listItemView;
+    }
+
+    private void deleteAuction(Auction currentAuction, final int position) {
+        new Http(getContext()).post(HttpUrl.auctionDeleteUrl(currentAuction.id), new Auction(),
+                new HttpCallback<Msg>(Msg.class) {
+                    @Override
+                    public void onError(Error error) throws IOException {
+                        ((DetailEventActivity) context).runOnUiThread(new RunnableToast(getContext(), error.toString()));
+                    }
+
+                    @Override
+                    public void onSuccess(final Msg response) throws IOException {
+                        ((DetailEventActivity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                auctionList.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ((DetailEventActivity) context).runOnUiThread(new RunnableToast(getContext(), e.toString()));
+                    }
+                });
     }
 }

@@ -127,7 +127,6 @@ public class CreateAuctionActivity extends AppCompatActivity {
             return;
         }
 
-        Toast.makeText(getApplicationContext(), R.string.submitting, Toast.LENGTH_SHORT).show();
         Good attemptGood = goodFromForm();
         attemptGood.auctionId = auctionId;
         attemptGood.image= "1234";
@@ -142,7 +141,7 @@ public class CreateAuctionActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Auction successfully created", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Auction successfully created", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });

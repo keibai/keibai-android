@@ -31,7 +31,6 @@
     <string name="event_type">Event type</string>
     <string-array name="event_types_array">
         <item>English</item>
-        <item>Dutch</item>
         <item>Combinatorial</item>
     </string-array>
     <string name="location">Location</string>
@@ -68,5 +67,6 @@
     <string name="close">Close</string>
     <string name="start">Start</string>
     <string name="winmessage">You have won in Auction %1$d</string>
-    }"
+    <string name="auction_delete">Auction deletion</string>
+    <string name="auction_delete_placeholder">Do you want to delete %1$s?</string>
 </resources>

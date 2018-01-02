@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -84,7 +85,7 @@ public class DetailEventActivity extends AppCompatActivity {
         fetchAuctionList();
     }
 
-    private void fetchAuctionList() {
+    void fetchAuctionList() {
         new Http(getApplicationContext()).get(HttpUrl.getAuctionListByEventId(this.event.id),
                 new HttpCallback<Auction[]>(Auction[].class) {
                     @Override
@@ -110,7 +111,7 @@ public class DetailEventActivity extends AppCompatActivity {
     }
 
     private void renderAuctionList(Auction[] auctions) {
-        AuctionAdapter auctionAdapter = new AuctionAdapter(this, Arrays.asList(auctions));
+        AuctionAdapter auctionAdapter = new AuctionAdapter(this, new ArrayList<>(Arrays.asList(auctions)));
         auctionAdapter.setEvent(event);
         ListView listView = findViewById(R.id.event_auctions_list);
         listView.setAdapter(auctionAdapter);
