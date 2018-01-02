@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.auction.DetailAuctionBidFragment">
+    tools:context=".activities.auction.DetailAuctionBidFragment"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <TextView
         android:id="@+id/fragment_detail_auction_bid_item_name"
