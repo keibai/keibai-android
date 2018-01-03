@@ -33,7 +33,7 @@ public class DetailAuctionBidFragment extends Fragment{
 
     private Auction auction;
     private Event event;
-    private float credit;
+    private User user;
 
     private Button startAuctionButton;
     private TextView remainingAuctionTimeText;
@@ -58,7 +58,7 @@ public class DetailAuctionBidFragment extends Fragment{
 
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
-        retrieveUserCredit();
+        retrieveUser();
 
         startAuctionButton = view.findViewById(R.id.start_auction_button);
         remainingAuctionTimeText = view.findViewById(R.id.remaining_auction_time_text);
@@ -70,14 +70,17 @@ public class DetailAuctionBidFragment extends Fragment{
         setHighestBidText((float) auction.startingPrice);
         setRemainingAuctionTimeText(event.auctionTime);
 
-//        seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
-//        seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
-//        editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+        seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
 
         return view;
     }
 
-    private void retrieveUserCredit() {
+    public void renderSeekBarBid() {
+        seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
+        editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+    }
+
+    private void retrieveUser() {
         new Http(getContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
@@ -89,8 +92,14 @@ public class DetailAuctionBidFragment extends Fragment{
             }
 
             @Override
-            public void onSuccess(final User user) throws IOException {
-                System.out.println(user);
+            public void onSuccess(final User fetchedUser) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        user = fetchedUser;
+                        renderSeekBarBid();
+                    }
+                });
             }
 
             @Override
