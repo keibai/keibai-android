@@ -51,6 +51,13 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+
+        http.close();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
     }
@@ -117,12 +124,5 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
                 getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
             }
         });
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
     }
 }

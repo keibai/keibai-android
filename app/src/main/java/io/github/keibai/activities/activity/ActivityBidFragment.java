@@ -39,6 +39,13 @@ public class ActivityBidFragment extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+
+        http.close();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -61,36 +68,29 @@ public class ActivityBidFragment extends Fragment {
     }
 
     private void fetchBidList() {
-        http.get(HttpUrl.getBidListByOwnerId((int) SaveSharedPreference.getUserId(getContext())),
-                new HttpCallback<BidLog[]>(BidLog[].class) {
-                    @Override
-                    public void onError(Error error) throws IOException {
-                        getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
-                    }
+        int userId = (int) SaveSharedPreference.getUserId(getContext());
+        http.get(HttpUrl.getBidListByOwnerId(userId), new HttpCallback<BidLog[]>(BidLog[].class) {
+            @Override
+            public void onError(Error error) throws IOException {
+                getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
+            }
 
+            @Override
+            public void onSuccess(final BidLog[] response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
-                    public void onSuccess(final BidLog[] response) throws IOException {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                BidAdapter bidAdapter = new BidAdapter(getContext(), Arrays.asList(response));
-                                ListView listView = view.findViewById(R.id.activities_bid_list);
-                                listView.setAdapter(bidAdapter);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+                    public void run() {
+                        BidAdapter bidAdapter = new BidAdapter(getContext(), Arrays.asList(response));
+                        ListView listView = view.findViewById(R.id.activities_bid_list);
+                        listView.setAdapter(bidAdapter);
                     }
                 });
-    }
+            }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+            }
+        });
     }
 }

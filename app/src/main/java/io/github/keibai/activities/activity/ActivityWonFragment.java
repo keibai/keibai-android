@@ -44,6 +44,13 @@ public class ActivityWonFragment extends Fragment{
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+
+        http.close();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -88,12 +95,5 @@ public class ActivityWonFragment extends Fragment{
                         getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
                     }
                 });
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
     }
 }
