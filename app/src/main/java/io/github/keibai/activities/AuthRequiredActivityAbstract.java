@@ -2,6 +2,8 @@ package io.github.keibai.activities;
 
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -21,6 +23,24 @@ public abstract class AuthRequiredActivityAbstract extends AppCompatActivity {
     /**
      * Check if signed or move the user to the welcome page.
      */
+    private Http http;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -33,7 +53,7 @@ public abstract class AuthRequiredActivityAbstract extends AppCompatActivity {
 
         // Check signed in status remotely.
         // @See remoteCheck()
-        new Http(getApplicationContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
+        http.get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
             @Override
             public void onError(Error error) throws IOException {
                 runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
