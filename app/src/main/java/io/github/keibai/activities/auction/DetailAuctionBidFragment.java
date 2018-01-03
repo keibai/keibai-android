@@ -41,6 +41,16 @@ public class DetailAuctionBidFragment extends Fragment{
     private EditText editTextBid;
     private SeekBar seekBarBid;
     private Button bidButton;
+    private AuctionValues auctionValues = new AuctionValues();
+
+    private class AuctionValues {
+        int boo;
+
+        public void next() {
+            boo += 1;
+            System.out.println("boo is " + boo);
+        }
+    }
 
     public DetailAuctionBidFragment() {
         // Required empty public constructor
@@ -91,6 +101,7 @@ public class DetailAuctionBidFragment extends Fragment{
             @Override
             public void onSuccess(final User user) throws IOException {
                 System.out.println(user);
+                auctionValues.next();
             }
 
             @Override
