@@ -54,7 +54,9 @@ public class DetailEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
 
-        http = new Http(getApplicationContext());
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         final Resources res = getResources();
 
@@ -86,6 +88,13 @@ public class DetailEventActivity extends AppCompatActivity {
         textEventStatus.setText(event.status);
 
         fetchAuctionList();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 
     void fetchAuctionList() {
@@ -161,12 +170,5 @@ public class DetailEventActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         fetchAuctionList();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        http.close();
     }
 }

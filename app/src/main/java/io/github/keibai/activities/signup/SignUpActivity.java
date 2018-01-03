@@ -35,7 +35,9 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        http = new Http(getApplicationContext());
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_sign_up);
         setSupportActionBar(toolbar);
@@ -49,6 +51,13 @@ public class SignUpActivity extends AppCompatActivity {
         validation.addValidation(this, R.id.edit_sign_up_repeat_password, R.id.edit_sign_up_password, R.string.repeat_email_invalid);
         validation.addValidation(this, R.id.edit_sign_up_password, ".{4,}", R.string.password_invalid);
         validation.addValidation(this, R.id.edit_sign_up_repeat_password, R.id.edit_sign_up_password, R.string.password_invalid);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 
     @Override
@@ -108,12 +117,5 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        http.close();
     }
 }

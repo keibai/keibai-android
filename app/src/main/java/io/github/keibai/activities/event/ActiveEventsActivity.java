@@ -32,7 +32,9 @@ public class ActiveEventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_events);
 
-        http = new Http(getApplicationContext());
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         http.get(HttpUrl.getEventListUrl(), new HttpCallback<Event[]>(Event[].class) {
 
@@ -62,6 +64,13 @@ public class ActiveEventsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
+    }
+
     private class EventOnClick implements AdapterView.OnItemClickListener {
 
         @Override
@@ -77,12 +86,5 @@ public class ActiveEventsActivity extends AppCompatActivity {
         Intent intent = new Intent(context, DetailEventActivity.class);
         SaveSharedPreference.setCurrentEvent(context, event);
         return intent;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        http.close();
     }
 }

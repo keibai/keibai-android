@@ -31,13 +31,22 @@ public class CreditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
 
-        http = new Http(getApplicationContext());
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         Button submit = findViewById(R.id.button_credit_submit);
         submit.setOnClickListener(new AddCredit());
 
         validation = new DefaultAwesomeValidation(getApplicationContext());
         validation.addValidation(this, R.id.edit_credit_credit, "[0-9]+", R.string.credit_invalid);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 
     public User userFromForm() {
@@ -79,13 +88,6 @@ public class CreditActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        http.close();
     }
 }
 

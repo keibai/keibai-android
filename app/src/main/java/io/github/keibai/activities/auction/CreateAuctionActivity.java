@@ -36,7 +36,9 @@ public class CreateAuctionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_auction);
 
-        http = new Http(getApplicationContext());
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_create_event);
         setSupportActionBar(toolbar);
@@ -50,6 +52,13 @@ public class CreateAuctionActivity extends AppCompatActivity {
         validation.addValidation(this, R.id.edit_create_auction_name, "[a-zA-Z0-9\\s]+", R.string.auction_name_invalid);
         validation.addValidation(this, R.id.edit_create_auction_starting_price, "[0-9\\.]+", R.string.starting_price_invalid);
         validation.addValidation(this, R.id.edit_create_auction_good_name, "[a-zA-Z0-9\\s]+", R.string.good_name_invalid);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 
     @Override
@@ -155,12 +164,5 @@ public class CreateAuctionActivity extends AppCompatActivity {
                 runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        http.close();
     }
 }

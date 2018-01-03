@@ -28,7 +28,17 @@ public abstract class AuthRequiredActivityAbstract extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        http = new Http(getApplicationContext());
+
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 
     @Override
@@ -77,12 +87,5 @@ public abstract class AuthRequiredActivityAbstract extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        http.close();
     }
 }

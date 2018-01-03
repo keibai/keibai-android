@@ -33,7 +33,9 @@ public class CreateEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        http = new Http(getApplicationContext());
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_create_event);
         setSupportActionBar(toolbar);
@@ -45,6 +47,13 @@ public class CreateEventActivity extends AppCompatActivity {
         validation.addValidation(this, R.id.edit_event_create_time, "[0-9]+", R.string.event_time_seconds_error);
         validation.addValidation(this, R.id.edit_event_create_category, "[a-zA-Z0-9\\s]+", R.string.category_error);
         validation.addValidation(this, R.id.edit_event_create_location, "[a-zA-Z0-9\\s]+", R.string.location_error);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 
     @Override
@@ -107,12 +116,5 @@ public class CreateEventActivity extends AppCompatActivity {
                 runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        http.close();
     }
 }
