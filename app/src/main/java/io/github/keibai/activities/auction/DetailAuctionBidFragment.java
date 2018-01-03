@@ -11,17 +11,29 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.http.Http;
+import io.github.keibai.http.HttpCallback;
+import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Event;
+import io.github.keibai.models.User;
+import io.github.keibai.models.meta.Error;
+import io.github.keibai.runnable.RunnableToast;
+import okhttp3.Call;
 
 public class DetailAuctionBidFragment extends Fragment{
+
+    private static final float STEP = 0.5f;
 
     private View view;
 
     private Auction auction;
     private Event event;
+    private float credit;
 
     private Button startAuctionButton;
     private TextView remainingAuctionTimeText;
@@ -46,6 +58,7 @@ public class DetailAuctionBidFragment extends Fragment{
 
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
+        retrieveUserCredit();
 
         startAuctionButton = view.findViewById(R.id.start_auction_button);
         remainingAuctionTimeText = view.findViewById(R.id.remaining_auction_time_text);
@@ -57,7 +70,37 @@ public class DetailAuctionBidFragment extends Fragment{
         setHighestBidText((float) auction.startingPrice);
         setRemainingAuctionTimeText(event.auctionTime);
 
+//        seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
+//        seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
+//        editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+
         return view;
+    }
+
+    private void retrieveUserCredit() {
+        new Http(getContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
+
+            @Override
+            public void onError(Error error) throws IOException {
+                if (getActivity() ==  null) {
+                    return;
+                }
+                getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
+            }
+
+            @Override
+            public void onSuccess(final User user) throws IOException {
+                System.out.println(user);
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (getActivity() ==  null) {
+                    return;
+                }
+                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+            }
+        });
     }
 
     private void setHighestBidText(float bid) {
@@ -72,4 +115,20 @@ public class DetailAuctionBidFragment extends Fragment{
         remainingAuctionTimeText.setText(text);
     }
 
+    SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+            editTextBid.setText(String.format("%.2f", auction.startingPrice + (progress * STEP)));
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
 }

@@ -60,6 +60,7 @@
             android:id="@+id/edit_text_bid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
             android:text="00.01"/>
 
         <SeekBar
