@@ -54,7 +54,7 @@ public class HomeFragment extends MainFragmentAbstract {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        http = new Http(context);
+        http = new Http(getContext());
     }
 
     @Override
