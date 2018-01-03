@@ -1,5 +1,6 @@
 package io.github.keibai.activities.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,9 +25,17 @@ import okhttp3.Call;
 public class ActivityBidFragment extends Fragment {
 
     private View view;
+    private Http http;
 
     public ActivityBidFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        http = new Http(getContext());
     }
 
     @Override
@@ -52,7 +61,7 @@ public class ActivityBidFragment extends Fragment {
     }
 
     private void fetchBidList() {
-        new Http(getContext()).get(HttpUrl.getBidListByOwnerId((int) SaveSharedPreference.getUserId(getContext())),
+        http.get(HttpUrl.getBidListByOwnerId((int) SaveSharedPreference.getUserId(getContext())),
                 new HttpCallback<BidLog[]>(BidLog[].class) {
                     @Override
                     public void onError(Error error) throws IOException {
@@ -78,4 +87,10 @@ public class ActivityBidFragment extends Fragment {
                 });
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        http.close();
+    }
 }
