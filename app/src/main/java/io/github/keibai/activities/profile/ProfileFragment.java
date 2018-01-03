@@ -1,6 +1,7 @@
 package io.github.keibai.activities.profile;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -31,6 +32,7 @@ import okhttp3.Call;
 public class ProfileFragment extends ProfileMenuFragmentAbstract {
 
     private View view;
+    private Http http;
 
     public ProfileFragment() {
         super(R.layout.fragment_profile);
@@ -39,6 +41,13 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        http = new Http(getContext());
     }
 
     @Override
@@ -86,21 +95,15 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
     }
 
     private void fetchUser() {
-        new Http(getContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
+        http.get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
             public void onError(Error error) throws IOException {
-                if (getActivity() ==  null) {
-                    return;
-                }
                 getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
             }
 
             @Override
             public void onSuccess(final User user) throws IOException {
-                if (getActivity() ==  null) {
-                    return;
-                }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -111,12 +114,15 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                if (getActivity() ==  null) {
-                    return;
-                }
                 getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
             }
         });
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        http.close();
+    }
 }
