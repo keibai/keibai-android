@@ -1,5 +1,6 @@
 package io.github.keibai.activities.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,9 +30,17 @@ import okhttp3.Call;
 public class ActivityWonFragment extends Fragment{
 
     private View view;
+    private Http http;
 
     public ActivityWonFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        http = new Http(getContext());
     }
 
     @Override
@@ -55,7 +64,7 @@ public class ActivityWonFragment extends Fragment{
     }
 
     private void fetchAuctionList() {
-        new Http(getContext()).get(HttpUrl.getAuctionListByWinnerId((int) SaveSharedPreference.getUserId(getContext())),
+        http.get(HttpUrl.getAuctionListByWinnerId((int) SaveSharedPreference.getUserId(getContext())),
                 new HttpCallback<Auction[]>(Auction[].class) {
                     @Override
                     public void onError(Error error) throws IOException {
@@ -81,4 +90,10 @@ public class ActivityWonFragment extends Fragment{
                 });
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        http.close();
+    }
 }
