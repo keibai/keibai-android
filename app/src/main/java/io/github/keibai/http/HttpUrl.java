@@ -32,6 +32,8 @@ public class HttpUrl {
     private static final String bidByIdUrl = "/bids/search?id=";
     private static final String bidListByOwnerId = "/bids/list?ownerid=";
 
+    private static final String webSocket = "/ws";
+
     // User
     public static String newUserUrl() {
         return baseUrl + newUser;
@@ -117,5 +119,10 @@ public class HttpUrl {
 
     public static String getAuctionListByWinnerId(int winnerId) {
         return baseUrl + auctionListByWinnerId + winnerId;
+    }
+
+    // WebSocket
+    public static String webSocket() {
+        return baseUrl + webSocket;
     }
 }
