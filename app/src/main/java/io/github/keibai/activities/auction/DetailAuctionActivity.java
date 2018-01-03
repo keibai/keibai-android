@@ -1,6 +1,5 @@
 package io.github.keibai.activities.auction;
 
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,25 +14,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.keibai.R;
-import io.github.keibai.activities.event.DetailEventActivity;
+import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.models.Auction;
 
 public class DetailAuctionActivity extends AppCompatActivity {
+
+    private Auction auction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_auction);
 
-        // To change auction name
-        Intent intent = getIntent();
-
-        String auctionName = intent.getStringExtra(DetailEventActivity.EXTRA_AUCTION_NAME);
+        auction = SaveSharedPreference.getCurrentAuction(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_auction);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(auctionName + " Auction");
+        actionBar.setTitle(auction.name);
 
         ViewPager viewPager = findViewById(R.id.viewpager_detail_auction);
         setupViewPager(viewPager);

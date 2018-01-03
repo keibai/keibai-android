@@ -63,13 +63,15 @@
     <string name="starting_price_invalid">Invalid starting price</string>
     <string name="good_name">Good name</string>
     <string name="good_name_invalid">Invalid good name</string>
-    <string name="starting_price_placeholder">Starting at %1$.2f€</string>
+    <string name="starting_price_placeholder">Starting at €%1$.2f</string>
     <string name="close">Close</string>
     <string name="start">Start</string>
     <string name="auction_delete">Auction deletion</string>
     <string name="auction_delete_placeholder">Do you want to delete %1$s?</string>
     <string name="winmessage">You have won in Auction %1$s</string>
     <string name="usercreated">Creation Date</string>
+    <string name="money_placeholder">€%1$.2f</string>
+    <string name="remaining_auction_time_placeholder">%1$d seconds left</string>
     <string name="participate_activity">Participated Activity:</string>
     <string name="personal_statistics">Personal Statistics:</string>
     <string name="auction_won">Auction Won:\t</string>

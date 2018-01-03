@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import io.github.keibai.R;
+import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
@@ -72,7 +73,7 @@ public class ActiveEventsActivity extends AppCompatActivity {
 
     public static Intent getEventDetailIntent(Context context, Event event) {
         Intent intent = new Intent(context, DetailEventActivity.class);
-        intent.putExtra(EXTRA_JSON_EVENT, new Gson().toJson(event));
+        SaveSharedPreference.setCurrentEvent(context, event);
         return intent;
     }
 

@@ -78,7 +78,6 @@ public class AuctionAdapter extends ArrayAdapter {
         final Resources res = parent.getResources();
 
         final Auction currentAuction = (Auction) getItem(position);
-        System.out.println(currentAuction);
         TextView nameTextView = listItemView.findViewById(R.id.auction_name);
         nameTextView.setText(currentAuction.name);
 

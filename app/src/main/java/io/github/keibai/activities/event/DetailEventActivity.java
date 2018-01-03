@@ -10,6 +10,7 @@ import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.auction.AuctionAdapter;
 import io.github.keibai.activities.auction.CreateAuctionActivity;
+import io.github.keibai.activities.auction.DetailAuctionActivity;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
@@ -36,7 +38,6 @@ import okhttp3.Call;
 
 public class DetailEventActivity extends AppCompatActivity {
 
-    public static final String EXTRA_AUCTION_NAME = "EXTRA_AUCTION_NAME";
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
 
     private TextView textViewLocation;
@@ -51,11 +52,9 @@ public class DetailEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
 
-        Intent intent = getIntent();
         final Resources res = getResources();
 
-        this.event = new Gson().fromJson(
-                intent.getStringExtra(ActiveEventsActivity.EXTRA_JSON_EVENT), Event.class);
+        this.event = SaveSharedPreference.getCurrentEvent(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_event);
         setSupportActionBar(toolbar);
@@ -116,15 +115,15 @@ public class DetailEventActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.event_auctions_list);
         listView.setAdapter(auctionAdapter);
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Auction auctionClicked = (Auction) parent.getItemAtPosition(position);
-//                Intent intent = new Intent(getApplicationContext(), DetailAuctionActivity.class);
-//                intent.putExtra(EXTRA_AUCTION_NAME, auctionClicked.name);
-//                startActivity(intent);
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Auction auctionClicked = (Auction) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getApplicationContext(), DetailAuctionActivity.class);
+                SaveSharedPreference.setCurrentAuction(getApplication(), auctionClicked);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
