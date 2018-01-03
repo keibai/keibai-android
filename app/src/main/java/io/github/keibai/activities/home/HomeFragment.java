@@ -13,13 +13,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
 import io.github.keibai.activities.bid.BidAdapter;
 import io.github.keibai.activities.bid.BidLog;
+import io.github.keibai.activities.bid.BidLogAmountComparable;
 import io.github.keibai.activities.bid.WinnerAdapter;
 import io.github.keibai.activities.credit.CreditActivity;
 import io.github.keibai.http.Http;
@@ -192,21 +195,14 @@ public class HomeFragment extends MainFragmentAbstract {
         });
     }
 
-    private void renderBid(BidLog[] response) {
+    private void renderBid(BidLog[] bids) {
         TextView madeBid = view.findViewById(R.id.made_bid);
+        madeBid.setText(String.valueOf(bids.length));
 
-        madeBid.setText(String.valueOf(response.length));
-
-        double max = 0.0;
-
-        for (int i = 0; i < response.length; i++) {
-            if (response[i].getAmount() > max) {
-                max = response[i].getAmount();
-            }
+        if (bids.length > 0) {
+            BidLog maxBid = Collections.max(new ArrayList<BidLog>(), new BidLogAmountComparable());
+            TextView maxBidText = view.findViewById(R.id.max_bid);
+            maxBidText.setText(String.valueOf(maxBid.getAmount()));
         }
-
-        TextView maxBid = view.findViewById(R.id.max_bid);
-
-        maxBid.setText(String.valueOf(max));
     }
 }
