@@ -72,4 +72,9 @@
     <string name="usercreated">Creation Date</string>
     <string name="money_placeholder">€%1$.2f</string>
     <string name="remaining_auction_time_placeholder">%1$d seconds left</string>
+    <string name="participate_activity">Participated Activity:</string>
+    <string name="personal_statistics">Personal Statistics:</string>
+    <string name="auction_won">Auction Won:\t</string>
+    <string name="made_bid">Total Bids Made:\t</string>
+    <string name="max_bid">Highest Bid Made:\t</string>
 </resources>

@@ -35,13 +35,14 @@
                 android:text="@string/name"
                 android:textStyle="bold"
                 android:layout_marginTop="18dp"
-                android:textSize="30sp"/>
+                android:textSize="25sp"/>
 
             <TextView
                 android:id="@+id/text_profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"/>
+                android:layout_marginTop="5dp"
+                android:textSize="25sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -49,13 +50,14 @@
                 android:text="@string/last_name"
                 android:textStyle="bold"
                 android:layout_marginTop="18dp"
-                android:textSize="30sp"/>
+                android:textSize="25sp"/>
 
             <TextView
                 android:id="@+id/text_profile_last_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"/>
+                android:layout_marginTop="5dp"
+                android:textSize="25sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,13 +65,14 @@
                 android:text="@string/email"
                 android:textStyle="bold"
                 android:layout_marginTop="18dp"
-                android:textSize="30sp"/>
+                android:textSize="25sp"/>
 
             <TextView
                 android:id="@+id/text_profile_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"/>
+                android:layout_marginTop="5dp"
+                android:textSize="25sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -77,13 +80,14 @@
                 android:text="@string/usercreated"
                 android:textStyle="bold"
                 android:layout_marginTop="18dp"
-                android:textSize="30sp"/>
+                android:textSize="25sp"/>
 
             <TextView
                 android:id="@+id/creation_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"/>
+                android:layout_marginTop="5dp"
+                android:textSize="25sp"/>
 
         </LinearLayout>
 
