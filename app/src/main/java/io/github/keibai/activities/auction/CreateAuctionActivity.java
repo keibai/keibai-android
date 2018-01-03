@@ -29,11 +29,14 @@ public class CreateAuctionActivity extends AppCompatActivity {
 
     private int eventId;
     private DefaultAwesomeValidation validation;
+    private Http http;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_auction);
+
+        http = new Http(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar_create_event);
         setSupportActionBar(toolbar);
@@ -99,7 +102,7 @@ public class CreateAuctionActivity extends AppCompatActivity {
 
         Auction attemptAuction = auctionFromForm();
         attemptAuction.eventId = eventId;
-        new Http(getApplicationContext()).post(HttpUrl.newAuctionUrl(), attemptAuction, new HttpCallback<Auction>(Auction.class) {
+        http.post(HttpUrl.newAuctionUrl(), attemptAuction, new HttpCallback<Auction>(Auction.class) {
             @Override
             public void onError(Error error) throws IOException {
                 runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
@@ -130,7 +133,7 @@ public class CreateAuctionActivity extends AppCompatActivity {
         Good attemptGood = goodFromForm();
         attemptGood.auctionId = auctionId;
         attemptGood.image= "1234";
-        new Http(getApplicationContext()).post(HttpUrl.newGoodUrl(), attemptGood, new HttpCallback<Good>(Good.class) {
+        http.post(HttpUrl.newGoodUrl(), attemptGood, new HttpCallback<Good>(Good.class) {
             @Override
             public void onError(Error error) throws IOException {
                 runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
@@ -152,5 +155,12 @@ public class CreateAuctionActivity extends AppCompatActivity {
                 runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 }
