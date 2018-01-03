@@ -25,14 +25,16 @@ import okhttp3.Call;
 
 public class ActiveEventsActivity extends AppCompatActivity {
 
-    public static final String EXTRA_JSON_EVENT = "EXTRA_JSON_EVENT";
+    private Http http;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_active_events);
 
-        new Http(getApplicationContext()).get(HttpUrl.getEventListUrl(), new HttpCallback<Event[]>(Event[].class) {
+        http = new Http(getApplicationContext());
+
+        http.get(HttpUrl.getEventListUrl(), new HttpCallback<Event[]>(Event[].class) {
 
             @Override
             public void onError(Error error) throws IOException {
@@ -77,4 +79,10 @@ public class ActiveEventsActivity extends AppCompatActivity {
         return intent;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
+    }
 }
