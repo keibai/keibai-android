@@ -28,11 +28,14 @@ import okhttp3.Call;
 public class SignUpActivity extends AppCompatActivity {
 
     private DefaultAwesomeValidation validation;
+    private Http http;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        http = new Http(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar_sign_up);
         setSupportActionBar(toolbar);
@@ -86,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         User attemptUser = userFromForm();
-        new Http(getApplicationContext()).post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>(User.class) {
+        http.post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>(User.class) {
             @Override
             public void onError(Error error) throws IOException {
                 runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));
@@ -105,5 +108,12 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 }
