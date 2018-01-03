@@ -53,11 +53,9 @@ public class DetailEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
 
-        Intent intent = getIntent();
         final Resources res = getResources();
 
-        this.event = new Gson().fromJson(
-                intent.getStringExtra(ActiveEventsActivity.EXTRA_JSON_EVENT), Event.class);
+        this.event = SaveSharedPreference.getCurrentEvent(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_event);
         setSupportActionBar(toolbar);

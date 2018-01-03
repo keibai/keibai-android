@@ -95,7 +95,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.event.DetailEventActivity" />
         </activity>
         <activity
             android:name=".activities.event.ActiveEventsActivity"
@@ -113,7 +113,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.event.DetailEventActivity" />
         </activity>
         <activity
             android:name=".activities.credit.CreditActivity"
