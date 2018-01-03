@@ -24,11 +24,14 @@ import okhttp3.Call;
 public class CreditActivity extends AppCompatActivity {
 
     private DefaultAwesomeValidation validation;
+    private Http http;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
+
+        http = new Http(getApplicationContext());
 
         Button submit = findViewById(R.id.button_credit_submit);
         submit.setOnClickListener(new AddCredit());
@@ -56,7 +59,7 @@ public class CreditActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), R.string.submitting, Toast.LENGTH_SHORT).show();
             User attemptUser = userFromForm();
-            new Http(getApplicationContext()).post(HttpUrl.userUpdateCreditUrl(), attemptUser, new HttpCallback<User>(User.class) {
+            http.post(HttpUrl.userUpdateCreditUrl(), attemptUser, new HttpCallback<User>(User.class) {
 
                 @Override
                 public void onError(Error error) throws IOException {
@@ -76,6 +79,13 @@ public class CreditActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 }
 
