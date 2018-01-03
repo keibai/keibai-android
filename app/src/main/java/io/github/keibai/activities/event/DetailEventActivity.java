@@ -38,7 +38,6 @@ import okhttp3.Call;
 
 public class DetailEventActivity extends AppCompatActivity {
 
-    public static final String EXTRA_AUCTION_NAME = "EXTRA_AUCTION_NAME";
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
 
     private TextView textViewLocation;
@@ -121,7 +120,7 @@ public class DetailEventActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Auction auctionClicked = (Auction) parent.getItemAtPosition(position);
                 Intent intent = new Intent(getApplicationContext(), DetailAuctionActivity.class);
-                intent.putExtra(EXTRA_AUCTION_NAME, auctionClicked.name);
+                SaveSharedPreference.setCurrentAuction(getApplication(), auctionClicked);
                 startActivity(intent);
             }
         });
