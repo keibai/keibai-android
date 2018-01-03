@@ -26,11 +26,14 @@ import okhttp3.Call;
 public class CreateEventActivity extends AppCompatActivity {
 
     private DefaultAwesomeValidation validation;
+    private Http http;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+        http = new Http(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar_create_event);
         setSupportActionBar(toolbar);
@@ -86,7 +89,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(), R.string.submitting, Toast.LENGTH_SHORT).show();
         Event attemptEvent = eventFromForm();
-        new Http(getApplicationContext()).post(HttpUrl.newEventUrl(), attemptEvent, new HttpCallback<Event>(Event.class) {
+        http.post(HttpUrl.newEventUrl(), attemptEvent, new HttpCallback<Event>(Event.class) {
 
             @Override
             public void onError(final Error error) throws IOException {
@@ -104,5 +107,12 @@ public class CreateEventActivity extends AppCompatActivity {
                 runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 }
