@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -46,7 +47,7 @@ public class DetailAuctionBidFragment extends Fragment{
     private double minBid;
 
     private Button startAuctionButton;
-    private TextView remainingAuctionTimeText;
+    private Chronometer auctionTimeChronometer;
     private TextView highestBidText;
     private TextView auctionUserCreditText;
     private EditText editTextBid;
@@ -117,7 +118,7 @@ public class DetailAuctionBidFragment extends Fragment{
         minBid = auction.startingPrice + STEP;
 
         startAuctionButton = view.findViewById(R.id.start_auction_button);
-        remainingAuctionTimeText = view.findViewById(R.id.remaining_auction_time_text);
+        auctionTimeChronometer = view.findViewById(R.id.auction_time_chronometer);
         highestBidText = view.findViewById(R.id.highest_bid_text);
         auctionUserCreditText = view.findViewById(R.id.auction_user_credit_text);
         editTextBid = view.findViewById(R.id.edit_text_bid);
@@ -135,6 +136,7 @@ public class DetailAuctionBidFragment extends Fragment{
             bidInfoText.setText(res.getString(R.string.ready_start_auction));
             auctionUserCreditText.setVisibility(View.INVISIBLE);
             hideBidUi();
+            startAuctionButton.setOnClickListener(startAuctionButtonOnClickListener);
         } else {
             // Bidder Ui
             fetchUserInfoAndRenderBidUi();
@@ -144,6 +146,15 @@ public class DetailAuctionBidFragment extends Fragment{
 
         return view;
     }
+
+    View.OnClickListener startAuctionButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startAuctionButton.setVisibility(View.GONE);
+            auctionTimeChronometer.setVisibility(View.VISIBLE);
+            auctionTimeChronometer.start();
+        }
+    };
 
     public void renderBidUi() {
         setUserCreditText();
@@ -225,11 +236,6 @@ public class DetailAuctionBidFragment extends Fragment{
     private void setHighestBidText(float bid) {
         String text = String.format(res.getString(R.string.money_placeholder), bid);
         highestBidText.setText(text);
-    }
-
-    private void setRemainingAuctionTimeText(int seconds) {
-        String text = String.format(res.getString(R.string.remaining_auction_time_placeholder), seconds);
-        remainingAuctionTimeText.setText(text);
     }
 
     private void setUserCreditText() {

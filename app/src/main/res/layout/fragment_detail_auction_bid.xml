@@ -20,11 +20,10 @@
             android:text="@string/start"
             android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/remaining_auction_time_text"
+        <Chronometer
+            android:id="@+id/auction_time_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/remaining_auction_time_placeholder"
             android:textSize="20sp"
             android:visibility="gone"/>
 
