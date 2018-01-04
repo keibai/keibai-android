@@ -16,6 +16,7 @@ public class WebSocketCallback<T> extends WebSocketListener {
     public void onOpen(WebSocketConnection connection) {}
 
     public void onMessage(okhttp3.WebSocket webSocket, String text) {
+        onMessage(new WebSocketConnection(webSocket), text);
     }
 
     public void onMessage(WebSocket webSocket, ByteString bytes) {
