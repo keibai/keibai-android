@@ -12,6 +12,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 import io.github.keibai.R;
@@ -19,9 +21,14 @@ import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
+import io.github.keibai.http.WebSocket;
+import io.github.keibai.http.WebSocketCallback;
+import io.github.keibai.http.WebSocketConnection;
 import io.github.keibai.models.Auction;
+import io.github.keibai.models.Bid;
 import io.github.keibai.models.Event;
 import io.github.keibai.models.User;
+import io.github.keibai.models.meta.BodyWS;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
@@ -53,6 +60,48 @@ public class DetailAuctionBidFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        demoPlay();
+    }
+
+    public void demoPlay() {
+        System.out.println("Started demo play.");
+
+        WebSocket ws = new WebSocket(getContext());
+        WebSocketConnection wsConnection = ws.connect(HttpUrl.webSocket(), new WebSocketCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, final BodyWS body) {
+                try {
+                    System.out.println(body.type);
+                    System.out.println(body.nonce);
+                    System.out.println(body.json);
+                    Bid newBid = new Gson().fromJson(body.json, Bid.class);
+                    System.out.println("Got " + newBid);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+        // 1. Subscribe to auction.
+        Auction auction = new Auction();
+        auction.id = 13;
+        System.out.println("Subscribing to " + auction);
+        BodyWS bodySubscription = new BodyWS();
+        bodySubscription.type = "AuctionSubscribe";
+        bodySubscription.nonce = "1";
+        bodySubscription.json = new Gson().toJson(auction);
+        wsConnection.send(bodySubscription);
+
+        // 2. Send a sample bid.
+        Bid sampleBid = new Bid();
+        sampleBid.auctionId = auction.id;
+        sampleBid.amount = 1.1;
+        System.out.println("Bidding " + sampleBid);
+        BodyWS bodySampleBid = new BodyWS();
+        bodySampleBid.type = "AuctionBid";
+        bodySampleBid.nonce = "1";
+        bodySampleBid.json = new Gson().toJson(sampleBid);
+        wsConnection.send(bodySampleBid);
     }
 
     @Override
