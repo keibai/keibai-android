@@ -50,8 +50,10 @@ public class DetailAuctionBidFragment extends Fragment{
     private TextView highestBidText;
     private TextView auctionUserCreditText;
     private EditText editTextBid;
+    private TextView bidTextView;
     private SeekBar seekBarBid;
     private Button bidButton;
+    private TextView bidInfoText;
 
     public DetailAuctionBidFragment() {
         // Required empty public constructor
@@ -61,7 +63,7 @@ public class DetailAuctionBidFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        demoPlay();
+        //demoPlay();
     }
 
     public void demoPlay() {
@@ -119,30 +121,49 @@ public class DetailAuctionBidFragment extends Fragment{
         highestBidText = view.findViewById(R.id.highest_bid_text);
         auctionUserCreditText = view.findViewById(R.id.auction_user_credit_text);
         editTextBid = view.findViewById(R.id.edit_text_bid);
+        bidTextView = view.findViewById(R.id.bid_text_view);
         seekBarBid = view.findViewById(R.id.seek_bar_bid);
         bidButton = view.findViewById(R.id.bid_button);
+        bidInfoText = view.findViewById(R.id.bid_info_text);
 
         setHighestBidText((float) auction.startingPrice);
         setRemainingAuctionTimeText(event.auctionTime);
 
-        renderUi();
+        fetchUserInfoAndRenderBidUi();
 
         seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
 
         return view;
     }
 
-    public void renderSeekBarBid() {
+    public void renderBidUi() {
         setUserCreditText();
-        if (user.credit < minBid + STEP) {
-            disableBiddingUI();
-        } else {
-            seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
-            editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
+
+        switch (auction.status) {
+            case Auction.PENDING:
+                hideBiddingUi();
+                bidInfoText.setText(res.getString(R.string.auction_not_accepted_yet));
+                break;
+            case Auction.ACCEPTED:
+                hideBiddingUi();
+                bidInfoText.setText(res.getString(R.string.auction_not_started_yet));
+                break;
+            case Auction.FINISHED:
+                hideBiddingUi();
+                bidInfoText.setText(res.getString(R.string.auction_finished));
+                break;
+            case Auction.IN_PROGRESS:
+                if (user.credit < minBid + STEP) {
+                    disableBiddingUI();
+                } else {
+                    seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
+                    editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
+                }
+                break;
         }
     }
 
-    private void renderUi() {
+    private void fetchUserInfoAndRenderBidUi() {
         new Http(getContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
@@ -159,7 +180,7 @@ public class DetailAuctionBidFragment extends Fragment{
                     @Override
                     public void run() {
                         user = fetchedUser;
-                        renderSeekBarBid();
+                        renderBidUi();
                     }
                 });
             }
@@ -214,5 +235,14 @@ public class DetailAuctionBidFragment extends Fragment{
         editTextBid.setEnabled(false);
         seekBarBid.setEnabled(false);
         bidButton.setEnabled(false);
+    }
+
+    private void hideBiddingUi() {
+        bidTextView.setVisibility(View.GONE);
+        editTextBid.setVisibility(View.GONE);
+        seekBarBid.setVisibility(View.GONE);
+        bidButton.setVisibility(View.GONE);
+
+        bidInfoText.setVisibility(View.VISIBLE);
     }
 }
