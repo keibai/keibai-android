@@ -12,7 +12,6 @@ public class Event extends ModelAbstract {
     public static final String[] EVENT_STATUS = {OPENED, IN_PROGRESS, FINISHED};
 
     public String name;
-    public int auctionTime;
     public String location;
     public Timestamp createdAt;
     public Timestamp updatedAt;
@@ -29,7 +28,6 @@ public class Event extends ModelAbstract {
         Event event = (Event) o;
 
         if (id != event.id) return false;
-        if (auctionTime != event.auctionTime) return false;
         if (ownerId != event.ownerId) return false;
         if (!name.equals(event.name)) return false;
         if (!location.equals(event.location)) return false;
@@ -44,7 +42,6 @@ public class Event extends ModelAbstract {
     public int hashCode() {
         int result = name.hashCode();
         result = 31 * result + id;
-        result = 31 * result + auctionTime;
         result = 31 * result + location.hashCode();
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
         result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
@@ -59,7 +56,6 @@ public class Event extends ModelAbstract {
     public String toString() {
         return "Event{" +
                 "name='" + name + '\'' +
-                ", auctionTime=" + auctionTime +
                 ", location='" + location + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
