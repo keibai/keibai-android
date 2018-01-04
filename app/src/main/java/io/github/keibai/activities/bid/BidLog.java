@@ -1,11 +1,6 @@
 package io.github.keibai.activities.bid;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-
-/**
- * BidLog class
- */
 
 public class BidLog {
 
