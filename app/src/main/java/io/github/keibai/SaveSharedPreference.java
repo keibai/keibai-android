@@ -16,6 +16,7 @@ public class SaveSharedPreference {
     static final String PREF_COOKIES = "cookies";
     static final String PREF_CURRENT_EVENT = "current_event";
     static final String PREF_CURRENT_AUCTION = "current_auction";
+    static final String PREF_AUTOFILL_EMAIL = "autofill_email";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -61,6 +62,16 @@ public class SaveSharedPreference {
     public static Auction getCurrentAuction(Context ctx) {
         String jsonEvent = getSharedPreferences(ctx).getString(PREF_CURRENT_AUCTION, "{}");
         return new Gson().fromJson(jsonEvent, Auction.class);
+    }
+
+    public static void setAutofillEmail(Context ctx, String email) {
+        Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_AUTOFILL_EMAIL, email);
+        editor.apply();
+    }
+
+    public static String getAutofillEmail(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_AUTOFILL_EMAIL, "");
     }
 }
 
