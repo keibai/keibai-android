@@ -29,6 +29,7 @@ import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Auction;
+import io.github.keibai.models.Bid;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
 
@@ -200,7 +201,7 @@ public class HomeFragment extends MainFragmentAbstract {
         madeBid.setText(String.valueOf(bids.length));
 
         if (bids.length > 0) {
-            BidLog maxBid = Collections.max(new ArrayList<BidLog>(), new BidLogAmountComparable());
+            BidLog maxBid = Collections.max(Arrays.asList(bids), new BidLogAmountComparable());
             TextView maxBidText = view.findViewById(R.id.max_bid);
             maxBidText.setText(String.valueOf(maxBid.getAmount()));
         }

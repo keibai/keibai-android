@@ -1,5 +1,6 @@
 package io.github.keibai.activities.auction;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,6 +41,7 @@ public class DetailAuctionBidFragment extends Fragment{
 
     private View view;
     private Resources res;
+    private Http http;
 
     private Auction auction;
     private Event event;
@@ -58,6 +60,20 @@ public class DetailAuctionBidFragment extends Fragment{
 
     public DetailAuctionBidFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        http = new Http(getContext());
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        http.close();
     }
 
     @Override
@@ -184,13 +200,10 @@ public class DetailAuctionBidFragment extends Fragment{
     }
 
     private void fetchUserInfoAndRenderBidUi() {
-        new Http(getContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
+        http.get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
             public void onError(Error error) throws IOException {
-                if (getActivity() ==  null) {
-                    return;
-                }
                 getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
             }
 
@@ -207,9 +220,6 @@ public class DetailAuctionBidFragment extends Fragment{
 
             @Override
             public void onFailure(Call call, IOException e) {
-                if (getActivity() ==  null) {
-                    return;
-                }
                 getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
             }
         });
