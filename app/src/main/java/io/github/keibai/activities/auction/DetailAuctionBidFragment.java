@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -30,14 +31,17 @@ public class DetailAuctionBidFragment extends Fragment{
     private static final float STEP = 0.5f;
 
     private View view;
+    private Resources res;
 
     private Auction auction;
     private Event event;
     private User user;
+    private double minBid;
 
     private Button startAuctionButton;
     private TextView remainingAuctionTimeText;
     private TextView highestBidText;
+    private TextView auctionUserCreditText;
     private EditText editTextBid;
     private SeekBar seekBarBid;
     private Button bidButton;
@@ -55,14 +59,16 @@ public class DetailAuctionBidFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_detail_auction_bid, container, false);
+        res = getResources();
 
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
-        retrieveUser();
+        minBid = auction.startingPrice + STEP;
 
         startAuctionButton = view.findViewById(R.id.start_auction_button);
         remainingAuctionTimeText = view.findViewById(R.id.remaining_auction_time_text);
         highestBidText = view.findViewById(R.id.highest_bid_text);
+        auctionUserCreditText = view.findViewById(R.id.auction_user_credit_text);
         editTextBid = view.findViewById(R.id.edit_text_bid);
         seekBarBid = view.findViewById(R.id.seek_bar_bid);
         bidButton = view.findViewById(R.id.bid_button);
@@ -70,17 +76,24 @@ public class DetailAuctionBidFragment extends Fragment{
         setHighestBidText((float) auction.startingPrice);
         setRemainingAuctionTimeText(event.auctionTime);
 
+        renderUi();
+
         seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
 
         return view;
     }
 
     public void renderSeekBarBid() {
-        seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
-        editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+        setUserCreditText();
+        if (user.credit < minBid + STEP) {
+            disableBiddingUI();
+        } else {
+            seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
+            editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
+        }
     }
 
-    private void retrieveUser() {
+    private void renderUi() {
         new Http(getContext()).get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
@@ -112,22 +125,10 @@ public class DetailAuctionBidFragment extends Fragment{
         });
     }
 
-    private void setHighestBidText(float bid) {
-        final Resources res = getResources();
-        String text = String.format(res.getString(R.string.money_placeholder), bid);
-        highestBidText.setText(text);
-    }
-
-    private void setRemainingAuctionTimeText(int seconds) {
-        final Resources res = getResources();
-        String text = String.format(res.getString(R.string.remaining_auction_time_placeholder), seconds);
-        remainingAuctionTimeText.setText(text);
-    }
-
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-            editTextBid.setText(String.format("%.2f", auction.startingPrice + (progress * STEP)));
+            editTextBid.setText(String.format("%.2f", minBid + (progress * STEP)));
         }
 
         @Override
@@ -140,4 +141,29 @@ public class DetailAuctionBidFragment extends Fragment{
 
         }
     };
+
+    /* Bidding UI utilities */
+    private void setHighestBidText(float bid) {
+        String text = String.format(res.getString(R.string.money_placeholder), bid);
+        highestBidText.setText(text);
+    }
+
+    private void setRemainingAuctionTimeText(int seconds) {
+        String text = String.format(res.getString(R.string.remaining_auction_time_placeholder), seconds);
+        remainingAuctionTimeText.setText(text);
+    }
+
+    private void setUserCreditText() {
+        String text = String.format(res.getString(R.string.auction_user_credit_placeholder), user.credit);
+        auctionUserCreditText.setText(text);
+    }
+
+    private void disableBiddingUI() {
+        Toast.makeText(getContext(), res.getString(R.string.auction_user_credit_not_enough), Toast.LENGTH_SHORT).show();
+        seekBarBid.setProgress(100);
+        editTextBid.setText(String.format("%.2f", minBid));
+        editTextBid.setEnabled(false);
+        seekBarBid.setEnabled(false);
+        bidButton.setEnabled(false);
+    }
 }
