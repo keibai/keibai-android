@@ -22,7 +22,7 @@ public class HttpUrl {
     private static final String auctionByIdUrl = "/auctions/search?id=";
     private static final String auctionListByEventId = "/auctions/list?eventid=";
     private static final String auctionListByWinnerId = "/auctions/winnerlist?winnerid=";
-    private static final String auctionUpdateStatusUrl = "/auctions/update/status";
+    private static final String auctionAcceptUrl = "/auctions/accept?id=";
     public static final String auctionDeleteUrl = "/auctions/delete?id=";
 
     private static final String newGood = "/goods/new";
@@ -87,8 +87,8 @@ public class HttpUrl {
         return baseUrl + auctionListByEventId + eventId;
     }
 
-    public static String auctionUpdateStatusUrl() {
-        return baseUrl+ auctionUpdateStatusUrl;
+    public static String auctionAcceptUrl(int id) {
+        return baseUrl+ auctionAcceptUrl + id;
     }
 
     public static String auctionDeleteUrl(int id) {
