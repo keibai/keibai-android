@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import io.github.keibai.models.ModelAbstract;
+import okhttp3.Call;
 import okhttp3.CookieJar;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -36,5 +37,14 @@ public class Http {
                 .post(requestBody)
                 .build();
         http.newCall(request).enqueue(callback);
+    }
+
+    public void close() {
+        for (Call call : http.dispatcher().queuedCalls()) {
+            call.cancel();
+        }
+        for (Call call : http.dispatcher().runningCalls()) {
+            call.cancel();
+        }
     }
 }

@@ -27,11 +27,16 @@ import okhttp3.Call;
 public class SignInActivity extends AppCompatActivity {
 
     private DefaultAwesomeValidation validation;
+    private Http http;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_sign_in);
         setSupportActionBar(toolbar);
@@ -41,6 +46,13 @@ public class SignInActivity extends AppCompatActivity {
         validation = new DefaultAwesomeValidation(getApplicationContext());
         validation.addValidation(this, R.id.edit_sign_in_email, Patterns.EMAIL_ADDRESS, R.string.email_invalid);
         validation.addValidation(this, R.id.edit_sign_in_password, ".+", R.string.password_invalid);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 
     @Override
@@ -77,7 +89,7 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         User attemptUser = userFromForm();
-        new Http(getApplicationContext()).post(HttpUrl.getUserAuthenticateUrl(), attemptUser, new HttpCallback<User>(User.class) {
+        http.post(HttpUrl.getUserAuthenticateUrl(), attemptUser, new HttpCallback<User>(User.class) {
             @Override
             public void onError(Error error) throws IOException {
                 runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));

@@ -28,11 +28,16 @@ import okhttp3.Call;
 public class SignUpActivity extends AppCompatActivity {
 
     private DefaultAwesomeValidation validation;
+    private Http http;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_sign_up);
         setSupportActionBar(toolbar);
@@ -46,6 +51,13 @@ public class SignUpActivity extends AppCompatActivity {
         validation.addValidation(this, R.id.edit_sign_up_repeat_password, R.id.edit_sign_up_password, R.string.repeat_email_invalid);
         validation.addValidation(this, R.id.edit_sign_up_password, ".{4,}", R.string.password_invalid);
         validation.addValidation(this, R.id.edit_sign_up_repeat_password, R.id.edit_sign_up_password, R.string.password_invalid);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
     }
 
     @Override
@@ -86,7 +98,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         User attemptUser = userFromForm();
-        new Http(getApplicationContext()).post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>(User.class) {
+        http.post(HttpUrl.newUserUrl(), attemptUser, new HttpCallback<User>(User.class) {
             @Override
             public void onError(Error error) throws IOException {
                 runOnUiThread(new RunnableToast(getApplicationContext(), error.toString()));

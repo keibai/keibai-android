@@ -40,6 +40,8 @@ public class DetailEventActivity extends AppCompatActivity {
 
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
 
+    private Http http;
+
     private TextView textViewLocation;
     private TextView textViewTimestamp;
     private TextView textViewAuctionType;
@@ -51,6 +53,10 @@ public class DetailEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
+
+        if (http == null) {
+            http = new Http(getApplicationContext());
+        }
 
         final Resources res = getResources();
 
@@ -84,8 +90,15 @@ public class DetailEventActivity extends AppCompatActivity {
         fetchAuctionList();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        http.close();
+    }
+
     void fetchAuctionList() {
-        new Http(getApplicationContext()).get(HttpUrl.getAuctionListByEventId(this.event.id),
+        http.get(HttpUrl.getAuctionListByEventId(this.event.id),
                 new HttpCallback<Auction[]>(Auction[].class) {
                     @Override
                     public void onError(Error error) throws IOException {
