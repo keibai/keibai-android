@@ -77,4 +77,10 @@
     <string name="auction_won">Auction Won:\t</string>
     <string name="made_bid">Total Bids Made:\t</string>
     <string name="max_bid">Highest Bid Made:\t</string>
+    <string name="auction_user_credit_placeholder">Your credit: €%1$.2f</string>
+    <string name="auction_user_credit_not_enough">Not enough credit</string>
+    <string name="auction_not_accepted_yet">Auction not accepted yet</string>
+    <string name="auction_not_started_yet">Auction not started yet</string>
+    <string name="auction_finished">Auction finished</string>
+    <string name="ready_start_auction">Ready to start auction</string>
 </resources>
