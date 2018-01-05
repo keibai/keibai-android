@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.keibai.activities.auction.DetailAuctionCombinatorialBidFragment">
+    tools:context="io.github.keibai.activities.auction.DetailAuctionCombinatorialBidFragment"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <!-- Full layout -->
     <LinearLayout
@@ -39,8 +41,6 @@
                 </ListView>
 
             </RelativeLayout>
-
-
 
             <!-- Selected items -->
             <RelativeLayout
