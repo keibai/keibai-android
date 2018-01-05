@@ -4,4 +4,5 @@
     <color name="colorPrimaryContrast">#FFF</color>
     <color name="colorPrimaryDark">#EE7600</color>
     <color name="colorAccent">#d50000</color>
+    <color name="colorProfile">#ff9966</color>
 </resources>
