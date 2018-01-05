@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Auction;
+import io.github.keibai.models.Event;
 import io.github.keibai.models.Good;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.runnable.RunnableToast;
@@ -30,6 +32,13 @@ public class CreateAuctionActivity extends AppCompatActivity {
     private int eventId;
     private DefaultAwesomeValidation validation;
     private Http http;
+    private Event event;
+    private Auction auction;
+    private Good good;
+
+    private EditText auctionNameEditText;
+    private EditText auctionStartingPriceEditText;
+    private EditText goodNameEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +57,24 @@ public class CreateAuctionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         eventId = intent.getIntExtra(DetailEventActivity.EXTRA_EVENT_ID, -1);
 
+        event = SaveSharedPreference.getCurrentEvent(getApplicationContext());
+
+        auctionNameEditText = findViewById(R.id.edit_create_auction_name);
+        auctionStartingPriceEditText = findViewById(R.id.edit_create_auction_starting_price);
+        goodNameEditText = findViewById(R.id.edit_create_auction_good_name);
+
         validation = new DefaultAwesomeValidation(getApplicationContext());
         validation.addValidation(this, R.id.edit_create_auction_name, "[a-zA-Z0-9\\s]+", R.string.auction_name_invalid);
         validation.addValidation(this, R.id.edit_create_auction_starting_price, "[0-9\\.]+", R.string.starting_price_invalid);
-        validation.addValidation(this, R.id.edit_create_auction_good_name, "[a-zA-Z0-9\\s]+", R.string.good_name_invalid);
+        //validation.addValidation(this, R.id.edit_create_auction_good_name, "[a-zA-Z0-9\\s]+", R.string.good_name_invalid);
+
+        if (event.auctionType.equals(Event.ENGLISH)) {
+            // English auction UI
+            goodNameEditText.setVisibility(View.GONE);
+        } else if (event.auctionType.equals(Event.COMBINATORIAL)) {
+            // Combinatorial auction UI
+            Toast.makeText(getApplicationContext(), Event.COMBINATORIAL, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -111,6 +134,10 @@ public class CreateAuctionActivity extends AppCompatActivity {
 
         Auction attemptAuction = auctionFromForm();
         attemptAuction.eventId = eventId;
+        postAuction(attemptAuction);
+    }
+
+    private void postAuction(Auction attemptAuction) {
         http.post(HttpUrl.newAuctionUrl(), attemptAuction, new HttpCallback<Auction>(Auction.class) {
             @Override
             public void onError(Error error) throws IOException {
@@ -122,7 +149,15 @@ public class CreateAuctionActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        saveGood(response.id);
+                        if (event.auctionType.equals(Event.ENGLISH)) {
+                            Good good = new Good();
+                            good.name = response.name;
+                            good.auctionId = response.id;
+                            good.image = "1234";
+                            postGood(good, "Auction successfully created");
+                        } else if (event.auctionType.equals(Event.COMBINATORIAL)) {
+
+                        }
                     }
                 });
             }
@@ -134,14 +169,7 @@ public class CreateAuctionActivity extends AppCompatActivity {
         });
     }
 
-    private void saveGood(int auctionId) {
-        if (!validation.validate()) {
-            return;
-        }
-
-        Good attemptGood = goodFromForm();
-        attemptGood.auctionId = auctionId;
-        attemptGood.image= "1234";
+    private void postGood(Good attemptGood, final String msg) {
         http.post(HttpUrl.newGoodUrl(), attemptGood, new HttpCallback<Good>(Good.class) {
             @Override
             public void onError(Error error) throws IOException {
@@ -149,11 +177,11 @@ public class CreateAuctionActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSuccess(Good response) throws IOException {
+            public void onSuccess(final Good response) throws IOException {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Auction successfully created", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });

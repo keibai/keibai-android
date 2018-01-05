@@ -4,7 +4,9 @@ import java.sql.Timestamp;
 
 public class Event extends ModelAbstract {
 
-    public static final String[] AUCTION_TYPES = {"English", "Combinatorial"};
+    public static final String ENGLISH = "English";
+    public static final String COMBINATORIAL = "Combinatorial";
+    public static final String[] AUCTION_TYPES = {ENGLISH, COMBINATORIAL};
 
     public static final String OPENED = "OPENED";
     public static final String IN_PROGRESS = "IN_PROGRESS";
