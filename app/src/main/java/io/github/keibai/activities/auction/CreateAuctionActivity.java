@@ -34,7 +34,9 @@ import okhttp3.Call;
 public class CreateAuctionActivity extends AppCompatActivity {
 
     private int eventId;
-    private DefaultAwesomeValidation validation;
+    private DefaultAwesomeValidation auctionValidation;
+    private DefaultAwesomeValidation combinatorialGoodValidation;
+    private DefaultAwesomeValidation englishPriceValidation;
     private Http http;
     private Event event;
     private List<Good> goods;
@@ -71,18 +73,22 @@ public class CreateAuctionActivity extends AppCompatActivity {
         addGoodButton = findViewById(R.id.add_good_button);
         createAuctionGoodList = findViewById(R.id.create_auction_good_list);
 
-        validation = new DefaultAwesomeValidation(getApplicationContext());
-        validation.addValidation(this, R.id.edit_create_auction_name, "[a-zA-Z0-9\\s]+", R.string.auction_name_invalid);
+        auctionValidation = new DefaultAwesomeValidation(getApplicationContext());
+        combinatorialGoodValidation = new DefaultAwesomeValidation(getApplicationContext());
+        englishPriceValidation = new DefaultAwesomeValidation(getApplicationContext());
+
+        auctionValidation.addValidation(this, R.id.edit_create_auction_name, "[a-zA-Z0-9\\s]+", R.string.auction_name_invalid);
 
         if (event.auctionType.equals(Event.ENGLISH)) {
             // English auction UI
             goodNameEditText.setVisibility(View.GONE);
             createAuctionGoodList.setVisibility(View.GONE);
-            validation.addValidation(this, R.id.edit_create_auction_starting_price, "[0-9\\.]+", R.string.starting_price_invalid);
+            addGoodButton.setVisibility(View.GONE);
+            englishPriceValidation.addValidation(this, R.id.edit_create_auction_starting_price, "[0-9\\.]+", R.string.starting_price_invalid);
         } else if (event.auctionType.equals(Event.COMBINATORIAL)) {
             // Combinatorial auction UI
             auctionStartingPriceEditText.setVisibility(View.GONE);
-            validation.addValidation(this, R.id.edit_create_auction_good_name, "[a-zA-Z0-9\\s]+", R.string.good_name_invalid);
+            combinatorialGoodValidation.addValidation(this, R.id.edit_create_auction_good_name, "[a-zA-Z0-9\\s]+", R.string.good_name_invalid);
 
             final GoodAdapter goodAdapter = new GoodAdapter(this, this.goods);
             createAuctionGoodList.setAdapter(goodAdapter);
@@ -90,7 +96,7 @@ public class CreateAuctionActivity extends AppCompatActivity {
             addGoodButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!validation.validate()) {
+                    if (!combinatorialGoodValidation.validate()) {
                         return;
                     }
                     Good newGood = new Good();
@@ -136,7 +142,11 @@ public class CreateAuctionActivity extends AppCompatActivity {
 
         Auction auction = new Auction();
         auction.name = formName.getText().toString();
-        auction.startingPrice = Float.parseFloat(formStartingPrice.getText().toString());
+        if (event.auctionType.equals(Event.ENGLISH)) {
+            auction.startingPrice = Float.parseFloat(formStartingPrice.getText().toString());
+        } else {
+            auction.startingPrice = 1.0; // Ignored in case of combinatorial auctions
+        }
 
         return auction;
     }
@@ -146,11 +156,18 @@ public class CreateAuctionActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.event_id_invalid, Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!validation.validate()) {
+        if (!auctionValidation.validate()) {
             return;
         }
 
-        Toast.makeText(getApplicationContext(), R.string.submitting, Toast.LENGTH_SHORT).show();
+
+        if (event.auctionType.equals(Event.ENGLISH) && !englishPriceValidation.validate()) {
+            return;
+        }
+        if (goods.size() < 2) {
+            Toast.makeText(getApplicationContext(), "Can not create combinatorial auction with less than 2 goods", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Auction attemptAuction = auctionFromForm();
         attemptAuction.eventId = eventId;
@@ -158,6 +175,8 @@ public class CreateAuctionActivity extends AppCompatActivity {
     }
 
     private void postAuction(Auction attemptAuction) {
+        Toast.makeText(getApplicationContext(), R.string.submitting, Toast.LENGTH_SHORT).show();
+
         http.post(HttpUrl.newAuctionUrl(), attemptAuction, new HttpCallback<Auction>(Auction.class) {
             @Override
             public void onError(Error error) throws IOException {
@@ -176,7 +195,12 @@ public class CreateAuctionActivity extends AppCompatActivity {
                             good.image = "1234";
                             postGood(good, "Auction successfully created");
                         } else if (event.auctionType.equals(Event.COMBINATORIAL)) {
-
+                            for (Good good: goods) {
+                                // Update good auction IDs now that we know the auction ID
+                                good.auctionId = response.id;
+                                postGood(good, good.name + " created");
+                            }
+                            Toast.makeText(getApplicationContext(), "Auction successfully created", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
