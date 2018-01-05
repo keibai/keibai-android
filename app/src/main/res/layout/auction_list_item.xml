@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,64 +7,63 @@
         android:id="@+id/auction_img"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_centerVertical="true"
         android:padding="10dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/auction_img"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/auction_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test"
-        android:textSize="20sp"
-        android:padding="8dp"/>
-
-    <TextView
-        android:id="@+id/auction_starting_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test"
-        android:textSize="15sp"
-        android:padding="10dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/auction_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:padding="8dp"
+            android:text="@string/test"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/text_auction_is_valid_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="STATUS" />
-
-            <Button
-                android:id="@+id/button_accept_auction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✔"/>
-
-            <Button
-                android:id="@+id/button_deny_auction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✖"/>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/auction_starting_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/test"
+            android:textSize="15sp"
+            android:padding="10dp"/>
 
     </LinearLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/text_auction_is_valid_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="STATUS" />
+
+        <Button
+            android:id="@+id/button_accept_auction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_auction_is_valid_status"
+            android:layout_alignParentEnd="true"
+            android:text="✔"/>
+
+        <Button
+            android:id="@+id/button_deny_auction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button_accept_auction"
+            android:layout_alignParentEnd="true"
+            android:text="✖"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
