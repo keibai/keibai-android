@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class GoodAdapter extends ArrayAdapter {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItemView = convertView;
 
         if (listItemView == null) {
@@ -40,8 +41,17 @@ public class GoodAdapter extends ArrayAdapter {
 
         goodNameText = listItemView.findViewById(R.id.good_list_good_name);
 
-        Good good = (Good) getItem(position);
+        final Good good = (Good) getItem(position);
         goodNameText.setText(good.name);
+
+        Button deleteButton = listItemView.findViewById(R.id.button_delete_good);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goods.remove(position);
+                notifyDataSetChanged();
+            }
+        });
 
         return listItemView;
     }
