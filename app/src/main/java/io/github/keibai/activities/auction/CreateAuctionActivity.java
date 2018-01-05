@@ -8,10 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
@@ -33,12 +37,13 @@ public class CreateAuctionActivity extends AppCompatActivity {
     private DefaultAwesomeValidation validation;
     private Http http;
     private Event event;
-    private Auction auction;
-    private Good good;
+    private List<Good> goods;
 
     private EditText auctionNameEditText;
     private EditText auctionStartingPriceEditText;
     private EditText goodNameEditText;
+    private Button addGoodButton;
+    private ListView createAuctionGoodList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,22 +63,46 @@ public class CreateAuctionActivity extends AppCompatActivity {
         eventId = intent.getIntExtra(DetailEventActivity.EXTRA_EVENT_ID, -1);
 
         event = SaveSharedPreference.getCurrentEvent(getApplicationContext());
+        goods = new ArrayList<>();
 
         auctionNameEditText = findViewById(R.id.edit_create_auction_name);
         auctionStartingPriceEditText = findViewById(R.id.edit_create_auction_starting_price);
         goodNameEditText = findViewById(R.id.edit_create_auction_good_name);
+        addGoodButton = findViewById(R.id.add_good_button);
+        createAuctionGoodList = findViewById(R.id.create_auction_good_list);
 
         validation = new DefaultAwesomeValidation(getApplicationContext());
         validation.addValidation(this, R.id.edit_create_auction_name, "[a-zA-Z0-9\\s]+", R.string.auction_name_invalid);
-        validation.addValidation(this, R.id.edit_create_auction_starting_price, "[0-9\\.]+", R.string.starting_price_invalid);
-        //validation.addValidation(this, R.id.edit_create_auction_good_name, "[a-zA-Z0-9\\s]+", R.string.good_name_invalid);
 
         if (event.auctionType.equals(Event.ENGLISH)) {
             // English auction UI
             goodNameEditText.setVisibility(View.GONE);
+            createAuctionGoodList.setVisibility(View.GONE);
+            validation.addValidation(this, R.id.edit_create_auction_starting_price, "[0-9\\.]+", R.string.starting_price_invalid);
         } else if (event.auctionType.equals(Event.COMBINATORIAL)) {
             // Combinatorial auction UI
-            Toast.makeText(getApplicationContext(), Event.COMBINATORIAL, Toast.LENGTH_SHORT).show();
+            auctionStartingPriceEditText.setVisibility(View.GONE);
+            validation.addValidation(this, R.id.edit_create_auction_good_name, "[a-zA-Z0-9\\s]+", R.string.good_name_invalid);
+
+            final GoodAdapter goodAdapter = new GoodAdapter(this, this.goods);
+            createAuctionGoodList.setAdapter(goodAdapter);
+
+            addGoodButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!validation.validate()) {
+                        return;
+                    }
+                    Good newGood = new Good();
+                    newGood.name = goodNameEditText.getText().toString();
+                    newGood.image = "1234";
+                    // Auction ID will be set once the auction is created, for all goods!
+                    goods.add(newGood);
+                    goodAdapter.notifyDataSetChanged();
+                    goodNameEditText.requestFocus();
+                    goodNameEditText.setText("");
+                }
+            });
         }
     }
 
@@ -110,15 +139,6 @@ public class CreateAuctionActivity extends AppCompatActivity {
         auction.startingPrice = Float.parseFloat(formStartingPrice.getText().toString());
 
         return auction;
-    }
-
-    public Good goodFromForm() {
-        EditText formName = findViewById(R.id.edit_create_auction_good_name);
-
-        Good good = new Good();
-        good.name = formName.getText().toString();
-
-        return good;
     }
 
     private void onSave() {
