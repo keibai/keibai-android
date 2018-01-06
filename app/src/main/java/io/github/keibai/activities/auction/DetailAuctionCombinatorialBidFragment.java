@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private EditText editTextBid;
     private SeekBar seekBarBid;
     private Button bidButton;
+    private TextView infoTextView;
 
     public DetailAuctionCombinatorialBidFragment() {
         // Required empty public constructor
@@ -96,6 +98,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         editTextBid = view.findViewById(R.id.comb_edit_text_bid);
         seekBarBid = view.findViewById(R.id.comb_seek_bar_bid);
         bidButton = view.findViewById(R.id.comb_bid_button);
+        infoTextView = view.findViewById(R.id.comb_bid_info_text);
 
         fetchInfoAndRenderBidUI();
         seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
@@ -158,8 +161,12 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private void renderUserBidUI() {
         setUserCreditText();
         // TODO: Auction status checks
-        seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
-        editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+        if (user.credit < auction.startingPrice) {
+            disableBidUi();
+        } else {
+            seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
+            editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+        }
     }
 
     private void renderGoods() {
@@ -208,8 +215,20 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         }
     };
 
+    /* Bidding UI utilities */
     private void setUserCreditText() {
         String text = String.format(res.getString(R.string.auction_user_credit_placeholder), user.credit);
         userCreditText.setText(text);
+    }
+
+    private void disableBidUi() {
+        Toast.makeText(getContext(), res.getString(R.string.auction_user_credit_not_enough), Toast.LENGTH_SHORT).show();
+        seekBarBid.setProgress(100);
+        editTextBid.setText(String.format("%.2f", auction.startingPrice));
+        editTextBid.setEnabled(false);
+        seekBarBid.setEnabled(false);
+        bidButton.setEnabled(false);
+        selectedGoodsListView.setEnabled(false);
+        availableGoodsListView.setEnabled(false);
     }
 }
