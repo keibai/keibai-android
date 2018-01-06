@@ -1,5 +1,6 @@
 package io.github.keibai.models.meta;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +9,10 @@ public class BodyWS {
     public String nonce;
     public int status = 200;
     public String json;
+
+    public BodyWS() {
+        this.nonce = UUID.randomUUID().toString();
+    }
 
     public static BodyWS fromString(String text) {
         Pattern pattern = Pattern.compile("(.*?),(.*?),([0-9]+),(.*)");
