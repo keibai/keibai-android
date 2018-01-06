@@ -20,6 +20,7 @@ public class Auction extends ModelAbstract {
     public int ownerId;
     public String status;
     public int winnerId;
+    public String combinatorialWinners;
 
     @Override
     public boolean equals(Object o) {
@@ -35,7 +36,8 @@ public class Auction extends ModelAbstract {
         if (!name.equals(auction.name)) return false;
         if (startTime != null ? !startTime.equals(auction.startTime) : auction.startTime != null) return false;
         if (endingTime != null ? !endingTime.equals(auction.endingTime) : auction.endingTime != null) return false;
-        return status.equals(auction.status);
+        if (!status.equals(auction.status)) return false;
+        return combinatorialWinners != null ? combinatorialWinners.equals(auction.combinatorialWinners) : auction.combinatorialWinners == null;
     }
 
     @Override
@@ -51,6 +53,7 @@ public class Auction extends ModelAbstract {
         result = 31 * result + ownerId;
         result = 31 * result + status.hashCode();
         result = 31 * result + winnerId;
+        result = 31 * result + (combinatorialWinners != null ? combinatorialWinners.hashCode() : 0);
         return result;
     }
 
@@ -65,6 +68,7 @@ public class Auction extends ModelAbstract {
                 ", ownerId=" + ownerId +
                 ", status='" + status + '\'' +
                 ", winnerId=" + winnerId +
+                ", combinatorialWinners='" + combinatorialWinners + '\'' +
                 ", id=" + id +
                 '}';
     }
