@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -48,6 +49,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private List<Good> availableGoods;
     private List<Good> selectedGoods;
 
+    private Chronometer timeChronometer;
     private ListView availableGoodsListView;
     private ListView selectedGoodsListView;
     private TextView userCreditText;
@@ -56,6 +58,8 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private SeekBar seekBarBid;
     private Button bidButton;
     private TextView infoTextView;
+    private Button startAuctionButton;
+    private Button stopAuctionButton;
 
     public DetailAuctionCombinatorialBidFragment() {
         // Required empty public constructor
@@ -90,6 +94,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
 
+        timeChronometer = view.findViewById(R.id.comb_auction_time_chronometer);
         availableGoodsListView = view.findViewById(R.id.comb_available_goods_list);
         selectedGoodsListView = view.findViewById(R.id.comb_selected_goods_list);
         userCreditText = view.findViewById(R.id.comb_auction_user_credit_text);
@@ -98,20 +103,24 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         seekBarBid = view.findViewById(R.id.comb_seek_bar_bid);
         bidButton = view.findViewById(R.id.comb_bid_button);
         infoTextView = view.findViewById(R.id.comb_bid_info_text);
+        startAuctionButton = view.findViewById(R.id.comb_start_auction_button);
+        stopAuctionButton = view.findViewById(R.id.comb_stop_auction_button);
 
         fetchAndRenderGoods();
         if (SaveSharedPreference.getUserId(getContext()) == event.ownerId) {
             // User is the owner. He/she has access to the management part of the UI
             // TODO: Set visible only when there are not auctions in progress and auction is accepted
+            startAuctionButton.setVisibility(View.VISIBLE);
             bidTextView.setText(res.getString(R.string.ready_start_auction));
             userCreditText.setVisibility(View.INVISIBLE);
             hideBidUi();
+            startAuctionButton.setOnClickListener(startAuctionButtonOnClickListener);
+            stopAuctionButton.setOnClickListener(stopAuctionButtonOnClickListener);
         } else {
             // Bidder Ui
             fetchAndRenderUser();
             seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
         }
-
 
         return view;
     }
@@ -239,6 +248,24 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
 
+        }
+    };
+
+    View.OnClickListener startAuctionButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startAuctionButton.setVisibility(View.GONE);
+            stopAuctionButton.setVisibility(View.VISIBLE);
+            timeChronometer.setVisibility(View.VISIBLE);
+            timeChronometer.start();
+        }
+    };
+
+    View.OnClickListener stopAuctionButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            stopAuctionButton.setVisibility(View.GONE);
+            timeChronometer.stop();
         }
     };
 

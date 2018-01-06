@@ -85,5 +85,6 @@
     <string name="ready_start_auction">Ready to start auction</string>
     <string name="available_goods">Available goods</string>
     <string name="selected_goods">Selected goods</string>
+    <string name="stop_auction">Press the button to stop the auction</string>
 
 </resources>

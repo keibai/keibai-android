@@ -12,6 +12,21 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <Chronometer
+                android:id="@+id/comb_auction_time_chronometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
         <!-- Item selection layout -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -133,6 +148,24 @@
                     android:text="@string/test"
                     android:textSize="20sp"
                     android:layout_centerHorizontal="true"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/comb_start_auction_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/comb_bid_info_text"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/comb_stop_auction_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stop"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/comb_bid_info_text"
                     android:visibility="gone"/>
 
             </RelativeLayout>
