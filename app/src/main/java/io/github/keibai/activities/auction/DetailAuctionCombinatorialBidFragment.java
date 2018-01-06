@@ -2,7 +2,6 @@ package io.github.keibai.activities.auction;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -100,14 +99,24 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         bidButton = view.findViewById(R.id.comb_bid_button);
         infoTextView = view.findViewById(R.id.comb_bid_info_text);
 
-        fetchInfoAndRenderBidUI();
-        seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
+        fetchAndRenderGoods();
+        if (SaveSharedPreference.getUserId(getContext()) == event.ownerId) {
+            // User is the owner. He/she has access to the management part of the UI
+            // TODO: Set visible only when there are not auctions in progress and auction is accepted
+            bidTextView.setText(res.getString(R.string.ready_start_auction));
+            userCreditText.setVisibility(View.INVISIBLE);
+            hideBidUi();
+        } else {
+            // Bidder Ui
+            fetchAndRenderUser();
+            seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
+        }
+
 
         return view;
     }
 
-    private void fetchInfoAndRenderBidUI() {
-        // Fetch user
+    private void fetchAndRenderUser() {
         http.get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
@@ -132,7 +141,9 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
             }
         });
 
-        // Fetch auction goods
+    }
+
+    private void fetchAndRenderGoods() {
         http.get(HttpUrl.getGoodListByAuctionIdUrl(auction.id), new HttpCallback<Good[]>(Good[].class) {
             @Override
             public void onError(Error error) throws IOException {
