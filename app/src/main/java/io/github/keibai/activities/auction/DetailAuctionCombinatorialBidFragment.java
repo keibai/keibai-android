@@ -160,12 +160,28 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
 
     private void renderUserBidUI() {
         setUserCreditText();
-        // TODO: Auction status checks
-        if (user.credit < auction.startingPrice) {
-            disableBidUi();
-        } else {
-            seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
-            editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+
+        switch (auction.status) {
+            case Auction.PENDING:
+                hideBidUi();
+                bidTextView.setText(res.getString(R.string.auction_not_accepted_yet));
+                break;
+            case Auction.ACCEPTED:
+                hideBidUi();
+                bidTextView.setText(res.getString(R.string.auction_not_started_yet));
+                break;
+            case Auction.FINISHED:
+                hideBidUi();
+                bidTextView.setText(res.getString(R.string.auction_finished));
+                break;
+            case Auction.IN_PROGRESS:
+                if (user.credit < auction.startingPrice) {
+                    disableBidUi();
+                } else {
+                    seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
+                    editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+                }
+                break;
         }
     }
 
@@ -230,5 +246,16 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         bidButton.setEnabled(false);
         selectedGoodsListView.setEnabled(false);
         availableGoodsListView.setEnabled(false);
+    }
+
+    private void hideBidUi() {
+        bidTextView.setVisibility(View.GONE);
+        editTextBid.setVisibility(View.GONE);
+        seekBarBid.setVisibility(View.GONE);
+        bidButton.setVisibility(View.GONE);
+        availableGoodsListView.setEnabled(false);
+        selectedGoodsListView.setEnabled(false);
+
+        bidTextView.setVisibility(View.VISIBLE);
     }
 }
