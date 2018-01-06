@@ -90,7 +90,7 @@ public class CreateAuctionActivity extends AppCompatActivity {
             auctionStartingPriceEditText.setVisibility(View.GONE);
             combinatorialGoodValidation.addValidation(this, R.id.edit_create_auction_good_name, "[a-zA-Z0-9\\s]+", R.string.good_name_invalid);
 
-            final GoodAdapter goodAdapter = new GoodAdapter(this, this.goods);
+            final GoodAdapter goodAdapter = new GoodAdapter(this, this.goods, true);
             createAuctionGoodList.setAdapter(goodAdapter);
 
             addGoodButton.setOnClickListener(new View.OnClickListener() {

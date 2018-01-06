@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,6 +16,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.github.keibai.R;
@@ -127,6 +130,29 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         });
 
         // Fetch auction goods
+        http.get(HttpUrl.getGoodListByAuctionIdUrl(auction.id), new HttpCallback<Good[]>(Good[].class) {
+            @Override
+            public void onError(Error error) throws IOException {
+                getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
+            }
+
+            @Override
+            public void onSuccess(final Good[] response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        availableGoods = new ArrayList<>(Arrays.asList(response));
+                        selectedGoods = new ArrayList<>();
+                        renderGoods();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+            }
+        });
     }
 
     private void renderUserBidUI() {
@@ -134,6 +160,35 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         // TODO: Auction status checks
         seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
         editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
+    }
+
+    private void renderGoods() {
+        final GoodAdapter availableGoodsAdapter = new GoodAdapter(getContext(), availableGoods, false);
+        final GoodAdapter selectedGoodsAdapter = new GoodAdapter(getContext(), selectedGoods, false);
+        availableGoodsListView.setAdapter(availableGoodsAdapter);
+        selectedGoodsListView.setAdapter(selectedGoodsAdapter);
+
+        availableGoodsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Good goodClicked = (Good) parent.getItemAtPosition(position);
+                availableGoods.remove(position);
+                selectedGoods.add(goodClicked);
+                availableGoodsAdapter.notifyDataSetChanged();
+                selectedGoodsAdapter.notifyDataSetChanged();
+            }
+        });
+
+        selectedGoodsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Good goodClicked = (Good) parent.getItemAtPosition(position);
+                selectedGoods.remove(position);
+                availableGoods.add(goodClicked);
+                selectedGoodsAdapter.notifyDataSetChanged();
+                availableGoodsAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {

@@ -20,13 +20,15 @@ public class GoodAdapter extends ArrayAdapter {
 
     private Context context;
     private List<Good> goods;
+    private boolean withDeleteButton;
 
     private TextView goodNameText;
 
-    public GoodAdapter(@NonNull Context context, @NonNull List<Good> objects) {
+    public GoodAdapter(@NonNull Context context, @NonNull List<Good> objects, boolean withDeleteButton) {
         super(context, 0, objects);
         this.context = context;
         this.goods = objects;
+        this.withDeleteButton = withDeleteButton;
     }
 
     @NonNull
@@ -45,13 +47,17 @@ public class GoodAdapter extends ArrayAdapter {
         goodNameText.setText(good.name);
 
         Button deleteButton = listItemView.findViewById(R.id.button_delete_good);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goods.remove(position);
-                notifyDataSetChanged();
-            }
-        });
+        if (withDeleteButton) {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goods.remove(position);
+                    notifyDataSetChanged();
+                }
+            });
+        } else {
+            deleteButton.setVisibility(View.GONE);
+        }
 
         return listItemView;
     }
