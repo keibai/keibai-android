@@ -117,6 +117,14 @@ public class DetailAuctionBidFragment extends Fragment{
                 }
             }
         });
+        // 0. Subscribe to new connections.
+        wsConnection.on("AuctionNewConnection", new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                User user = new Gson().fromJson(body.json, User.class);
+                System.out.println("New connection" + user);
+            }
+        });
 
         // 1. Subscribe to auction.
         Auction auction = new Auction();
