@@ -88,13 +88,11 @@ public class DetailAuctionBidFragment extends Fragment{
         wsConnection = ws.connect(HttpUrl.webSocket(), new WebSocketConnectionCallback() {
             @Override
             public void onOpen(WebSocketConnection connection, Response response) {
-                // TODO
                 System.out.println("WebSocket connected!");
             }
 
             @Override
             public void onClosed(WebSocketConnection connection, int code, String reason) {
-                // TODO
                 System.out.println("Socket connection closed.");
             }
         });
@@ -168,8 +166,8 @@ public class DetailAuctionBidFragment extends Fragment{
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            auctionTimeChronometer.setBase(SystemClock.elapsedRealtime());
-                            auctionTimeChronometer.start();
+                            auction = startedAuction;
+                            setChronometerTime();
                         }
                     });
                 } catch (Exception e) {
@@ -213,6 +211,7 @@ public class DetailAuctionBidFragment extends Fragment{
                     bidInfoText.setText(res.getString(R.string.ready_start_auction));
                     break;
                 case Auction.IN_PROGRESS:
+                    setChronometerTime();
                     stopAuctionButton.setVisibility(View.VISIBLE);
                     bidInfoText.setText(res.getString(R.string.ready_stop_auction));
                     break;
@@ -275,6 +274,7 @@ public class DetailAuctionBidFragment extends Fragment{
                 bidInfoText.setText(res.getString(R.string.auction_finished));
                 break;
             case Auction.IN_PROGRESS:
+                setChronometerTime();
                 if (user.credit < minBid + STEP) {
                     disableBidUI();
                 } else {
@@ -355,5 +355,13 @@ public class DetailAuctionBidFragment extends Fragment{
         bidButton.setVisibility(View.GONE);
 
         bidInfoText.setVisibility(View.VISIBLE);
+    }
+
+    private void setChronometerTime() {
+        /* https://stackoverflow.com/questions/21561110/how-to-use-timestamp-in-chronometr-android */
+        long system = SystemClock.elapsedRealtime();
+        long t = auction.startTime.getTime() - System.currentTimeMillis();
+        auctionTimeChronometer.setBase((system+t) - 7000); // TODO: Check this!
+        auctionTimeChronometer.start();
     }
 }
