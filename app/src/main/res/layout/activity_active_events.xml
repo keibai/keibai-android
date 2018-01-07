@@ -7,17 +7,10 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
-    <EditText
-        android:id="@+id/search_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search_active_events"/>
-
     <ListView
         android:id="@+id/active_events_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/search_edit_text">
+        android:layout_height="wrap_content">
 
     </ListView>
 
