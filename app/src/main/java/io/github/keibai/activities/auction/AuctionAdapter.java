@@ -109,11 +109,7 @@ public class AuctionAdapter extends ArrayAdapter {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Auction updateAuction = new Auction();
-                updateAuction.id = currentAuction.id;
-                updateAuction.status = Auction.ACCEPTED;
-
-                new Http(getContext()).post(HttpUrl.auctionUpdateStatusUrl(), updateAuction, new HttpCallback<Auction>(Auction.class) {
+                new Http(getContext()).post(HttpUrl.auctionAcceptUrl(currentAuction.id), new Auction(), new HttpCallback<Auction>(Auction.class) {
                     @Override
                     public void onError(Error error) throws IOException {
                         ((DetailEventActivity) context).runOnUiThread(new RunnableToast(getContext(), error.toString()));
