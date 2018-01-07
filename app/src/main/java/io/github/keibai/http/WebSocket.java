@@ -15,11 +15,14 @@ public class WebSocket {
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
     }
 
-    public WebSocketConnection connect(String url, WebSocketCallback callback) {
+    public WebSocketConnection connect(String url, WebSocketConnectionCallback callback) {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-        okhttp3.WebSocket webSocket = client.newWebSocket(request, callback);
-        return new WebSocketConnection(webSocket);
+        return this.connect(request, callback);
+    }
+
+    public WebSocketConnection connect(Request request, WebSocketConnectionCallback callback) {
+        return new WebSocketConnection(client, request, callback);
     }
 }

@@ -85,11 +85,14 @@ public class AuctionAdapter extends ArrayAdapter {
         String startingPrice = String.format(res.getString(R.string.starting_price_placeholder), currentAuction.startingPrice);
         startingPriceTextView.setText(startingPrice);
 
-        ImageView imageView = listItemView.findViewById(R.id.auction_img);
-        imageView.setImageResource(R.drawable.ic_dori);
-
         final TextView isValidStatusTextView = listItemView.findViewById(R.id.text_auction_is_valid_status);
         isValidStatusTextView.setText(currentAuction.status);
+
+        ImageView imageView = listItemView.findViewById(R.id.auction_img);
+        if (currentAuction.status.equals(Auction.PENDING)) imageView.setImageResource(R.drawable.ic_yellow);
+        else if (currentAuction.status.equals(Auction.ACCEPTED)) imageView.setImageResource(R.drawable.ic_green);
+        else if (currentAuction.status.equals(Auction.IN_PROGRESS)) imageView.setImageResource(R.drawable.ic_red);
+        else if (currentAuction.status.equals(Auction.FINISHED)) imageView.setImageResource(R.drawable.ic_grey);
 
         final Button acceptButton = listItemView.findViewById(R.id.button_accept_auction);
         final Button denyButton = listItemView.findViewById(R.id.button_deny_auction);

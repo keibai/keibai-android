@@ -23,54 +23,51 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="@dimen/event_detail_image_height"
-            android:src="@drawable/ic_dori"
-            android:maxHeight="1dp"
-            android:layout_weight="1"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
 
             <TextView
-                android:id="@+id/text_event_status"
+                android:id="@+id/event_detail_auction_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="STATUS" />
+                android:text="Auction type"/>
+
+            <TextView
+                android:id="@+id/event_detail_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"/>
+
+            <TextView
+                android:id="@+id/event_detail_friendly_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1h ago"/>
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/text_event_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="STATUS"
+                android:gravity="right"/>
+
+        </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/event_detail_auction_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Auction type"/>
-
-    <TextView
-        android:id="@+id/event_detail_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Location"/>
-
-    <TextView
-        android:id="@+id/event_detail_friendly_timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1h ago"/>
 
     <ListView
         android:id="@+id/event_auctions_list"
