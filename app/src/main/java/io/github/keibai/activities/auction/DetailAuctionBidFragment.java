@@ -255,75 +255,23 @@ public class DetailAuctionBidFragment extends Fragment{
         return view;
     }
 
-    private void fetchEventAuctionsAndRenderOwnerUi() {
-        http.get(HttpUrl.getAuctionListByEventId(event.id), new HttpCallback<Auction[]>(Auction[].class) {
-            @Override
-            public void onError(final Error error) throws IOException {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showToast(error.toString());
-                    }
-                });
-            }
-
-            @Override
-            public void onSuccess(final Auction[] response) throws IOException {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Search for auction in progress
-                        Auction inProgressAuction = null;
-                        for (Auction a: response) {
-                            if (a.status.equals(Auction.IN_PROGRESS)) {
-                                inProgressAuction = a;
-                                break;
-                            }
-                        }
-
-                        renderOwnerUi(inProgressAuction);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call call, final IOException e) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showToast(e.toString());
-                    }
-                });
-            }
-        });
-    }
-
-    private void renderOwnerUi(Auction inProgressAuction) {
-        if (inProgressAuction != null && inProgressAuction.id != auction.id) {
-            // Auction in progress is not the current auction
-            String text = String.format(res.getString(R.string.in_progress_auction_placeholder), inProgressAuction.name);
-            bidInfoText.setText(text);
-        } else {
-            // No auction in progress or auction in progress is the current auction
-            switch (auction.status) {
-                case Auction.ACCEPTED:
-                    startAuctionButton.setVisibility(View.VISIBLE);
-                    bidInfoText.setText(res.getString(R.string.ready_start_auction));
-                    break;
-                case Auction.IN_PROGRESS:
-                    setChronometerTime();
-                    stopAuctionButton.setVisibility(View.VISIBLE);
-                    bidInfoText.setText(res.getString(R.string.ready_stop_auction));
-                    break;
-                case Auction.FINISHED:
-                    fetchWinnerAndRenderName(auction.winnerId);
-                    break;
-                case Auction.PENDING:
-                    bidInfoText.setText(res.getString(R.string.auction_should_be_accepted));
-                    break;
-            }
+    /* Listeners */
+    SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+            editTextBid.setText(String.format("%.2f", minBid + (progress * STEP)));
         }
-    }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
 
     View.OnClickListener startAuctionButtonOnClickListener = new View.OnClickListener() {
         @Override
@@ -374,33 +322,7 @@ public class DetailAuctionBidFragment extends Fragment{
         }
     };
 
-    public void renderBidUi() {
-        setUserCreditText();
-
-        switch (auction.status) {
-            case Auction.PENDING:
-                hideBidUi();
-                bidInfoText.setText(res.getString(R.string.auction_not_accepted_yet));
-                break;
-            case Auction.ACCEPTED:
-                hideBidUi();
-                bidInfoText.setText(res.getString(R.string.auction_not_started_yet));
-                break;
-            case Auction.FINISHED:
-                hideBidUi();
-                bidInfoText.setText(res.getString(R.string.auction_finished));
-                break;
-            case Auction.IN_PROGRESS:
-                setChronometerTime();
-                if (user.credit < minBid + STEP) {
-                    disableBidUI();
-                } else {
-                    setSeekBar();
-                }
-                break;
-        }
-    }
-
+    /* Fetch data */
     private void fetchUserInfoAndRenderBidUi() {
         http.get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
@@ -515,22 +437,103 @@ public class DetailAuctionBidFragment extends Fragment{
         }
     }
 
-    SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-            editTextBid.setText(String.format("%.2f", minBid + (progress * STEP)));
+    private void fetchEventAuctionsAndRenderOwnerUi() {
+        http.get(HttpUrl.getAuctionListByEventId(event.id), new HttpCallback<Auction[]>(Auction[].class) {
+            @Override
+            public void onError(final Error error) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(error.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess(final Auction[] response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Search for auction in progress
+                        Auction inProgressAuction = null;
+                        for (Auction a: response) {
+                            if (a.status.equals(Auction.IN_PROGRESS)) {
+                                inProgressAuction = a;
+                                break;
+                            }
+                        }
+
+                        renderOwnerUi(inProgressAuction);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(e.toString());
+                    }
+                });
+            }
+        });
+    }
+
+    /* Render data */
+    private void renderOwnerUi(Auction inProgressAuction) {
+        if (inProgressAuction != null && inProgressAuction.id != auction.id) {
+            // Auction in progress is not the current auction
+            String text = String.format(res.getString(R.string.in_progress_auction_placeholder), inProgressAuction.name);
+            bidInfoText.setText(text);
+        } else {
+            // No auction in progress or auction in progress is the current auction
+            switch (auction.status) {
+                case Auction.ACCEPTED:
+                    startAuctionButton.setVisibility(View.VISIBLE);
+                    bidInfoText.setText(res.getString(R.string.ready_start_auction));
+                    break;
+                case Auction.IN_PROGRESS:
+                    setChronometerTime();
+                    stopAuctionButton.setVisibility(View.VISIBLE);
+                    bidInfoText.setText(res.getString(R.string.ready_stop_auction));
+                    break;
+                case Auction.FINISHED:
+                    fetchWinnerAndRenderName(auction.winnerId);
+                    break;
+                case Auction.PENDING:
+                    bidInfoText.setText(res.getString(R.string.auction_should_be_accepted));
+                    break;
+            }
         }
+    }
 
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
+    public void renderBidUi() {
+        setUserCreditText();
 
+        switch (auction.status) {
+            case Auction.PENDING:
+                hideBidUi();
+                bidInfoText.setText(res.getString(R.string.auction_not_accepted_yet));
+                break;
+            case Auction.ACCEPTED:
+                hideBidUi();
+                bidInfoText.setText(res.getString(R.string.auction_not_started_yet));
+                break;
+            case Auction.FINISHED:
+                hideBidUi();
+                bidInfoText.setText(res.getString(R.string.auction_finished));
+                break;
+            case Auction.IN_PROGRESS:
+                setChronometerTime();
+                if (user.credit < minBid + STEP) {
+                    disableBidUI();
+                } else {
+                    setSeekBar();
+                }
+                break;
         }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-    };
+    }
 
     /* Bidding UI utilities */
     private void setHighestBidText(float bid) {
