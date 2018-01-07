@@ -51,7 +51,6 @@ public class DetailAuctionBidFragment extends Fragment{
     private User user;
     private double minBid;
 
-    private Button startAuctionButton;
     private Chronometer auctionTimeChronometer;
     private TextView highestBidText;
     private TextView auctionUserCreditText;
@@ -60,6 +59,8 @@ public class DetailAuctionBidFragment extends Fragment{
     private SeekBar seekBarBid;
     private Button bidButton;
     private TextView bidInfoText;
+    private Button startAuctionButton;
+    private Button stopAuctionButton;
 
     public DetailAuctionBidFragment() {
         // Required empty public constructor
@@ -168,7 +169,6 @@ public class DetailAuctionBidFragment extends Fragment{
         event = SaveSharedPreference.getCurrentEvent(getContext());
         minBid = auction.startingPrice + STEP;
 
-        startAuctionButton = view.findViewById(R.id.start_auction_button);
         auctionTimeChronometer = view.findViewById(R.id.auction_time_chronometer);
         highestBidText = view.findViewById(R.id.highest_bid_text);
         auctionUserCreditText = view.findViewById(R.id.auction_user_credit_text);
@@ -177,6 +177,8 @@ public class DetailAuctionBidFragment extends Fragment{
         seekBarBid = view.findViewById(R.id.seek_bar_bid);
         bidButton = view.findViewById(R.id.bid_button);
         bidInfoText = view.findViewById(R.id.bid_info_text);
+        startAuctionButton = view.findViewById(R.id.start_auction_button);
+        stopAuctionButton = view.findViewById(R.id.stop_auction_button);
 
         setHighestBidText((float) auction.startingPrice);
 
@@ -188,6 +190,7 @@ public class DetailAuctionBidFragment extends Fragment{
             auctionUserCreditText.setVisibility(View.INVISIBLE);
             hideBidUi();
             startAuctionButton.setOnClickListener(startAuctionButtonOnClickListener);
+            stopAuctionButton.setOnClickListener(stopAuctionButtonOnClickListener);
         } else {
             // Bidder Ui
             fetchUserInfoAndRenderBidUi();
@@ -202,8 +205,17 @@ public class DetailAuctionBidFragment extends Fragment{
         @Override
         public void onClick(View view) {
             startAuctionButton.setVisibility(View.GONE);
+            stopAuctionButton.setVisibility(View.VISIBLE);
             auctionTimeChronometer.setVisibility(View.VISIBLE);
             auctionTimeChronometer.start();
+        }
+    };
+
+    View.OnClickListener stopAuctionButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            stopAuctionButton.setVisibility(View.GONE);
+            auctionTimeChronometer.stop();
         }
     };
 

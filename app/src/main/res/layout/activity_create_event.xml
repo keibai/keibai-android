@@ -35,13 +35,6 @@
         android:prompt="@string/event_type" />
 
     <EditText
-        android:id="@+id/edit_event_create_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/event_time_seconds"
-        android:inputType="number" />
-
-    <EditText
         android:id="@+id/edit_event_create_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
