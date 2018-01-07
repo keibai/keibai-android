@@ -1,12 +1,14 @@
 package io.github.keibai.activities.bid;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -14,8 +16,6 @@ import java.util.List;
 
 import io.github.keibai.R;
 import io.github.keibai.activities.MainActivity;
-import io.github.keibai.activities.activity.ActivityBidFragment;
-import io.github.keibai.activities.activity.ActivityFragment;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
@@ -34,11 +34,14 @@ public class BidAdapter extends ArrayAdapter {
     private int auctionId;
     private BidLog currentTransaction;
     private View listItemView;
+    private Integer rowcount;
+    private LinearLayout linearLayout;
 
     public BidAdapter(@NonNull Context context, @NonNull List<BidLog> objects) {
         super(context, 0, objects);
 
         this.context = context;
+        this.rowcount = 0;
     }
 
     @NonNull
@@ -49,6 +52,7 @@ public class BidAdapter extends ArrayAdapter {
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.transaction_list_item,
                     parent, false);
+            linearLayout = (LinearLayout) listItemView.findViewById(R.id.layout);
         }
 
         currentTransaction = (BidLog) getItem(position);
@@ -66,6 +70,11 @@ public class BidAdapter extends ArrayAdapter {
 
         auctionId = currentTransaction.getAuctionId();
         fetchAuctionName();
+
+        if (rowcount % 2 == 0) linearLayout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        else linearLayout.setBackgroundColor(Color.parseColor("#F4F4F4"));
+
+        ++rowcount;
 
         return listItemView;
     }
