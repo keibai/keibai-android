@@ -44,7 +44,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
         validation = new DefaultAwesomeValidation(getApplicationContext());
         validation.addValidation(this, R.id.edit_event_create_name, "[a-zA-Z0-9\\s]+", R.string.event_name_error);
-        validation.addValidation(this, R.id.edit_event_create_time, "[0-9]+", R.string.event_time_seconds_error);
         validation.addValidation(this, R.id.edit_event_create_category, "[a-zA-Z0-9\\s]+", R.string.category_error);
         validation.addValidation(this, R.id.edit_event_create_location, "[a-zA-Z0-9\\s]+", R.string.location_error);
     }
@@ -76,14 +75,12 @@ public class CreateEventActivity extends AppCompatActivity {
     public Event eventFromForm() {
         EditText formName = findViewById(R.id.edit_event_create_name);
         Spinner formAuctionType = findViewById(R.id.spinner_event_create_type);
-        EditText formTime = findViewById(R.id.edit_event_create_time);
         EditText formLocation = findViewById(R.id.edit_event_create_location);
         EditText formCategory = findViewById(R.id.edit_event_create_category);
 
         Event event = new Event();
         event.name = formName.getText().toString();
         event.auctionType = String.valueOf(formAuctionType.getSelectedItem());
-        event.auctionTime = Integer.valueOf(formTime.getText().toString());
         event.location = formLocation.getText().toString();
         event.category = formCategory.getText().toString();
         event.status = Event.OPENED;
