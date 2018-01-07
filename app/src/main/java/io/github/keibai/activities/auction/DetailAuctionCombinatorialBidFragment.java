@@ -111,7 +111,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
             // User is the owner. He/she has access to the management part of the UI
             // TODO: Set visible only when there are not auctions in progress and auction is accepted
             startAuctionButton.setVisibility(View.VISIBLE);
-            bidTextView.setText(res.getString(R.string.ready_start_auction));
+            infoTextView.setText(res.getString(R.string.ready_start_auction));
             userCreditText.setVisibility(View.INVISIBLE);
             hideBidUi();
             startAuctionButton.setOnClickListener(startAuctionButtonOnClickListener);
@@ -258,6 +258,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
             stopAuctionButton.setVisibility(View.VISIBLE);
             timeChronometer.setVisibility(View.VISIBLE);
             timeChronometer.start();
+            infoTextView.setText(res.getString(R.string.ready_stop_auction));
         }
     };
 
@@ -266,6 +267,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         public void onClick(View view) {
             stopAuctionButton.setVisibility(View.GONE);
             timeChronometer.stop();
+            infoTextView.setText("");
         }
     };
 
@@ -294,6 +296,6 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         availableGoodsListView.setEnabled(false);
         selectedGoodsListView.setEnabled(false);
 
-        bidTextView.setVisibility(View.VISIBLE);
+        infoTextView.setVisibility(View.VISIBLE);
     }
 }
