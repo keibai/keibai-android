@@ -212,6 +212,57 @@ public class DetailAuctionBidFragment extends Fragment{
             auctionUserCreditText.setVisibility(View.INVISIBLE);
             hideBidUi();
 
+            fetchEventAuctionsAndRenderOwnerUi();
+        } else {
+            // Bidder Ui
+            fetchUserInfoAndRenderBidUi();
+
+            seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
+        }
+
+        return view;
+    }
+
+    private void fetchEventAuctionsAndRenderOwnerUi() {
+        http.get(HttpUrl.getAuctionListByEventId(event.id), new HttpCallback<Auction[]>(Auction[].class) {
+            @Override
+            public void onError(Error error) throws IOException {
+                getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
+            }
+
+            @Override
+            public void onSuccess(final Auction[] response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Search for auction in progress
+                        Auction inProgressAuction = null;
+                        for (Auction a: response) {
+                            if (a.status.equals(Auction.IN_PROGRESS)) {
+                                inProgressAuction = a;
+                                break;
+                            }
+                        }
+
+                        renderOwnerUi(inProgressAuction);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+            }
+        });
+    }
+
+    private void renderOwnerUi(Auction inProgressAuction) {
+        if (inProgressAuction != null && inProgressAuction.id != auction.id) {
+            // Auction in progress is not the current auction
+            String text = String.format(res.getString(R.string.in_progress_auction_placeholder), inProgressAuction.name);
+            bidInfoText.setText(text);
+        } else {
+            // No auction in progress or auction in progress is the current auction
             switch (auction.status) {
                 case Auction.ACCEPTED:
                     startAuctionButton.setVisibility(View.VISIBLE);
@@ -229,14 +280,7 @@ public class DetailAuctionBidFragment extends Fragment{
                     // TODO
                     break;
             }
-        } else {
-            // Bidder Ui
-            fetchUserInfoAndRenderBidUi();
-
-            seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
         }
-
-        return view;
     }
 
     View.OnClickListener startAuctionButtonOnClickListener = new View.OnClickListener() {
@@ -260,7 +304,6 @@ public class DetailAuctionBidFragment extends Fragment{
             stopAuctionButton.setVisibility(View.GONE);
             auctionTimeChronometer.stop();
             bidInfoText.setText("");
-
         }
     };
 

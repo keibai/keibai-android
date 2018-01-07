@@ -88,4 +88,5 @@
     <string name="stop_auction">Press the button to stop the auction</string>
     <string name="ready_stop_auction">Ready to stop auction</string>
     <string name="stop">Stop</string>
+    <string name="in_progress_auction_placeholder">In progress auction: %1$s</string>
 </resources>
