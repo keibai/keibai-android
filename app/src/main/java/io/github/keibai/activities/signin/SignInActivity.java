@@ -46,6 +46,8 @@ public class SignInActivity extends AppCompatActivity {
         validation = new DefaultAwesomeValidation(getApplicationContext());
         validation.addValidation(this, R.id.edit_sign_in_email, Patterns.EMAIL_ADDRESS, R.string.email_invalid);
         validation.addValidation(this, R.id.edit_sign_in_password, ".+", R.string.password_invalid);
+
+        autofillEmail();
     }
 
     @Override
@@ -70,6 +72,18 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void autofillEmail() {
+        String newFormEmail = SaveSharedPreference.getAutofillEmail(getApplicationContext());
+        EditText formEmail = findViewById(R.id.edit_sign_in_email);
+        formEmail.setText(newFormEmail);
+    }
+
+    public void updateAutofillEmail() {
+        EditText formEmail = findViewById(R.id.edit_sign_in_email);
+        String newEmail = formEmail.getText().toString();
+        SaveSharedPreference.setAutofillEmail(getApplicationContext(), newEmail);
     }
 
     public User userFromForm() {
@@ -97,7 +111,9 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(User response) throws IOException {
+                updateAutofillEmail();
                 SaveSharedPreference.setUserId(getApplicationContext(), response.id);
+
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
