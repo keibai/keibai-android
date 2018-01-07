@@ -168,6 +168,10 @@ public class DetailAuctionBidFragment extends Fragment{
                         public void run() {
                             auction = startedAuction;
                             setChronometerTime();
+                            showBidUi();
+                            if (user.credit < minBid + STEP) {
+                                disableBidUI();
+                            }
                         }
                     });
                 } catch (Exception e) {
@@ -357,11 +361,20 @@ public class DetailAuctionBidFragment extends Fragment{
         bidInfoText.setVisibility(View.VISIBLE);
     }
 
+    private void showBidUi() {
+        bidTextView.setVisibility(View.VISIBLE);
+        editTextBid.setVisibility(View.VISIBLE);
+        seekBarBid.setVisibility(View.VISIBLE);
+        bidButton.setVisibility(View.VISIBLE);
+
+        bidInfoText.setVisibility(View.GONE);
+    }
+
     private void setChronometerTime() {
         /* https://stackoverflow.com/questions/21561110/how-to-use-timestamp-in-chronometr-android */
         long system = SystemClock.elapsedRealtime();
         long t = auction.startTime.getTime() - System.currentTimeMillis();
-        auctionTimeChronometer.setBase((system+t) - 7000); // TODO: Check this!
+        auctionTimeChronometer.setBase((system+t)); // TODO: Check this!
         auctionTimeChronometer.start();
     }
 }
