@@ -36,7 +36,6 @@ import io.github.keibai.models.Good;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.BodyWS;
 import io.github.keibai.models.meta.Error;
-import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -117,7 +116,8 @@ public class DetailAuctionBidFragment extends Fragment{
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
         user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
-        minBid = auction.startingPrice + STEP;
+        minBid = auction.maxBid == 0.0 ? auction.startingPrice : auction.maxBid;
+        minBid += STEP;
         userMap = new SparseArray<>();
         fetchGood();
 
@@ -167,9 +167,9 @@ public class DetailAuctionBidFragment extends Fragment{
                         }
                         String msg = String.format(res.getString(R.string.bid_msg_placeholder), bidder.name, newBid.amount);
                         showToast(msg);
-                        minBid = newBid.amount;
+                        minBid = newBid.amount + STEP;
                         if (user.id != event.ownerId) {
-                            setHighestBidText((float) minBid);
+                            setHighestBidText((float) newBid.amount);
                             if (user.credit < minBid + STEP) {
                                 disableBidUI();
                             } else {
@@ -228,7 +228,7 @@ public class DetailAuctionBidFragment extends Fragment{
         startAuctionButton = view.findViewById(R.id.start_auction_button);
         stopAuctionButton = view.findViewById(R.id.stop_auction_button);
 
-        setHighestBidText((float) auction.startingPrice);
+        setHighestBidText((float) auction.maxBid);
 
         if (SaveSharedPreference.getUserId(getContext()) == event.ownerId) {
             // User is the owner. He/she has access to the management part of the UI
