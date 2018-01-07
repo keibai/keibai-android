@@ -81,12 +81,10 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
     public void renderUser(User user) {
         ImageView avatarView = view.findViewById(R.id.image_profile_avatar);
         TextView name = view.findViewById(R.id.text_profile_name);
-        TextView lastName = view.findViewById(R.id.text_profile_last_name);
         TextView email = view.findViewById(R.id.text_profile_email);
         TextView creation_date = view.findViewById(R.id.creation_date);
 
-        name.setText(user.name);
-        lastName.setText(user.lastName);
+        name.setText(user.name + " " + user.lastName);
         email.setText(user.email);
 
 

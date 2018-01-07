@@ -54,4 +54,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile group: 'com.squareup.picasso', name: 'picasso', version: '2.5.2'
     compile 'com.basgeekball:awesome-validation:2.0'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 }

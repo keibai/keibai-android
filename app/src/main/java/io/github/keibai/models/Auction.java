@@ -15,10 +15,12 @@ public class Auction extends ModelAbstract {
     public String name;
     public double startingPrice;
     public Timestamp startTime;
+    public Timestamp endingTime;
     public int eventId;
     public int ownerId;
     public String status;
     public int winnerId;
+    public String combinatorialWinners;
 
     @Override
     public boolean equals(Object o) {
@@ -27,14 +29,15 @@ public class Auction extends ModelAbstract {
 
         Auction auction = (Auction) o;
 
-        if (id != auction.id) return false;
         if (Double.compare(auction.startingPrice, startingPrice) != 0) return false;
         if (eventId != auction.eventId) return false;
         if (ownerId != auction.ownerId) return false;
         if (winnerId != auction.winnerId) return false;
         if (!name.equals(auction.name)) return false;
         if (startTime != null ? !startTime.equals(auction.startTime) : auction.startTime != null) return false;
-        return status.equals(auction.status);
+        if (endingTime != null ? !endingTime.equals(auction.endingTime) : auction.endingTime != null) return false;
+        if (!status.equals(auction.status)) return false;
+        return combinatorialWinners != null ? combinatorialWinners.equals(auction.combinatorialWinners) : auction.combinatorialWinners == null;
     }
 
     @Override
@@ -45,10 +48,12 @@ public class Auction extends ModelAbstract {
         temp = Double.doubleToLongBits(startingPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+        result = 31 * result + (endingTime != null ? endingTime.hashCode() : 0);
         result = 31 * result + eventId;
         result = 31 * result + ownerId;
         result = 31 * result + status.hashCode();
         result = 31 * result + winnerId;
+        result = 31 * result + (combinatorialWinners != null ? combinatorialWinners.hashCode() : 0);
         return result;
     }
 
@@ -58,10 +63,12 @@ public class Auction extends ModelAbstract {
                 "name='" + name + '\'' +
                 ", startingPrice=" + startingPrice +
                 ", startTime=" + startTime +
+                ", endingTime=" + endingTime +
                 ", eventId=" + eventId +
                 ", ownerId=" + ownerId +
                 ", status='" + status + '\'' +
                 ", winnerId=" + winnerId +
+                ", combinatorialWinners='" + combinatorialWinners + '\'' +
                 ", id=" + id +
                 '}';
     }
