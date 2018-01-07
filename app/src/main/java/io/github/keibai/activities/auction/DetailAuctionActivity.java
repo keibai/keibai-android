@@ -15,9 +15,10 @@ import java.util.List;
 
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.activities.AuthRequiredActivityAbstract;
 import io.github.keibai.models.Auction;
 
-public class DetailAuctionActivity extends AppCompatActivity {
+public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
 
     private Auction auction;
 

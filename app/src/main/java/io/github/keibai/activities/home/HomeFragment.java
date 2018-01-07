@@ -94,13 +94,6 @@ public class HomeFragment extends MainFragmentAbstract {
         fetchBidList();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        http.close();
-    }
-
     public void renderUser(User user) {
         TextView credit = view.findViewById(R.id.text_home_credit);
 
