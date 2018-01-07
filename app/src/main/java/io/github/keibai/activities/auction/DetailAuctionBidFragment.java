@@ -74,6 +74,8 @@ public class DetailAuctionBidFragment extends Fragment{
     private Button startAuctionButton;
     private Button stopAuctionButton;
 
+    private Toast currentToast;
+
     public DetailAuctionBidFragment() {
         // Required empty public constructor
     }
@@ -136,25 +138,36 @@ public class DetailAuctionBidFragment extends Fragment{
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
                 User user = new Gson().fromJson(body.json, User.class);
-                String msg = "User " + user.name + " connected";
-                getActivity().runOnUiThread(new RunnableToast(getContext(), msg));
+                final String msg = "User " + user.name + " connected";
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(msg);
+                    }
+                });
                 // Add user to the internal map in order to change user ID by its name
                 userMap.append(user.id, user);
             }
         });
 
-        // 3. Subscribe to new bids. TODO
-//        wsConnection.on(TYPE_AUCTION_BIDDED, new WebSocketBodyCallback() {
-//            @Override
-//            public void onMessage(WebSocketConnection connection, BodyWS body) {
-//                try {
-//                    Bid newBid = new Gson().fromJson(body.json, Bid.class);
-//                    System.out.println(newBid.amount);
-//                } catch (Exception e) {
-//                    System.out.println(e.getMessage());
-//                }
-//            }
-//        });
+        // 3. Subscribe to new bids.
+        wsConnection.on(TYPE_AUCTION_BIDDED, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, final BodyWS body) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Bid newBid = new Gson().fromJson(body.json, Bid.class);
+                        User bidder = userMap.get(newBid.ownerId);
+                        if (bidder == null) {
+                            bidder = new User() {{ name = String.valueOf(newBid.ownerId); }};
+                        }
+                        String msg = String.format(res.getString(R.string.bid_msg_placeholder), bidder.name, newBid.amount);
+                        showToast(msg);
+                    }
+                });
+            }
+        });
 
         // 4. Subscribe to auction started.
         wsConnection.on(TYPE_AUCTION_STARTED, new WebSocketBodyCallback() {
@@ -226,8 +239,13 @@ public class DetailAuctionBidFragment extends Fragment{
     private void fetchEventAuctionsAndRenderOwnerUi() {
         http.get(HttpUrl.getAuctionListByEventId(event.id), new HttpCallback<Auction[]>(Auction[].class) {
             @Override
-            public void onError(Error error) throws IOException {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
+            public void onError(final Error error) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(error.toString());
+                    }
+                });
             }
 
             @Override
@@ -250,8 +268,13 @@ public class DetailAuctionBidFragment extends Fragment{
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+            public void onFailure(Call call, final IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(e.toString());
+                    }
+                });
             }
         });
     }
@@ -277,7 +300,7 @@ public class DetailAuctionBidFragment extends Fragment{
                     // TODO
                     break;
                 case Auction.PENDING:
-                    // TODO
+                    bidInfoText.setText(res.getString(R.string.auction_should_be_accepted));
                     break;
             }
         }
@@ -339,8 +362,13 @@ public class DetailAuctionBidFragment extends Fragment{
         http.get(HttpUrl.userWhoami(), new HttpCallback<User>(User.class) {
 
             @Override
-            public void onError(Error error) throws IOException {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
+            public void onError(final Error error) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(error.toString());
+                    }
+                });
             }
 
             @Override
@@ -355,8 +383,13 @@ public class DetailAuctionBidFragment extends Fragment{
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+            public void onFailure(Call call, final IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(e.toString());
+                    }
+                });
             }
         });
     }
@@ -390,7 +423,7 @@ public class DetailAuctionBidFragment extends Fragment{
     }
 
     private void disableBidUI() {
-        Toast.makeText(getContext(), res.getString(R.string.auction_user_credit_not_enough), Toast.LENGTH_SHORT).show();
+        showToast(res.getString(R.string.auction_user_credit_not_enough));
         seekBarBid.setProgress(100);
         editTextBid.setText(String.format("%.2f", minBid));
         editTextBid.setEnabled(false);
@@ -425,5 +458,14 @@ public class DetailAuctionBidFragment extends Fragment{
         long t = auction.startTime.getTime() - System.currentTimeMillis();
         auctionTimeChronometer.setBase((system+t)); // TODO: Check this!
         auctionTimeChronometer.start();
+    }
+
+    private void showToast(String text) {
+        if (currentToast == null) {
+            currentToast = Toast.makeText(getContext(), text, Toast.LENGTH_LONG);
+        }
+        currentToast.setText(text);
+        currentToast.setDuration(Toast.LENGTH_LONG);
+        currentToast.show();
     }
 }

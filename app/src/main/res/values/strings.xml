@@ -89,4 +89,6 @@
     <string name="ready_stop_auction">Ready to stop auction</string>
     <string name="stop">Stop</string>
     <string name="in_progress_auction_placeholder">In progress auction: %1$s</string>
+    <string name="auction_should_be_accepted">Auction should be first accepted</string>
+    <string name="bid_msg_placeholder">%1$s bidded %2$.2f</string>
 </resources>
