@@ -32,6 +32,7 @@ import io.github.keibai.http.WebSocketConnectionCallback;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Bid;
 import io.github.keibai.models.Event;
+import io.github.keibai.models.Good;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.BodyWS;
 import io.github.keibai.models.meta.Error;
@@ -58,6 +59,7 @@ public class DetailAuctionBidFragment extends Fragment{
     private WebSocketConnection wsConnection;
 
     private Auction auction;
+    private Good good;
     private Event event;
     private User user;
     private double minBid;
@@ -117,6 +119,7 @@ public class DetailAuctionBidFragment extends Fragment{
         user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
         minBid = auction.startingPrice + STEP;
         userMap = new SparseArray<>();
+        fetchGood();
 
         wsSubscribe();
     }
@@ -164,6 +167,15 @@ public class DetailAuctionBidFragment extends Fragment{
                         }
                         String msg = String.format(res.getString(R.string.bid_msg_placeholder), bidder.name, newBid.amount);
                         showToast(msg);
+                        minBid = newBid.amount;
+                        if (user.id != event.ownerId) {
+                            setHighestBidText((float) minBid);
+                            if (user.credit < minBid + STEP) {
+                                disableBidUI();
+                            } else {
+                                setSeekBar();
+                            }
+                        }
                     }
                 });
             }
@@ -229,8 +241,8 @@ public class DetailAuctionBidFragment extends Fragment{
         } else {
             // Bidder Ui
             fetchUserInfoAndRenderBidUi();
-
             seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
+            bidButton.setOnClickListener(bidButtonOnClickListener);
         }
 
         return view;
@@ -330,6 +342,27 @@ public class DetailAuctionBidFragment extends Fragment{
         }
     };
 
+    View.OnClickListener bidButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            BodyWS bodyBid = new BodyWS();
+            bodyBid.type = TYPE_AUCTION_BID;
+
+            try {
+                Bid bid = new Bid();
+                bid.amount = Float.parseFloat(editTextBid.getText().toString());
+                bid.auctionId = auction.id;
+                bid.ownerId = user.id;
+                bid.goodId = good.id;
+                bodyBid.json = new Gson().toJson(bid);
+                wsConnection.send(bodyBid);
+            } catch (NumberFormatException e) {
+                showToast("Can not bid " + editTextBid.getText().toString());
+            }
+
+        }
+    };
+
     public void renderBidUi() {
         setUserCreditText();
 
@@ -351,8 +384,7 @@ public class DetailAuctionBidFragment extends Fragment{
                 if (user.credit < minBid + STEP) {
                     disableBidUI();
                 } else {
-                    seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
-                    editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
+                    setSeekBar();
                 }
                 break;
         }
@@ -378,6 +410,41 @@ public class DetailAuctionBidFragment extends Fragment{
                     public void run() {
                         user = fetchedUser;
                         renderBidUi();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(e.toString());
+                    }
+                });
+            }
+        });
+    }
+
+    private void fetchGood() {
+        http.get(HttpUrl.getGoodListByAuctionIdUrl(auction.id), new HttpCallback<Good[]>(Good[].class) {
+            @Override
+            public void onError(final Error error) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(error.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess(final Good[] response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Only one good for the english auctions
+                        good = response[0];
                     }
                 });
             }
@@ -448,8 +515,7 @@ public class DetailAuctionBidFragment extends Fragment{
 
         bidInfoText.setVisibility(View.GONE);
 
-        seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
-        editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
+        setSeekBar();
     }
 
     private void setChronometerTime() {
@@ -467,5 +533,11 @@ public class DetailAuctionBidFragment extends Fragment{
         currentToast.setText(text);
         currentToast.setDuration(Toast.LENGTH_LONG);
         currentToast.show();
+    }
+
+    private void setSeekBar() {
+        seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
+        seekBarBid.setProgress(0);
+        editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
     }
 }
