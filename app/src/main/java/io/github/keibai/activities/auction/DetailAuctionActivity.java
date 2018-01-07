@@ -17,16 +17,19 @@ import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.AuthRequiredActivityAbstract;
 import io.github.keibai.models.Auction;
+import io.github.keibai.models.Event;
 
 public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
 
     private Auction auction;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_auction);
 
+        event = SaveSharedPreference.getCurrentEvent(getApplicationContext());
         auction = SaveSharedPreference.getCurrentAuction(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar_detail_auction);
@@ -44,7 +47,11 @@ public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new DetailAuctionBidFragment(), getString(R.string.bid));
+        if (event.auctionType.equals(Event.ENGLISH)) {
+            adapter.addFragment(new DetailAuctionBidFragment(), getString(R.string.bid));
+        } else if (event.auctionType.equals(Event.COMBINATORIAL)) {
+            adapter.addFragment(new DetailAuctionCombinatorialBidFragment(), getString(R.string.bid));
+        }
         adapter.addFragment(new DetailAuctionTransactionsFragment(), getString(R.string.transactions));
         viewPager.setAdapter(adapter);
     }
