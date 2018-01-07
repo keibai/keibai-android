@@ -71,7 +71,7 @@ public class WebSocketConnection {
      * @return
      */
     public boolean close() {
-        return this.webSocket.close(0, "");
+        return this.webSocket.close(1000, "");
     }
 
     /**

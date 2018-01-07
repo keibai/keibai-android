@@ -3,8 +3,9 @@ package io.github.keibai.activities.auction;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,16 +41,27 @@ import okhttp3.Response;
 
 public class DetailAuctionBidFragment extends Fragment{
 
+    public static final String TYPE_AUCTION_SUBSCRIBE = "AuctionSubscribe";
+    public static final String TYPE_AUCTION_NEW_CONNECTION = "AuctionNewConnection";
+    public static final String TYPE_AUCTION_BID = "AuctionBid";
+    public static final String TYPE_AUCTION_BIDDED = "AuctionBidded";
+    public static final String TYPE_AUCTION_START = "AuctionStart";
+    public static final String TYPE_AUCTION_STARTED = "AuctionStarted";
+    public static final String TYPE_AUCTION_CLOSE = "AuctionClose";
+    public static final String TYPE_AUCTION_CLOSED = "AuctionClosed";
+
     private static final float STEP = 0.5f;
 
     private View view;
     private Resources res;
     private Http http;
+    private WebSocketConnection wsConnection;
 
     private Auction auction;
     private Event event;
     private User user;
     private double minBid;
+    private SparseArray<User> userMap;
 
     private Chronometer auctionTimeChronometer;
     private TextView highestBidText;
@@ -71,6 +83,21 @@ public class DetailAuctionBidFragment extends Fragment{
         super.onAttach(context);
 
         http = new Http(getContext());
+
+        WebSocket ws = new WebSocket(getContext());
+        wsConnection = ws.connect(HttpUrl.webSocket(), new WebSocketConnectionCallback() {
+            @Override
+            public void onOpen(WebSocketConnection connection, Response response) {
+                // TODO
+                System.out.println("WebSocket connected!");
+            }
+
+            @Override
+            public void onClosed(WebSocketConnection connection, int code, String reason) {
+                // TODO
+                System.out.println("Socket connection closed.");
+            }
+        });
     }
 
     @Override
@@ -78,85 +105,80 @@ public class DetailAuctionBidFragment extends Fragment{
         super.onDetach();
 
         http.close();
+        wsConnection.close();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //demoPlay();
+        auction = SaveSharedPreference.getCurrentAuction(getContext());
+        event = SaveSharedPreference.getCurrentEvent(getContext());
+        minBid = auction.startingPrice + STEP;
+        userMap = new SparseArray<>();
+
+        wsSubscribe();
     }
 
-    public void demoPlay() {
-        System.out.println("Started demo play.");
-
-        WebSocket ws = new WebSocket(getContext());
-        WebSocketConnection wsConnection = ws.connect(HttpUrl.webSocket(), new WebSocketConnectionCallback() {
-
+    private void wsSubscribe() {
+        // 1. Subscribe to auction.
+        BodyWS bodySubscription = new BodyWS();
+        bodySubscription.type = TYPE_AUCTION_SUBSCRIBE;
+        bodySubscription.json = new Gson().toJson(auction);
+        wsConnection.send(bodySubscription, new WebSocketBodyCallback() {
             @Override
-            public void onOpen(WebSocketConnection connection, Response response) {
-                System.out.println("WebSocket connected!");
-            }
-
-            @Override
-            public void onClosed(WebSocketConnection connection, int code, String reason) {
-                System.out.println("Socket connection closed.");
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                System.out.println("Response to AuctionSubscribe " + body);
             }
         });
-        // 0. Subscribe to new bids.
-        wsConnection.on("AuctionBidded", new WebSocketBodyCallback() {
+
+        // 2. Subscribe to new connections.
+        wsConnection.on(TYPE_AUCTION_NEW_CONNECTION, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                User user = new Gson().fromJson(body.json, User.class);
+                String msg = "User " + user.name + " connected";
+                getActivity().runOnUiThread(new RunnableToast(getContext(), msg));
+                // Add user to the internal map in order to change user ID by its name
+                userMap.append(user.id, user);
+            }
+        });
+
+        // 3. Subscribe to new bids. TODO
+//        wsConnection.on(TYPE_AUCTION_BIDDED, new WebSocketBodyCallback() {
+//            @Override
+//            public void onMessage(WebSocketConnection connection, BodyWS body) {
+//                try {
+//                    Bid newBid = new Gson().fromJson(body.json, Bid.class);
+//                    System.out.println(newBid.amount);
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage());
+//                }
+//            }
+//        });
+
+        // 4. Subscribe to auction started.
+        wsConnection.on(TYPE_AUCTION_STARTED, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
                 try {
-                    System.out.println(body.type);
-                    System.out.println(body.nonce);
-                    System.out.println(body.json);
-                    Bid newBid = new Gson().fromJson(body.json, Bid.class);
-                    System.out.println("Got " + newBid);
+                    final Auction startedAuction = new Gson().fromJson(body.json, Auction.class);
+                    System.out.println(startedAuction);
+                    // Start chronometer
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            auctionTimeChronometer.setBase(SystemClock.elapsedRealtime());
+                            auctionTimeChronometer.start();
+                        }
+                    });
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
         });
-        // 0. Subscribe to new connections.
-        wsConnection.on("AuctionNewConnection", new WebSocketBodyCallback() {
-            @Override
-            public void onMessage(WebSocketConnection connection, BodyWS body) {
-                User user = new Gson().fromJson(body.json, User.class);
-                System.out.println("New connection" + user);
-            }
-        });
 
-        // 1. Subscribe to auction.
-        Auction auction = new Auction();
-        auction.id = 13;
-        System.out.println("Subscribing to " + auction);
-        BodyWS bodySubscription = new BodyWS();
-        bodySubscription.type = "AuctionSubscribe";
-        bodySubscription.nonce = "1";
-        bodySubscription.json = new Gson().toJson(auction);
-        wsConnection.send(bodySubscription, new WebSocketBodyCallback() {
-            @Override
-            public void onMessage(WebSocketConnection connection, BodyWS body) {
-                System.out.println("Response to AuctionSubscribe" + body);
-            }
-        });
-
-        // 2. Send a sample bid.
-        Bid sampleBid = new Bid();
-        sampleBid.auctionId = auction.id;
-        sampleBid.amount = 1.1;
-        System.out.println("Bidding " + sampleBid);
-        BodyWS bodySampleBid = new BodyWS();
-        bodySampleBid.type = "AuctionBid";
-        bodySampleBid.nonce = "1";
-        bodySampleBid.json = new Gson().toJson(sampleBid);
-        wsConnection.send(bodySampleBid, new WebSocketBodyCallback() {
-            @Override
-            public void onMessage(WebSocketConnection connection, BodyWS body) {
-                System.out.println("Response to AuctionBid" + body);
-            }
-        });
+        // 5. Subscribe to auction closed. TODO
     }
 
     @Override
@@ -164,10 +186,6 @@ public class DetailAuctionBidFragment extends Fragment{
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_detail_auction_bid, container, false);
         res = getResources();
-
-        auction = SaveSharedPreference.getCurrentAuction(getContext());
-        event = SaveSharedPreference.getCurrentEvent(getContext());
-        minBid = auction.startingPrice + STEP;
 
         auctionTimeChronometer = view.findViewById(R.id.auction_time_chronometer);
         highestBidText = view.findViewById(R.id.highest_bid_text);
@@ -184,13 +202,27 @@ public class DetailAuctionBidFragment extends Fragment{
 
         if (SaveSharedPreference.getUserId(getContext()) == event.ownerId) {
             // User is the owner. He/she has access to the management part of the UI
-            // TODO: Set visible only when there are not auctions in progress and auction is accepted
-            startAuctionButton.setVisibility(View.VISIBLE);
-            bidInfoText.setText(res.getString(R.string.ready_start_auction));
-            auctionUserCreditText.setVisibility(View.INVISIBLE);
-            hideBidUi();
             startAuctionButton.setOnClickListener(startAuctionButtonOnClickListener);
             stopAuctionButton.setOnClickListener(stopAuctionButtonOnClickListener);
+            auctionUserCreditText.setVisibility(View.INVISIBLE);
+            hideBidUi();
+
+            switch (auction.status) {
+                case Auction.ACCEPTED:
+                    startAuctionButton.setVisibility(View.VISIBLE);
+                    bidInfoText.setText(res.getString(R.string.ready_start_auction));
+                    break;
+                case Auction.IN_PROGRESS:
+                    stopAuctionButton.setVisibility(View.VISIBLE);
+                    bidInfoText.setText(res.getString(R.string.ready_stop_auction));
+                    break;
+                case Auction.FINISHED:
+                    // TODO
+                    break;
+                case Auction.PENDING:
+                    // TODO
+                    break;
+            }
         } else {
             // Bidder Ui
             fetchUserInfoAndRenderBidUi();
@@ -204,10 +236,14 @@ public class DetailAuctionBidFragment extends Fragment{
     View.OnClickListener startAuctionButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            // Send start auction to server
+            BodyWS bodySubscription = new BodyWS();
+            bodySubscription.type = TYPE_AUCTION_START;
+            bodySubscription.json = new Gson().toJson(auction);
+            wsConnection.send(bodySubscription);
+
             startAuctionButton.setVisibility(View.GONE);
             stopAuctionButton.setVisibility(View.VISIBLE);
-            auctionTimeChronometer.setVisibility(View.VISIBLE);
-            auctionTimeChronometer.start();
             bidInfoText.setText(res.getString(R.string.ready_stop_auction));
         }
     };
