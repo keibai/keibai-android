@@ -208,7 +208,14 @@ public class DetailAuctionBidFragment extends Fragment{
             }
         });
 
-        // 5. Subscribe to auction closed. TODO
+        // 5. Subscribe to auction closed.
+        wsConnection.on(TYPE_AUCTION_CLOSED, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                final Auction closedAuction = new Gson().fromJson(body.json, Auction.class);
+                fetchWinnerAndRenderName(closedAuction.winnerId);
+            }
+        });
     }
 
     @Override
@@ -309,7 +316,7 @@ public class DetailAuctionBidFragment extends Fragment{
                     bidInfoText.setText(res.getString(R.string.ready_stop_auction));
                     break;
                 case Auction.FINISHED:
-                    // TODO
+                    fetchWinnerAndRenderName(auction.winnerId);
                     break;
                 case Auction.PENDING:
                     bidInfoText.setText(res.getString(R.string.auction_should_be_accepted));
@@ -322,10 +329,10 @@ public class DetailAuctionBidFragment extends Fragment{
         @Override
         public void onClick(View view) {
             // Send start auction to server
-            BodyWS bodySubscription = new BodyWS();
-            bodySubscription.type = TYPE_AUCTION_START;
-            bodySubscription.json = new Gson().toJson(auction);
-            wsConnection.send(bodySubscription);
+            BodyWS bodyStart = new BodyWS();
+            bodyStart.type = TYPE_AUCTION_START;
+            bodyStart.json = new Gson().toJson(auction);
+            wsConnection.send(bodyStart);
 
             startAuctionButton.setVisibility(View.GONE);
             stopAuctionButton.setVisibility(View.VISIBLE);
@@ -338,6 +345,10 @@ public class DetailAuctionBidFragment extends Fragment{
         public void onClick(View view) {
             stopAuctionButton.setVisibility(View.GONE);
             auctionTimeChronometer.stop();
+            BodyWS bodyClose = new BodyWS();
+            bodyClose.type = TYPE_AUCTION_CLOSE;
+            bodyClose.json = new Gson().toJson(auction);
+            wsConnection.send(bodyClose);
             bidInfoText.setText("");
         }
     };
@@ -459,6 +470,49 @@ public class DetailAuctionBidFragment extends Fragment{
                 });
             }
         });
+    }
+
+    private void fetchWinnerAndRenderName(int winnerId) {
+        if (winnerId == 0) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    bidInfoText.setText(R.string.auction_finished_without_winners);
+                }
+            });
+        } else {
+            http.get(HttpUrl.getUserByIdUrl(winnerId), new HttpCallback<User>(User.class) {
+                @Override
+                public void onError(final Error error) throws IOException {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showToast(error.toString());
+                        }
+                    });
+                }
+
+                @Override
+                public void onSuccess(final User response) throws IOException {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            bidInfoText.setText(String.format(res.getString(R.string.auction_winner_placeholder), response.name));
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call call, final IOException e) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showToast(e.toString());
+                        }
+                    });
+                }
+            });
+        }
     }
 
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
