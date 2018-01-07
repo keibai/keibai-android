@@ -112,6 +112,7 @@ public class DetailAuctionBidFragment extends Fragment{
 
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
+        user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
         minBid = auction.startingPrice + STEP;
         userMap = new SparseArray<>();
 
@@ -168,9 +169,11 @@ public class DetailAuctionBidFragment extends Fragment{
                         public void run() {
                             auction = startedAuction;
                             setChronometerTime();
-                            showBidUi();
-                            if (user.credit < minBid + STEP) {
-                                disableBidUI();
+                            if (user.id != event.ownerId) {
+                                showBidUi();
+                                if (user.credit < minBid + STEP) {
+                                    disableBidUI();
+                                }
                             }
                         }
                     });
@@ -368,6 +371,9 @@ public class DetailAuctionBidFragment extends Fragment{
         bidButton.setVisibility(View.VISIBLE);
 
         bidInfoText.setVisibility(View.GONE);
+
+        seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
+        editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
     }
 
     private void setChronometerTime() {
