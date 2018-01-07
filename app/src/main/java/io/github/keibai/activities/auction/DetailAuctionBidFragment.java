@@ -208,6 +208,7 @@ public class DetailAuctionBidFragment extends Fragment{
             stopAuctionButton.setVisibility(View.VISIBLE);
             auctionTimeChronometer.setVisibility(View.VISIBLE);
             auctionTimeChronometer.start();
+            bidInfoText.setText(res.getString(R.string.ready_stop_auction));
         }
     };
 
@@ -216,6 +217,8 @@ public class DetailAuctionBidFragment extends Fragment{
         public void onClick(View view) {
             stopAuctionButton.setVisibility(View.GONE);
             auctionTimeChronometer.stop();
+            bidInfoText.setText("");
+
         }
     };
 

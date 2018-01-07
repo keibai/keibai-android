@@ -83,5 +83,6 @@
     <string name="auction_not_started_yet">Auction not started yet</string>
     <string name="auction_finished">Auction finished</string>
     <string name="ready_start_auction">Ready to start auction</string>
+    <string name="ready_stop_auction">Ready to stop auction</string>
     <string name="stop">Stop</string>
 </resources>
