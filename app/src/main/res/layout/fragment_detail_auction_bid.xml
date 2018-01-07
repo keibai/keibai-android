@@ -17,8 +17,7 @@
             android:id="@+id/auction_time_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:visibility="gone"/>
+            android:textSize="20sp"/>
 
     </LinearLayout>
 
@@ -100,21 +99,29 @@
 
         <Button
             android:id="@+id/start_auction_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/start"
-            android:layout_centerHorizontal="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/ic_start_button"
+            android:text="START"
+            android:textColor="#FFFFFF"
             android:layout_below="@+id/bid_info_text"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"/>
 
         <Button
             android:id="@+id/stop_auction_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stop"
-            android:layout_centerHorizontal="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/ic_stop_button"
+            android:text="STOP"
+            android:textColor="#FFFFFF"
             android:layout_below="@+id/bid_info_text"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"/>
 
     </RelativeLayout>
 
