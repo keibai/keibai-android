@@ -5,4 +5,6 @@
     <color name="colorPrimaryDark">#EE7600</color>
     <color name="colorAccent">#d50000</color>
     <color name="colorProfile">#ff9966</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGrey">#F4F4F4</color>
 </resources>
