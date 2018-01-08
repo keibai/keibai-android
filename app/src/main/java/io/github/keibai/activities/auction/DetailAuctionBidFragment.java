@@ -125,7 +125,15 @@ public class DetailAuctionBidFragment extends Fragment{
     }
 
     private void wsSubscribe() {
-        // 1. Subscribe to auction.
+        wsSubscribeToAuction();
+        wsSubscribeToNewConnections();
+        wsSubscribeToNewBids();
+        wsSubscribeToAuctionStarted();
+        wsSubscribeToAuctionClosed();
+    }
+
+    /* Websockets */
+    private void wsSubscribeToAuction() {
         BodyWS bodySubscription = new BodyWS();
         bodySubscription.type = TYPE_AUCTION_SUBSCRIBE;
         bodySubscription.json = new Gson().toJson(auction);
@@ -135,8 +143,9 @@ public class DetailAuctionBidFragment extends Fragment{
                 System.out.println("Response to AuctionSubscribe " + body);
             }
         });
+    }
 
-        // 2. Subscribe to new connections.
+    private void wsSubscribeToNewConnections() {
         wsConnection.on(TYPE_AUCTION_NEW_CONNECTION, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
@@ -152,8 +161,9 @@ public class DetailAuctionBidFragment extends Fragment{
                 userMap.append(user.id, user);
             }
         });
+    }
 
-        // 3. Subscribe to new bids.
+    private void wsSubscribeToNewBids() {
         wsConnection.on(TYPE_AUCTION_BIDDED, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, final BodyWS body) {
@@ -180,8 +190,9 @@ public class DetailAuctionBidFragment extends Fragment{
                 });
             }
         });
+    }
 
-        // 4. Subscribe to auction started.
+    private void wsSubscribeToAuctionStarted() {
         wsConnection.on(TYPE_AUCTION_STARTED, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
@@ -207,8 +218,9 @@ public class DetailAuctionBidFragment extends Fragment{
                 }
             }
         });
+    }
 
-        // 5. Subscribe to auction closed.
+    private void wsSubscribeToAuctionClosed() {
         wsConnection.on(TYPE_AUCTION_CLOSED, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
