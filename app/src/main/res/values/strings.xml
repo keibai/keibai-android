@@ -93,4 +93,5 @@
     <string name="bid_msg_placeholder">%1$s bidded %2$.2f</string>
     <string name="auction_finished_without_winners">Auction finished without winners</string>
     <string name="auction_winner_placeholder">Auction finished. %1$s won the auction</string>
+    <string name="waiting_resolution_combinatorial">Auction finished. Waiting for a resolution</string>
 </resources>
