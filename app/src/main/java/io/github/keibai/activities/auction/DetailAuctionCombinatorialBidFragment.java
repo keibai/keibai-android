@@ -97,6 +97,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
 
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
+        user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
         userMap = new SparseArray<>();
 
         wsSubscribe();
@@ -424,10 +425,14 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     View.OnClickListener startAuctionButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            // Send start auction to server
+            BodyWS bodyStart = new BodyWS();
+            bodyStart.type = DetailAuctionBidFragment.TYPE_AUCTION_START;
+            bodyStart.json = new Gson().toJson(auction);
+            wsConnection.send(bodyStart);
+
             startAuctionButton.setVisibility(View.GONE);
             stopAuctionButton.setVisibility(View.VISIBLE);
-            timeChronometer.setVisibility(View.VISIBLE);
-            timeChronometer.start();
             infoTextView.setText(res.getString(R.string.ready_stop_auction));
         }
     };
