@@ -2,7 +2,11 @@ package io.github.keibai.http;
 
 import android.support.annotation.Nullable;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import io.github.keibai.models.meta.BodyWS;
 import okhttp3.*;
@@ -13,7 +17,7 @@ public class WebSocketConnection {
     public final okhttp3.WebSocket webSocket;
 
     private final WebSocketConnectionCallback callback;
-    private final ConcurrentHashMap<String, WebSocketBodyCallback> types;
+    private final ConcurrentHashMap<String, SafeWebSocketBodyCallbackSet> types;
     private final ConcurrentHashMap<String, WebSocketBodyCallback> nonces;
 
     WebSocketConnection(OkHttpClient client, Request request, WebSocketConnectionCallback callback) {
@@ -62,7 +66,12 @@ public class WebSocketConnection {
      * @param callback
      */
     public void on(String bodyType, WebSocketBodyCallback callback) {
-        types.put(bodyType, callback);
+        synchronized (types) {
+            if (!types.containsKey(bodyType)) {
+                types.put(bodyType, new SafeWebSocketBodyCallbackSet());
+            }
+            types.get(bodyType).add(callback);
+        }
     }
 
     /**
@@ -88,9 +97,12 @@ public class WebSocketConnection {
         }
 
         // Types can be listened forever.
-        WebSocketBodyCallback typesCallback = types.get(bodyWS.type);
+        SafeWebSocketBodyCallbackSet typesCallback = types.get(bodyWS.type);
         if (typesCallback != null) {
-            typesCallback.onMessage(this, bodyWS);
+            WebSocketBodyCallback[] callbacks = typesCallback.getCallbacks();
+            for (WebSocketBodyCallback c: callbacks) {
+                c.onMessage(this, bodyWS);
+            }
         }
     }
 
@@ -119,6 +131,39 @@ public class WebSocketConnection {
 
         public void onFailure(okhttp3.WebSocket webSocket, Throwable t, @Nullable Response response) {
             callback.onFailure(WebSocketConnection.this, t, response);
+        }
+    }
+
+    private class SafeWebSocketBodyCallbackSet {
+        Set<WebSocketBodyCallback> callbacks;
+        ReentrantReadWriteLock rwl;
+        Lock r;
+        Lock w;
+
+        public SafeWebSocketBodyCallbackSet() {
+            callbacks = new HashSet<>();
+            rwl = new ReentrantReadWriteLock();
+            r = rwl.readLock();
+            w = rwl.writeLock();
+        }
+
+        public void add(WebSocketBodyCallback callback) {
+            w.lock();
+            try {
+                callbacks.add(callback);
+            } finally {
+                w.unlock();
+            }
+        }
+
+        public WebSocketBodyCallback[] getCallbacks() {
+            r.lock();
+            try {
+                WebSocketBodyCallback[] callbacks = new WebSocketBodyCallback[this.callbacks.size()];
+                return this.callbacks.toArray(callbacks);
+            } finally {
+                r.unlock();
+            }
         }
     }
 }
