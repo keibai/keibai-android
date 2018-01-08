@@ -2,6 +2,7 @@ package io.github.keibai.activities.event;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -49,6 +50,8 @@ public class DetailEventActivity extends AppCompatActivity {
 
     private Event event;
 
+    private SwipeRefreshLayout swipeLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +91,14 @@ public class DetailEventActivity extends AppCompatActivity {
         textEventStatus.setText(event.status);
 
         fetchAuctionList();
+
+        swipeLayout = findViewById(R.id.swipeToRefresh);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchAuctionList();
+            }
+        });
     }
 
     @Override
@@ -111,6 +122,10 @@ public class DetailEventActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 renderAuctionList(response);
+
+                                if (swipeLayout.isRefreshing()) {
+                                    swipeLayout.setRefreshing(false);
+                                }
                             }
                         });
                     }
