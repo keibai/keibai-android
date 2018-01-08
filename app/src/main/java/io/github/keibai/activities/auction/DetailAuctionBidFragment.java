@@ -86,19 +86,7 @@ public class DetailAuctionBidFragment extends Fragment{
         super.onAttach(context);
 
         http = new Http(getContext());
-
-        WebSocket ws = new WebSocket(getContext());
-        wsConnection = ws.connect(HttpUrl.webSocket(), new WebSocketConnectionCallback() {
-            @Override
-            public void onOpen(WebSocketConnection connection, Response response) {
-                System.out.println("WebSocket connected!");
-            }
-
-            @Override
-            public void onClosed(WebSocketConnection connection, int code, String reason) {
-                System.out.println("Socket connection closed.");
-            }
-        });
+        wsConnection = ((DetailAuctionActivity) getActivity()).getWsConnection();
     }
 
     @Override

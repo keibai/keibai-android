@@ -16,13 +16,19 @@ import java.util.List;
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.AuthRequiredActivityAbstract;
+import io.github.keibai.http.HttpUrl;
+import io.github.keibai.http.WebSocket;
+import io.github.keibai.http.WebSocketConnection;
+import io.github.keibai.http.WebSocketConnectionCallback;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Event;
+import okhttp3.Response;
 
 public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
 
     private Auction auction;
     private Event event;
+    private WebSocketConnection wsConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,23 @@ public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
 
         TabLayout tabLayout = findViewById(R.id.tabs_detail_auction);
         tabLayout.setupWithViewPager(viewPager);
+
+        WebSocket ws = new WebSocket(getApplicationContext());
+        wsConnection = ws.connect(HttpUrl.webSocket(), new WebSocketConnectionCallback() {
+            @Override
+            public void onOpen(WebSocketConnection connection, Response response) {
+                System.out.println("WebSocket connected!");
+            }
+
+            @Override
+            public void onClosed(WebSocketConnection connection, int code, String reason) {
+                System.out.println("Socket connection closed.");
+            }
+        });
+    }
+
+    public WebSocketConnection getWsConnection() {
+        return wsConnection;
     }
 
     private void setupViewPager(ViewPager viewPager) {
