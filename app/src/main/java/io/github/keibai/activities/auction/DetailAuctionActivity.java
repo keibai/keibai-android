@@ -107,4 +107,11 @@ public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
             return fragmentTitles.get(position);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        wsConnection.close();
+    }
 }

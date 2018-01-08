@@ -94,7 +94,6 @@ public class DetailAuctionBidFragment extends Fragment{
         super.onDetach();
 
         http.close();
-        wsConnection.close();
     }
 
     @Override

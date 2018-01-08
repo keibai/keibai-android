@@ -26,6 +26,7 @@ import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
+import io.github.keibai.http.WebSocketConnection;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Event;
 import io.github.keibai.models.Good;
@@ -40,6 +41,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
 
     private View view;
     private Http http;
+    private WebSocketConnection wsConnection;
     private Resources res;
 
     private Auction auction;
@@ -70,6 +72,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         super.onAttach(context);
 
         http = new Http(getContext());
+        wsConnection = ((DetailAuctionActivity) getActivity()).getWsConnection();
     }
 
     @Override
