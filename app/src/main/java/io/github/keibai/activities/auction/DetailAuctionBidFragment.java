@@ -36,13 +36,16 @@ import io.github.keibai.models.Good;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.BodyWS;
 import io.github.keibai.models.meta.Error;
+import io.github.keibai.models.meta.Msg;
 import okhttp3.Call;
 import okhttp3.Response;
 
 public class DetailAuctionBidFragment extends Fragment{
 
     public static final String TYPE_AUCTION_SUBSCRIBE = "AuctionSubscribe";
+    public static final String TYPE_AUCTION_CONNECTIONS_ONCE = "AuctionConnectionOnce";
     public static final String TYPE_AUCTION_NEW_CONNECTION = "AuctionNewConnection";
+    public static final String TYPE_AUCTION_NEW_DISCONNECTION = "AuctionNewDisconnection";
     public static final String TYPE_AUCTION_BID = "AuctionBid";
     public static final String TYPE_AUCTION_BIDDED = "AuctionBidded";
     public static final String TYPE_AUCTION_START = "AuctionStart";
@@ -63,7 +66,9 @@ public class DetailAuctionBidFragment extends Fragment{
     private User user;
     private double minBid;
     private SparseArray<User> userMap;
+    private int connections;
 
+    private TextView auctionConnectionsText;
     private Chronometer auctionTimeChronometer;
     private TextView highestBidText;
     private TextView auctionUserCreditText;
@@ -132,6 +137,18 @@ public class DetailAuctionBidFragment extends Fragment{
         });
     }
 
+    private void wsSubscribeToNewConnectionsOnce() {
+        wsConnection.on(TYPE_AUCTION_CONNECTIONS_ONCE, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                // Returns the number of online users at a given time.
+                Msg msg = new Gson().fromJson(body.json, Msg.class);
+                connections = Integer.valueOf(msg.msg);
+                setConnectionsText();
+            }
+        });
+    }
+
     private void wsSubscribeToNewConnections() {
         wsConnection.on(TYPE_AUCTION_NEW_CONNECTION, new WebSocketBodyCallback() {
             @Override
@@ -146,6 +163,21 @@ public class DetailAuctionBidFragment extends Fragment{
                 });
                 // Add user to the internal map in order to change user ID by its name
                 userMap.append(user.id, user);
+
+                // +1 to connected users.
+                connections += 1;
+                setConnectionsText();
+            }
+        });
+    }
+
+    private void wsSubscribeToNewDisconnections() {
+        wsConnection.on(TYPE_AUCTION_NEW_DISCONNECTION, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                // -1 to connected users count.
+                connections -= 1;
+                setConnectionsText();
             }
         });
     }
@@ -223,6 +255,7 @@ public class DetailAuctionBidFragment extends Fragment{
         view = inflater.inflate(R.layout.fragment_detail_auction_bid, container, false);
         res = getResources();
 
+        auctionConnectionsText = view.findViewById(R.id.auction_connections_text);
         auctionTimeChronometer = view.findViewById(R.id.auction_time_chronometer);
         highestBidText = view.findViewById(R.id.highest_bid_text);
         auctionUserCreditText = view.findViewById(R.id.auction_user_credit_text);
@@ -595,5 +628,10 @@ public class DetailAuctionBidFragment extends Fragment{
         seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
         seekBarBid.setProgress(0);
         editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
+    }
+
+    private void setConnectionsText() {
+        String text = String.format(res.getString(R.string.connections_count), connections);
+        auctionConnectionsText.setText(text);
     }
 }
