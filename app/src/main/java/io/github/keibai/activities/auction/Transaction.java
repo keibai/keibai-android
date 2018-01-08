@@ -1,5 +1,6 @@
 package io.github.keibai.activities.auction;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
@@ -13,25 +14,22 @@ public class Transaction {
 
     private String user;
     private float money;
-    private Calendar calendar;
+    private Timestamp createdAt;
     private String auctionName;
-    private String messageType;
 
-    public Transaction(String user, float money, Calendar date, String messageType) {
+    public Transaction(String user, float money, Timestamp timestamp) {
         this.user = user;
         this.money = money;
-        this.calendar = date;
+        this.createdAt = timestamp;
         this.auctionName = "current auction";
-        this.messageType = messageType;
     }
 
-    public Transaction(String user, float money, Calendar date,
-                       String auctionName, String messageType) {
+    public Transaction(String user, float money, Timestamp timestamp,
+                       String auctionName) {
         this.user = user;
         this.money = money;
-        this.calendar = date;
+        this.createdAt = timestamp;
         this.auctionName = auctionName;
-        this.messageType = messageType;
     }
 
     public String getUser() {
@@ -42,35 +40,9 @@ public class Transaction {
         return money;
     }
 
-    public String getDate() {
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        return day + "/" + month + "/" + year;
-    }
-
-    public String getTime() {
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int month = calendar.get(Calendar.MINUTE);
-        int second = calendar.get(Calendar.SECOND);
-        return hour + ":" + month + ":" + second;
-    }
+    public Timestamp getCreatedAt() { return createdAt; }
 
     public String getBidMessage() {
-        return user + " bidded " + money + " in " + auctionName;
-    }
-
-    public String getWonMessage() {
-        return "You have won " + auctionName + " bidding " + money;
-    }
-
-    public String getMessage() {
-        if (messageType.equals(WON_MESSAGE)) {
-            return getWonMessage();
-        }
-        if (messageType.equals(BID_MESSAGE)) {
-            return getBidMessage();
-        }
-        return "";
+        return user + " bidded " + money;
     }
 }
