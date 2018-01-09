@@ -186,11 +186,13 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private void wsSubscribeToAuctionClosed() {
         wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_CLOSED, new WebSocketBodyCallback() {
             @Override
-            public void onMessage(WebSocketConnection connection, BodyWS body) {
+            public void onMessage(WebSocketConnection connection, final BodyWS body) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        infoTextView.setText(res.getString(R.string.waiting_resolution_combinatorial));
+                        Auction auction = new Gson().fromJson(body.json, Auction.class);
+                        //infoTextView.setText(res.getString(R.string.waiting_resolution_combinatorial));
+                        infoTextView.setText("Winners: " + auction.combinatorialWinners);
                     }
                 });
             }
@@ -215,6 +217,11 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         infoTextView = view.findViewById(R.id.comb_bid_info_text);
         startAuctionButton = view.findViewById(R.id.comb_start_auction_button);
         stopAuctionButton = view.findViewById(R.id.comb_stop_auction_button);
+
+        if (auction.combinatorialWinners != null) {
+            infoTextView.setText("Winners: " + auction.combinatorialWinners);
+            return view;
+        }
 
         fetchAndRenderGoods();
         if (SaveSharedPreference.getUserId(getContext()) == event.ownerId) {
@@ -452,6 +459,10 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         public void onClick(View view) {
             stopAuctionButton.setVisibility(View.GONE);
             timeChronometer.stop();
+            BodyWS bodyClose = new BodyWS();
+            bodyClose.type = DetailAuctionBidFragment.TYPE_AUCTION_CLOSE;
+            bodyClose.json = new Gson().toJson(auction);
+            wsConnection.send(bodyClose);
             infoTextView.setText("");
         }
     };
