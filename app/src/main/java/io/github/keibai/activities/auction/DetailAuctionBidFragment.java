@@ -118,7 +118,9 @@ public class DetailAuctionBidFragment extends Fragment{
 
     private void wsSubscribe() {
         wsSubscribeToAuction();
+        wsSubscribeToNewConnectionsOnce();
         wsSubscribeToNewConnections();
+        wsSubscribeToNewDisconnections();
         wsSubscribeToNewBids();
         wsSubscribeToAuctionStarted();
         wsSubscribeToAuctionClosed();
