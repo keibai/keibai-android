@@ -3,7 +3,9 @@ package io.github.keibai.activities.auction;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,10 +30,13 @@ import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
+import io.github.keibai.http.WebSocketBodyCallback;
+import io.github.keibai.http.WebSocketConnection;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Event;
 import io.github.keibai.models.Good;
 import io.github.keibai.models.User;
+import io.github.keibai.models.meta.BodyWS;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
@@ -40,11 +47,13 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
 
     private View view;
     private Http http;
+    private WebSocketConnection wsConnection;
     private Resources res;
 
     private Auction auction;
     private Event event;
     private User user;
+    private SparseArray<User> userMap;
 
     private List<Good> availableGoods;
     private List<Good> selectedGoods;
@@ -61,6 +70,8 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private Button startAuctionButton;
     private Button stopAuctionButton;
 
+    private Toast currentToast;
+
     public DetailAuctionCombinatorialBidFragment() {
         // Required empty public constructor
     }
@@ -70,6 +81,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         super.onAttach(context);
 
         http = new Http(getContext());
+        wsConnection = ((DetailAuctionActivity) getActivity()).getWsConnection();
     }
 
     @Override
@@ -82,6 +94,98 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        auction = SaveSharedPreference.getCurrentAuction(getContext());
+        event = SaveSharedPreference.getCurrentEvent(getContext());
+        user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
+        userMap = new SparseArray<>();
+
+        wsSubscribe();
+    }
+
+    /* Websockets */
+    private void wsSubscribe() {
+        wsSubscribeToAuction();
+        wsSubscribeToNewConnections();
+        wsSubscribeToNewBids();
+        wsSubscribeToAuctionStarted();
+        wsSubscribeToAuctionClosed();
+    }
+
+    private void wsSubscribeToAuction() {
+        BodyWS bodySubscription = new BodyWS();
+        bodySubscription.type = DetailAuctionBidFragment.TYPE_AUCTION_SUBSCRIBE;
+        bodySubscription.json = new Gson().toJson(auction);
+        wsConnection.send(bodySubscription, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                System.out.println("Response to AuctionSubscribe " + body);
+            }
+        });
+    }
+
+    private void wsSubscribeToNewConnections() {
+        wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_NEW_CONNECTION, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                User user = new Gson().fromJson(body.json, User.class);
+                final String msg = "User " + user.name + " connected";
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(msg);
+                    }
+                });
+                // Add user to the internal map in order to change user ID by its name
+                userMap.append(user.id, user);
+            }
+        });
+    }
+
+    private void wsSubscribeToNewBids() {
+        // TODO
+    }
+
+    private void wsSubscribeToAuctionStarted() {
+        wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_STARTED, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                try {
+                    final Auction startedAuction = new Gson().fromJson(body.json, Auction.class);
+                    System.out.println(startedAuction);
+                    // Start chronometer
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            auction = startedAuction;
+                            setChronometerTime();
+                            if (user.id != event.ownerId) {
+                                showBidUi();
+                                if (user.credit < startedAuction.startingPrice + STEP) {
+                                    disableBidUi();
+                                }
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void wsSubscribeToAuctionClosed() {
+        wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_CLOSED, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, BodyWS body) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        infoTextView.setText(res.getString(R.string.waiting_resolution_combinatorial));
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -90,9 +194,6 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_detail_auction_combinatorial_bid, container, false);
         res = getResources();
-
-        auction = SaveSharedPreference.getCurrentAuction(getContext());
-        event = SaveSharedPreference.getCurrentEvent(getContext());
 
         timeChronometer = view.findViewById(R.id.comb_auction_time_chronometer);
         availableGoodsListView = view.findViewById(R.id.comb_available_goods_list);
@@ -109,20 +210,90 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         fetchAndRenderGoods();
         if (SaveSharedPreference.getUserId(getContext()) == event.ownerId) {
             // User is the owner. He/she has access to the management part of the UI
-            // TODO: Set visible only when there are not auctions in progress and auction is accepted
-            startAuctionButton.setVisibility(View.VISIBLE);
-            infoTextView.setText(res.getString(R.string.ready_start_auction));
-            userCreditText.setVisibility(View.INVISIBLE);
-            hideBidUi();
             startAuctionButton.setOnClickListener(startAuctionButtonOnClickListener);
             stopAuctionButton.setOnClickListener(stopAuctionButtonOnClickListener);
+            userCreditText.setVisibility(View.INVISIBLE);
+            hideBidUi();
+
+            fetchEventAuctionsAndRenderOwnerUi();
         } else {
             // Bidder Ui
             fetchAndRenderUser();
             seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
+            bidButton.setOnClickListener(bidButtonOnClickListener);
         }
 
         return view;
+    }
+
+    private void fetchEventAuctionsAndRenderOwnerUi() {
+        http.get(HttpUrl.getAuctionListByEventId(event.id), new HttpCallback<Auction[]>(Auction[].class) {
+            @Override
+            public void onError(final Error error) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(error.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess(final Auction[] response) throws IOException {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Search for auction in progress
+                        Auction inProgressAuction = null;
+                        for (Auction a: response) {
+                            if (a.status.equals(Auction.IN_PROGRESS)) {
+                                inProgressAuction = a;
+                                break;
+                            }
+                        }
+
+                        renderOwnerUi(inProgressAuction);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast(e.toString());
+                    }
+                });
+            }
+        });
+    }
+
+    private void renderOwnerUi(Auction inProgressAuction) {
+        if (inProgressAuction != null && inProgressAuction.id != auction.id) {
+            // Auction in progress is not the current auction
+            String text = String.format(res.getString(R.string.in_progress_auction_placeholder), inProgressAuction.name);
+            infoTextView.setText(text);
+        } else {
+            // No auction in progress or auction in progress is the current auction
+            switch (auction.status) {
+                case Auction.ACCEPTED:
+                    startAuctionButton.setVisibility(View.VISIBLE);
+                    infoTextView.setText(res.getString(R.string.ready_start_auction));
+                    break;
+                case Auction.IN_PROGRESS:
+                    setChronometerTime();
+                    stopAuctionButton.setVisibility(View.VISIBLE);
+                    infoTextView.setText(res.getString(R.string.ready_stop_auction));
+                    break;
+                case Auction.FINISHED:
+                    // TODO
+                    break;
+                case Auction.PENDING:
+                    infoTextView.setText(res.getString(R.string.auction_should_be_accepted));
+                    break;
+            }
+        }
     }
 
     private void fetchAndRenderUser() {
@@ -254,10 +425,14 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     View.OnClickListener startAuctionButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            // Send start auction to server
+            BodyWS bodyStart = new BodyWS();
+            bodyStart.type = DetailAuctionBidFragment.TYPE_AUCTION_START;
+            bodyStart.json = new Gson().toJson(auction);
+            wsConnection.send(bodyStart);
+
             startAuctionButton.setVisibility(View.GONE);
             stopAuctionButton.setVisibility(View.VISIBLE);
-            timeChronometer.setVisibility(View.VISIBLE);
-            timeChronometer.start();
             infoTextView.setText(res.getString(R.string.ready_stop_auction));
         }
     };
@@ -271,10 +446,28 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         }
     };
 
+    View.OnClickListener bidButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // TODO
+        }
+    };
+
     /* Bidding UI utilities */
     private void setUserCreditText() {
         String text = String.format(res.getString(R.string.auction_user_credit_placeholder), user.credit);
         userCreditText.setText(text);
+    }
+
+    private void showBidUi() {
+        bidTextView.setVisibility(View.VISIBLE);
+        editTextBid.setVisibility(View.VISIBLE);
+        seekBarBid.setVisibility(View.VISIBLE);
+        bidButton.setVisibility(View.VISIBLE);
+
+        infoTextView.setVisibility(View.GONE);
+
+        setSeekBar();
     }
 
     private void disableBidUi() {
@@ -297,5 +490,28 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         selectedGoodsListView.setEnabled(false);
 
         infoTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void showToast(String text) {
+        if (currentToast == null) {
+            currentToast = Toast.makeText(getContext(), text, Toast.LENGTH_LONG);
+        }
+        currentToast.setText(text);
+        currentToast.setDuration(Toast.LENGTH_LONG);
+        currentToast.show();
+    }
+
+    private void setChronometerTime() {
+        /* https://stackoverflow.com/questions/21561110/how-to-use-timestamp-in-chronometr-android */
+        long system = SystemClock.elapsedRealtime();
+        long t = auction.startTime.getTime() - System.currentTimeMillis();
+        timeChronometer.setBase((system+t)); // TODO: Check this!
+        timeChronometer.start();
+    }
+
+    private void setSeekBar() {
+        seekBarBid.setMax((int) ((user.credit - auction.startingPrice) / STEP));
+        seekBarBid.setProgress(0);
+        editTextBid.setText(String.format("%.2f", auction.startingPrice + (seekBarBid.getProgress() * STEP)));
     }
 }

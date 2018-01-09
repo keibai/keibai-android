@@ -21,6 +21,7 @@ public class Auction extends ModelAbstract {
     public String status;
     public int winnerId;
     public String combinatorialWinners;
+    public double maxBid;
 
     @Override
     public boolean equals(Object o) {
@@ -33,6 +34,7 @@ public class Auction extends ModelAbstract {
         if (eventId != auction.eventId) return false;
         if (ownerId != auction.ownerId) return false;
         if (winnerId != auction.winnerId) return false;
+        if (Double.compare(auction.maxBid, maxBid) != 0) return false;
         if (!name.equals(auction.name)) return false;
         if (startTime != null ? !startTime.equals(auction.startTime) : auction.startTime != null) return false;
         if (endingTime != null ? !endingTime.equals(auction.endingTime) : auction.endingTime != null) return false;
@@ -54,6 +56,8 @@ public class Auction extends ModelAbstract {
         result = 31 * result + status.hashCode();
         result = 31 * result + winnerId;
         result = 31 * result + (combinatorialWinners != null ? combinatorialWinners.hashCode() : 0);
+        temp = Double.doubleToLongBits(maxBid);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
@@ -69,6 +73,7 @@ public class Auction extends ModelAbstract {
                 ", status='" + status + '\'' +
                 ", winnerId=" + winnerId +
                 ", combinatorialWinners='" + combinatorialWinners + '\'' +
+                ", maxBid=" + maxBid +
                 ", id=" + id +
                 '}';
     }
