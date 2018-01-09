@@ -363,7 +363,8 @@ public class DetailAuctionBidFragment extends Fragment{
                 bid.auctionId = auction.id;
                 bid.ownerId = user.id;
                 bid.goodId = good.id;
-                bodyBid.json = new Gson().toJson(bid);
+                Bid[] bids = new Bid[] {bid};
+                bodyBid.json = new Gson().toJson(bids);
                 wsConnection.send(bodyBid);
             } catch (NumberFormatException e) {
                 showToast("Can not bid " + editTextBid.getText().toString());
