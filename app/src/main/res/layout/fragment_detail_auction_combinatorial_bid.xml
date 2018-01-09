@@ -96,7 +96,6 @@
                 android:id="@+id/comb_auction_user_credit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/auction_user_credit_placeholder"
                 android:padding="5dp"/>
 
             <View

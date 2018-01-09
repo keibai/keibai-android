@@ -17,8 +17,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/connections_count"/>
+            android:textSize="20sp"/>
 
         <Chronometer
             android:id="@+id/auction_time_chronometer"
@@ -36,7 +35,7 @@
             android:id="@+id/highest_bid_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/money_placeholder"
+            android:text=""
             android:layout_centerInParent="true"
             android:textSize="80sp"/>
 
@@ -51,7 +50,6 @@
         android:id="@+id/auction_user_credit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/auction_user_credit_placeholder"
         android:padding="5dp"/>
 
     <View
