@@ -33,6 +33,7 @@ import io.github.keibai.http.HttpUrl;
 import io.github.keibai.http.WebSocketBodyCallback;
 import io.github.keibai.http.WebSocketConnection;
 import io.github.keibai.models.Auction;
+import io.github.keibai.models.Bid;
 import io.github.keibai.models.Event;
 import io.github.keibai.models.Good;
 import io.github.keibai.models.User;
@@ -53,7 +54,6 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private Auction auction;
     private Event event;
     private User user;
-    private SparseArray<User> userMap;
 
     private List<Good> availableGoods;
     private List<Good> selectedGoods;
@@ -98,7 +98,6 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
         user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
-        userMap = new SparseArray<>();
 
         wsSubscribe();
     }
@@ -136,14 +135,24 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
                         showToast(msg);
                     }
                 });
-                // Add user to the internal map in order to change user ID by its name
-                userMap.append(user.id, user);
             }
         });
     }
 
     private void wsSubscribeToNewBids() {
-        // TODO
+        wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_BIDDED, new WebSocketBodyCallback() {
+            @Override
+            public void onMessage(WebSocketConnection connection, final BodyWS body) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Bid newBid = new Gson().fromJson(body.json, Bid.class);
+                        String msg = String.format(res.getString(R.string.bid_msg_placeholder), String.valueOf(newBid.ownerId), newBid.amount);
+                        showToast(msg);
+                    }
+                });
+            }
+        });
     }
 
     private void wsSubscribeToAuctionStarted() {
@@ -366,6 +375,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
                 bidTextView.setText(res.getString(R.string.auction_finished));
                 break;
             case Auction.IN_PROGRESS:
+                setChronometerTime();
                 if (user.credit < auction.startingPrice) {
                     disableBidUi();
                 } else {
@@ -449,7 +459,37 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     View.OnClickListener bidButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // TODO
+            if (selectedGoods.size() == 0) {
+                showToast("You have to select at least one good");
+                return;
+            }
+
+            List<Bid> bids = new ArrayList<>();
+
+            BodyWS bodyBid = new BodyWS();
+            bodyBid.type = DetailAuctionBidFragment.TYPE_AUCTION_BID;
+
+            double amount;
+            try {
+                amount = Float.parseFloat(editTextBid.getText().toString());
+            } catch (NumberFormatException e) {
+                showToast("Can not bid " + editTextBid.getText().toString());
+                return;
+            }
+
+            for (Good good: selectedGoods) {
+                Bid bid = new Bid();
+                bid.amount = amount;
+                bid.auctionId = auction.id;
+                bid.ownerId = user.id;
+                bid.goodId = good.id;
+                bids.add(bid);
+            }
+            System.out.println(bids);
+            bodyBid.json = new Gson().toJson(bids.toArray(new Bid[bids.size()]));
+            wsConnection.send(bodyBid);
+            hideBidUi();
+            infoTextView.setText("You have already bidded");
         }
     };
 

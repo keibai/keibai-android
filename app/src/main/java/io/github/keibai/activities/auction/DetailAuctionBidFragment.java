@@ -363,12 +363,25 @@ public class DetailAuctionBidFragment extends Fragment{
                 bid.auctionId = auction.id;
                 bid.ownerId = user.id;
                 bid.goodId = good.id;
-                bodyBid.json = new Gson().toJson(bid);
-                wsConnection.send(bodyBid);
+                Bid[] bids = new Bid[] {bid};
+                bodyBid.json = new Gson().toJson(bids);
+                wsConnection.send(bodyBid, new WebSocketBodyCallback() {
+                    @Override
+                    public void onMessage(WebSocketConnection connection, BodyWS body) {
+                        if (body.status != 200) {
+                            final Error error = new Gson().fromJson(body.json, Error.class);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showToast(error.toString());
+                                }
+                            });
+                        }
+                    }
+                });
             } catch (NumberFormatException e) {
                 showToast("Can not bid " + editTextBid.getText().toString());
             }
-
         }
     };
 
