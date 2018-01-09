@@ -43,6 +43,6 @@ public class Transaction {
     public Timestamp getCreatedAt() { return createdAt; }
 
     public String getBidMessage() {
-        return user + " bidded " + money;
+        return "User " + user + " bidded €" + money;
     }
 }
