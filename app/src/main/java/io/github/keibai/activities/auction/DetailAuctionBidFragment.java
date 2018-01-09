@@ -215,8 +215,8 @@ public class DetailAuctionBidFragment extends Fragment{
                         String msg = String.format(res.getString(R.string.bid_msg_placeholder), bidder.name, newBid.amount);
                         showToast(msg);
                         minBid = newBid.amount + STEP;
+                        setHighestBidText((float) newBid.amount);
                         if (user.id != event.ownerId) {
-                            setHighestBidText((float) newBid.amount);
                             if (user.credit < minBid + STEP) {
                                 disableBidUI();
                             } else {
