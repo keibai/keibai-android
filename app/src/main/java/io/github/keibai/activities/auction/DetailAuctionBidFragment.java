@@ -118,9 +118,6 @@ public class DetailAuctionBidFragment extends Fragment{
 
     private void wsSubscribe() {
         wsSubscribeToAuction();
-        wsSubscribeToNewConnectionsOnce();
-        wsSubscribeToNewConnections();
-        wsSubscribeToNewDisconnections();
         wsSubscribeToNewBids();
         wsSubscribeToAuctionStarted();
         wsSubscribeToAuctionClosed();
@@ -134,19 +131,28 @@ public class DetailAuctionBidFragment extends Fragment{
         wsConnection.send(bodySubscription, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
-                System.out.println("Response to AuctionSubscribe " + body);
+                wsSubscribeToNewConnectionsOnce();
             }
         });
     }
 
     private void wsSubscribeToNewConnectionsOnce() {
-        wsConnection.on(TYPE_AUCTION_CONNECTIONS_ONCE, new WebSocketBodyCallback() {
+        BodyWS bodySubscribe = new BodyWS();
+        bodySubscribe.type = TYPE_AUCTION_CONNECTIONS_ONCE;
+        wsConnection.send(bodySubscribe, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
                 // Returns the number of online users at a given time.
                 Msg msg = new Gson().fromJson(body.json, Msg.class);
                 connections = Integer.valueOf(msg.msg);
-                setConnectionsText();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setConnectionsText();
+                    }
+                });
+                wsSubscribeToNewConnections();
+                wsSubscribeToNewDisconnections();
             }
         });
     }
@@ -168,7 +174,12 @@ public class DetailAuctionBidFragment extends Fragment{
 
                 // +1 to connected users.
                 connections += 1;
-                setConnectionsText();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setConnectionsText();
+                    }
+                });
             }
         });
     }
@@ -179,7 +190,12 @@ public class DetailAuctionBidFragment extends Fragment{
             public void onMessage(WebSocketConnection connection, BodyWS body) {
                 // -1 to connected users count.
                 connections -= 1;
-                setConnectionsText();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setConnectionsText();
+                    }
+                });
             }
         });
     }
