@@ -109,8 +109,8 @@ public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
 
         wsConnection.close();
     }

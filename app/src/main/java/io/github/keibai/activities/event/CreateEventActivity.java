@@ -49,8 +49,8 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
 
         http.close();
     }
