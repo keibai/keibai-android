@@ -164,7 +164,7 @@ public class CreateAuctionActivity extends AppCompatActivity {
         if (event.auctionType.equals(Event.ENGLISH) && !englishPriceValidation.validate()) {
             return;
         }
-        if (goods.size() < 2) {
+        if (event.auctionType.equals(Event.COMBINATORIAL) && goods.size() < 2) {
             Toast.makeText(getApplicationContext(), "Can not create combinatorial auction with less than 2 goods", Toast.LENGTH_SHORT).show();
             return;
         }

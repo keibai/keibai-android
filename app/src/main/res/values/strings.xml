@@ -88,4 +88,11 @@
     <string name="stop_auction">Press the button to stop the auction</string>
     <string name="ready_stop_auction">Ready to stop auction</string>
     <string name="stop">Stop</string>
+    <string name="in_progress_auction_placeholder">In progress auction: %1$s</string>
+    <string name="auction_should_be_accepted">Auction should be first accepted</string>
+    <string name="bid_msg_placeholder">%1$s bidded %2$.2f</string>
+    <string name="auction_finished_without_winners">Auction finished without winners</string>
+    <string name="auction_winner_placeholder">Auction finished. %1$s won the auction</string>
+    <string name="waiting_resolution_combinatorial">Auction finished. Waiting for a resolution</string>
+    <string name="connections_count">%1$d connections</string>
 </resources>
