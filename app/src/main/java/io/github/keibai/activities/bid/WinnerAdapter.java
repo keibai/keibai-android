@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import io.github.keibai.R;
@@ -51,6 +52,9 @@ public class WinnerAdapter extends ArrayAdapter {
         CharSequence friendlyTimestamp = DateUtils.getRelativeTimeSpanString(
                 currentTransaction.startTime.getTime(), now, DateUtils.DAY_IN_MILLIS);
         dateTextView.setText(friendlyTimestamp);
+
+        TextView timeTextView = listItemView.findViewById(R.id.transaction_time);
+        timeTextView.setText(currentTransaction.startTime.toString().split("\\s")[1].split("\\.")[0]);
 
         Resources res = parent.getResources();
 

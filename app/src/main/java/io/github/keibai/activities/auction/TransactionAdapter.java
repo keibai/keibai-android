@@ -50,6 +50,9 @@ public class TransactionAdapter extends ArrayAdapter {
                 currentTransaction.getCreatedAt().getTime(), now, DateUtils.DAY_IN_MILLIS);
         dateTextView.setText(friendlyTimestamp);
 
+        TextView timeTextView = listItemView.findViewById(R.id.transaction_time);
+        timeTextView.setText(currentTransaction.getCreatedAt().toString().split("\\s")[1].split("\\.")[0]);
+
         TextView text = listItemView.findViewById(R.id.transaction_text);
         text.setText(currentTransaction.getBidMessage());
 
