@@ -74,9 +74,9 @@
     <string name="remaining_auction_time_placeholder">%1$d seconds left</string>
     <string name="participate_activity">Participated Activity:</string>
     <string name="personal_statistics">Personal Statistics:</string>
-    <string name="auction_won">Auction Won:\t</string>
-    <string name="made_bid">Total Bids Made:\t</string>
-    <string name="max_bid">Highest Bid Made:\t</string>
+    <string name="auctions_won">auctions won</string>
+    <string name="made_bid">total bids</string>
+    <string name="max_bid">highest bid</string>
     <string name="auction_user_credit_placeholder">Your credit: €%1$.2f</string>
     <string name="auction_user_credit_not_enough">Not enough credit</string>
     <string name="auction_not_accepted_yet">Auction not accepted yet</string>
@@ -95,4 +95,5 @@
     <string name="auction_winner_placeholder">Auction finished. %1$s won the auction</string>
     <string name="waiting_resolution_combinatorial">Auction finished. Waiting for a resolution</string>
     <string name="connections_count">%1$d connections</string>
+    <string name="na">N/A</string>
 </resources>
