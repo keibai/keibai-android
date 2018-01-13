@@ -56,4 +56,6 @@ dependencies {
     compile 'com.basgeekball:awesome-validation:2.0'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.android.support:cardview-v7:26.+'
+    compile group: 'joda-time', name: 'joda-time', version: '2.3'
+
 }

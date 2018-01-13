@@ -18,7 +18,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.io.IOException;
+import java.util.Date;
 
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
@@ -700,14 +704,14 @@ public class DetailAuctionBidFragment extends Fragment{
         setSeekBar();
     }
 
+    // https://stackoverflow.com/questions/526524/android-get-time-of-chronometer-widget
     private void setChronometerTime() {
-        /* https://stackoverflow.com/questions/21561110/how-to-use-timestamp-in-chronometr-android */
-        long system = SystemClock.elapsedRealtime();
-        long currentTime = System.currentTimeMillis();
-        long startTime = auction.startTime.getTime();
-        // If android were well designed, we would use our database time
-        // Meanwhile, this is a patch
-        auctionTimeChronometer.setBase(system);
+        long realtime = SystemClock.elapsedRealtime();
+        DateTime auctionTime = ISODateTimeFormat.dateTimeParser().parseDateTime("2018-01-13T19:47:06.656Z");
+        DateTime currentTime = new DateTime();
+        long difference = currentTime.getMillis() - auctionTime.getMillis();
+
+        auctionTimeChronometer.setBase(realtime - difference);
         auctionTimeChronometer.start();
     }
 
