@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="event_detail_image_height">100dp</dimen>
     <dimen name="profile_gravatar_size">384px</dimen>
+    <dimen name="bigger">17sp</dimen>
 </resources>
