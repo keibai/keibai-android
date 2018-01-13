@@ -61,6 +61,7 @@ public class DetailAuctionBidFragment extends Fragment{
     private Good good;
     private Event event;
     private User user;
+    private double lastBid;
     private double minBid;
     private SparseArray<User> userMap;
     private int connections;
@@ -76,6 +77,10 @@ public class DetailAuctionBidFragment extends Fragment{
     private TextView bidInfoText;
     private Button startAuctionButton;
     private Button stopAuctionButton;
+    private Button bidSetMinButton;
+    private Button bidSet10Button;
+    private Button bidSet50Button;
+    private Button bidSet100Button;
 
     private Toast currentToast;
 
@@ -101,8 +106,8 @@ public class DetailAuctionBidFragment extends Fragment{
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
         user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
-        minBid = auction.maxBid == 0.0 ? auction.startingPrice : auction.maxBid;
-        minBid += STEP;
+        lastBid = auction.maxBid == 0.0 ? auction.startingPrice : auction.maxBid;
+        minBid = lastBid + STEP;
         userMap = new SparseArray<>();
         fetchGood();
 
@@ -214,6 +219,7 @@ public class DetailAuctionBidFragment extends Fragment{
                         }
                         String msg = String.format(res.getString(R.string.bid_msg_placeholder), bidder.name, newBid.amount);
                         showToast(msg);
+                        lastBid = newBid.amount;
                         minBid = newBid.amount + STEP;
                         setHighestBidText((float) newBid.amount);
                         if (user.id != event.ownerId) {
@@ -284,6 +290,10 @@ public class DetailAuctionBidFragment extends Fragment{
         bidInfoText = view.findViewById(R.id.bid_info_text);
         startAuctionButton = view.findViewById(R.id.start_auction_button);
         stopAuctionButton = view.findViewById(R.id.stop_auction_button);
+        bidSetMinButton = view.findViewById(R.id.bid_set_min_button);
+        bidSet10Button = view.findViewById(R.id.bid_set_10_button);
+        bidSet50Button = view.findViewById(R.id.bid_set_50_button);
+        bidSet100Button = view.findViewById(R.id.bid_set_100_button);
 
         setHighestBidText((float) auction.maxBid);
 
@@ -300,6 +310,10 @@ public class DetailAuctionBidFragment extends Fragment{
             fetchUserInfoAndRenderBidUi();
             seekBarBid.setOnSeekBarChangeListener(seekBarChangeListener);
             bidButton.setOnClickListener(bidButtonOnClickListener);
+            bidSetMinButton.setOnClickListener(bidMinButtonOnClickListener);
+            bidSet10Button.setOnClickListener(bid10ButtonOnClickListener);
+            bidSet50Button.setOnClickListener(bid50ButtonOnClickListener);
+            bidSet100Button.setOnClickListener(bid100ButtonOnClickListener);
         }
 
         return view;
@@ -382,6 +396,38 @@ public class DetailAuctionBidFragment extends Fragment{
             } catch (NumberFormatException e) {
                 showToast("Can not bid " + editTextBid.getText().toString());
             }
+        }
+    };
+
+    View.OnClickListener bidMinButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            double value = lastBid + STEP;
+            editTextBid.setText(String.valueOf(value));
+        }
+    };
+
+    View.OnClickListener bid10ButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            double value = lastBid + percentageOfCurrency(auction.startingPrice, 0.1);
+            editTextBid.setText(String.valueOf(value));
+        }
+    };
+
+    View.OnClickListener bid50ButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            double value = lastBid + percentageOfCurrency(auction.startingPrice, 0.5);
+            editTextBid.setText(String.valueOf(value));
+        }
+    };
+
+    View.OnClickListener bid100ButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            double value = lastBid + percentageOfCurrency(auction.startingPrice, 1);
+            editTextBid.setText(String.valueOf(value));
         }
     };
 
@@ -596,6 +642,22 @@ public class DetailAuctionBidFragment extends Fragment{
                 }
                 break;
         }
+
+        // Set bid buttons values.
+        setBidSetButtonsValues();
+    }
+
+    private void setBidSetButtonsValues() {
+        bidSetMinButton.setText(String.valueOf(STEP));
+        bidSet10Button.setText(String.valueOf(percentageOfCurrency(auction.startingPrice, 0.1)));
+        bidSet50Button.setText(String.valueOf(percentageOfCurrency(auction.startingPrice, 0.5)));
+        bidSet100Button.setText(String.valueOf(percentageOfCurrency(auction.startingPrice, 1)));
+    }
+
+    private double percentageOfCurrency(double value, double percentage) {
+        double res = value * percentage;
+        double rounded = Math.floor(res * 100) / 100;
+        return rounded;
     }
 
     /* Bidding UI utilities */
@@ -656,7 +718,8 @@ public class DetailAuctionBidFragment extends Fragment{
     }
 
     private void setSeekBar() {
-        seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
+        double range = Math.min(auction.startingPrice, user.credit - minBid);
+        seekBarBid.setMax((int) (range / STEP));
         seekBarBid.setProgress(0);
         editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
     }
