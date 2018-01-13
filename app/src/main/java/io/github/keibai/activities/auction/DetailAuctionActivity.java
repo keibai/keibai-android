@@ -64,6 +64,13 @@ public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        wsConnection.close();
+    }
+
     public WebSocketConnection getWsConnection() {
         return wsConnection;
     }
@@ -106,12 +113,5 @@ public class DetailAuctionActivity extends AuthRequiredActivityAbstract {
         public CharSequence getPageTitle(int position) {
             return fragmentTitles.get(position);
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        wsConnection.close();
     }
 }

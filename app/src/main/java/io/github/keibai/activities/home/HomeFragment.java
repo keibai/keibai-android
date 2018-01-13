@@ -55,22 +55,12 @@ public class HomeFragment extends MainFragmentAbstract {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        http = new Http(getContext());
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+
+        if (http == null) {
+            http = new Http(getContext());
+        }
     }
 
     @Override
@@ -92,6 +82,13 @@ public class HomeFragment extends MainFragmentAbstract {
         fetchUser();
         fetchAuctionList();
         fetchBidList();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        http.close();
     }
 
     public void renderUser(User user) {

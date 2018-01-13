@@ -90,20 +90,16 @@ public class DetailAuctionBidFragment extends Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        http = new Http(getContext());
         wsConnection = ((DetailAuctionActivity) getActivity()).getWsConnection();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (http == null) {
+            http = new Http(getContext());
+        }
 
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
@@ -114,6 +110,13 @@ public class DetailAuctionBidFragment extends Fragment{
         fetchGood();
 
         wsSubscribe();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        http.close();
     }
 
     private void wsSubscribe() {
