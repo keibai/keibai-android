@@ -198,59 +198,24 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         });
     }
 
-    private void renderCombinatorialWinners(String combinatorialWinners) {
-        final String msg;
+    private void renderCombinatorialWinners(final String combinatorialWinners) {
+        timeChronometer.stop();
+        infoTextView.setVisibility(View.VISIBLE);
         if (combinatorialWinners == null || combinatorialWinners.equals("")) {
-            msg = res.getString(R.string.auction_finished_without_winners);
-        } else {
-            String[] winnerIdsStr = combinatorialWinners.split(",");
-            for (String strId: winnerIdsStr) {
-                fetchWinner(Integer.parseInt(strId));
-            }
-            final StringBuilder builder = new StringBuilder();
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String separator = "";
-                    for (String name: winnerNames) {
-                        builder.append(separator).append(name);
-                        separator = "";
-                    }
+                    infoTextView.setText(res.getString(R.string.auction_finished_without_winners));
                 }
             });
-            msg = builder.toString();
+        } else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    infoTextView.setText("Winners IDs: " + combinatorialWinners);
+                }
+            });
         }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                timeChronometer.stop();
-                infoTextView.setText(msg);
-            }
-        });
-    }
-
-    private void fetchWinner(int winnerId) {
-        http.get(HttpUrl.getUserByIdUrl(winnerId), new HttpCallback<User>(User.class) {
-            @Override
-            public void onError(Error error) throws IOException {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), error.toString()));
-            }
-
-            @Override
-            public void onSuccess(final User response) throws IOException {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        winnerNames.add(response.name);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
-            }
-        });
     }
 
     @Override
@@ -564,6 +529,8 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         editTextBid.setVisibility(View.VISIBLE);
         seekBarBid.setVisibility(View.VISIBLE);
         bidButton.setVisibility(View.VISIBLE);
+        selectedGoodsListView.setEnabled(true);
+        selectedGoodsListView.setEnabled(true);
 
         infoTextView.setVisibility(View.GONE);
 
