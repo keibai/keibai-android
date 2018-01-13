@@ -1,7 +1,6 @@
 package io.github.keibai.activities.auction;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
 
 /**
  * Transaction class

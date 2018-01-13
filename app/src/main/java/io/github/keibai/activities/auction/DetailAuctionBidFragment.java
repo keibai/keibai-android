@@ -25,10 +25,8 @@ import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
-import io.github.keibai.http.WebSocket;
 import io.github.keibai.http.WebSocketBodyCallback;
 import io.github.keibai.http.WebSocketConnection;
-import io.github.keibai.http.WebSocketConnectionCallback;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Bid;
 import io.github.keibai.models.Event;
@@ -38,7 +36,6 @@ import io.github.keibai.models.meta.BodyWS;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.models.meta.Msg;
 import okhttp3.Call;
-import okhttp3.Response;
 
 public class DetailAuctionBidFragment extends Fragment{
 

@@ -10,9 +10,7 @@ import android.widget.ListView;
 
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import io.github.keibai.R;

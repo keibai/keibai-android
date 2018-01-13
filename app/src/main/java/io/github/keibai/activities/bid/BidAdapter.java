@@ -52,7 +52,7 @@ public class BidAdapter extends ArrayAdapter {
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.transaction_list_item,
                     parent, false);
-            linearLayout = (LinearLayout) listItemView.findViewById(R.id.layout);
+            linearLayout = listItemView.findViewById(R.id.layout);
         }
 
         currentTransaction = (BidLog) getItem(position);

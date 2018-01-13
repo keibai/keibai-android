@@ -10,10 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import io.github.keibai.R;
@@ -42,7 +40,7 @@ public class WinnerAdapter extends ArrayAdapter {
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.transaction_list_item,
                     parent, false);
-            linearLayout = (LinearLayout) listItemView.findViewById(R.id.layout);
+            linearLayout = listItemView.findViewById(R.id.layout);
         }
 
         Auction currentTransaction = (Auction) getItem(position);
