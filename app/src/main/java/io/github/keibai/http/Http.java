@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
+import io.github.keibai.gson.BetterGson;
 import io.github.keibai.models.ModelAbstract;
 import okhttp3.Call;
 import okhttp3.CookieJar;
@@ -30,7 +31,7 @@ public class Http {
     }
 
     public void post(String url, ModelAbstract body, HttpCallback callback) {
-        String jsonBody = body == null ? "{}" : new Gson().toJson(body);
+        String jsonBody = body == null ? "{}" : new BetterGson().newInstance().toJson(body);
         RequestBody requestBody = RequestBody.create(JSON, jsonBody);
         Request request = new Request.Builder()
                 .url(url)

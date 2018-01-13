@@ -27,6 +27,7 @@ import java.util.List;
 
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.gson.BetterGson;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
@@ -119,7 +120,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private void wsSubscribeToAuction() {
         BodyWS bodySubscription = new BodyWS();
         bodySubscription.type = DetailAuctionBidFragment.TYPE_AUCTION_SUBSCRIBE;
-        bodySubscription.json = new Gson().toJson(auction);
+        bodySubscription.json = new BetterGson().newInstance().toJson(auction);
         wsConnection.send(bodySubscription, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
@@ -132,7 +133,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_NEW_CONNECTION, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
-                User user = new Gson().fromJson(body.json, User.class);
+                User user = new BetterGson().newInstance().fromJson(body.json, User.class);
                 final String msg = "User " + user.name + " connected";
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -151,7 +152,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        final Bid newBid = new Gson().fromJson(body.json, Bid.class);
+                        final Bid newBid = new BetterGson().newInstance().fromJson(body.json, Bid.class);
                         String msg = String.format(res.getString(R.string.bid_msg_placeholder), String.valueOf(newBid.ownerId), newBid.amount);
                         showToast(msg);
                     }
@@ -165,7 +166,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
                 try {
-                    final Auction startedAuction = new Gson().fromJson(body.json, Auction.class);
+                    final Auction startedAuction = new BetterGson().newInstance().fromJson(body.json, Auction.class);
                     System.out.println(startedAuction);
                     // Start chronometer
                     getActivity().runOnUiThread(new Runnable() {
@@ -459,7 +460,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
             // Send start auction to server
             BodyWS bodyStart = new BodyWS();
             bodyStart.type = DetailAuctionBidFragment.TYPE_AUCTION_START;
-            bodyStart.json = new Gson().toJson(auction);
+            bodyStart.json = new BetterGson().newInstance().toJson(auction);
             wsConnection.send(bodyStart);
 
             startAuctionButton.setVisibility(View.GONE);
@@ -511,7 +512,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
                 bids.add(bid);
             }
             System.out.println(bids);
-            bodyBid.json = new Gson().toJson(bids.toArray(new Bid[bids.size()]));
+            bodyBid.json = new BetterGson().newInstance().toJson(bids.toArray(new Bid[bids.size()]));
             wsConnection.send(bodyBid);
             hideBidUi();
             infoTextView.setText("You have already bidded");

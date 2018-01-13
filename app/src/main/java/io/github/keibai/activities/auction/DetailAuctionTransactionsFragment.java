@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.keibai.R;
+import io.github.keibai.gson.BetterGson;
 import io.github.keibai.http.WebSocketBodyCallback;
 import io.github.keibai.http.WebSocketConnection;
 import io.github.keibai.models.Bid;
@@ -51,7 +52,7 @@ public class DetailAuctionTransactionsFragment extends Fragment{
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Bid bodyBid = new Gson().fromJson(body.json, Bid.class);
+                        Bid bodyBid = new BetterGson().newInstance().fromJson(body.json, Bid.class);
                         Transaction transaction = new Transaction(String.valueOf(bodyBid.ownerId),
                                 (float) bodyBid.amount, bodyBid.createdAt);
                         transactions.add(0, transaction);
