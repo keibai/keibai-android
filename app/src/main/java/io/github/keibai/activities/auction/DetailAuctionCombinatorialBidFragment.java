@@ -571,8 +571,11 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private void setChronometerTime() {
         /* https://stackoverflow.com/questions/21561110/how-to-use-timestamp-in-chronometr-android */
         long system = SystemClock.elapsedRealtime();
-        long t = auction.startTime.getTime() - System.currentTimeMillis();
-        timeChronometer.setBase((system+t)); // TODO: Check this!
+        long currentTime = System.currentTimeMillis();
+        long startTime = auction.startTime.getTime();
+        // If android were well designed, we would use our database time
+        // Meanwhile, this is a patch
+        timeChronometer.setBase(system);
         timeChronometer.start();
     }
 
