@@ -1,6 +1,5 @@
 package io.github.keibai.activities.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,13 +31,6 @@ public class ActivityBidFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        http = new Http(getContext());
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
 
@@ -49,7 +41,9 @@ public class ActivityBidFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        if (http == null) {
+            http = new Http(getContext());
+        }
     }
 
     @Override
@@ -65,6 +59,13 @@ public class ActivityBidFragment extends Fragment {
         super.onResume();
 
         fetchBidList();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        http.close();
     }
 
     private void fetchBidList() {

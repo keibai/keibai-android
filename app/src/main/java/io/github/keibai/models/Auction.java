@@ -1,7 +1,6 @@
 package io.github.keibai.models;
 
 import java.sql.Timestamp;
-import java.util.Objects;
 
 public class Auction extends ModelAbstract {
 

@@ -14,7 +14,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import io.github.keibai.R;
-import io.github.keibai.activities.bid.BidLog;
 
 /**
  * Transaction adapter
@@ -39,7 +38,7 @@ public class TransactionAdapter extends ArrayAdapter {
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.transaction_list_item,
                     parent, false);
-            linearLayout = (LinearLayout) listItemView.findViewById(R.id.layout);
+            linearLayout = listItemView.findViewById(R.id.layout);
         }
 
         Transaction currentTransaction = (Transaction) getItem(position);

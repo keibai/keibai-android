@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,26 +79,29 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        http = new Http(getContext());
         wsConnection = ((DetailAuctionActivity) getActivity()).getWsConnection();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (http == null) {
+            http = new Http(getContext());
+        }
+
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
         user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
 
         wsSubscribe();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        http.close();
     }
 
     /* Websockets */

@@ -1,6 +1,5 @@
 package io.github.keibai.activities.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,15 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
 
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
-import io.github.keibai.activities.auction.Transaction;
-import io.github.keibai.activities.auction.TransactionAdapter;
 import io.github.keibai.activities.bid.WinnerAdapter;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
@@ -37,22 +31,12 @@ public class ActivityWonFragment extends Fragment{
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        http = new Http(getContext());
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (http == null) {
+            http = new Http(getContext());
+        }
     }
 
     @Override
@@ -68,6 +52,13 @@ public class ActivityWonFragment extends Fragment{
         super.onResume();
 
         fetchAuctionList();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        http.close();
     }
 
     private void fetchAuctionList() {

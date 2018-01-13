@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.keibai.activities.MainFragmentAbstract;
 import io.github.keibai.R;
+import io.github.keibai.activities.MainFragmentAbstract;
 
 
 /**

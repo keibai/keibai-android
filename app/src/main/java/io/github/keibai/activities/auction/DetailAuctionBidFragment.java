@@ -25,10 +25,8 @@ import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
-import io.github.keibai.http.WebSocket;
 import io.github.keibai.http.WebSocketBodyCallback;
 import io.github.keibai.http.WebSocketConnection;
-import io.github.keibai.http.WebSocketConnectionCallback;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Bid;
 import io.github.keibai.models.Event;
@@ -38,7 +36,6 @@ import io.github.keibai.models.meta.BodyWS;
 import io.github.keibai.models.meta.Error;
 import io.github.keibai.models.meta.Msg;
 import okhttp3.Call;
-import okhttp3.Response;
 
 public class DetailAuctionBidFragment extends Fragment{
 
@@ -90,20 +87,16 @@ public class DetailAuctionBidFragment extends Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        http = new Http(getContext());
         wsConnection = ((DetailAuctionActivity) getActivity()).getWsConnection();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (http == null) {
+            http = new Http(getContext());
+        }
 
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
@@ -114,6 +107,13 @@ public class DetailAuctionBidFragment extends Fragment{
         fetchGood();
 
         wsSubscribe();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        http.close();
     }
 
     private void wsSubscribe() {

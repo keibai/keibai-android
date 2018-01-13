@@ -1,7 +1,6 @@
 package io.github.keibai.activities.profile;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -44,22 +43,12 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        http = new Http(getContext());
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+
+        if (http == null) {
+            http = new Http(getContext());
+        }
     }
 
     @Override
@@ -76,6 +65,13 @@ public class ProfileFragment extends ProfileMenuFragmentAbstract {
         super.onResume();
 
         fetchUser();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        http.close();
     }
 
     public void renderUser(User user) {

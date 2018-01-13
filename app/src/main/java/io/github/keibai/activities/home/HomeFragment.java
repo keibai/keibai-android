@@ -1,7 +1,6 @@
 package io.github.keibai.activities.home;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,30 +8,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
 import io.github.keibai.activities.MainFragmentAbstract;
-import io.github.keibai.R;
-import io.github.keibai.activities.bid.BidAdapter;
 import io.github.keibai.activities.bid.BidLog;
 import io.github.keibai.activities.bid.BidLogAmountComparable;
-import io.github.keibai.activities.bid.WinnerAdapter;
 import io.github.keibai.activities.credit.CreditActivity;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
 import io.github.keibai.models.Auction;
-import io.github.keibai.models.Bid;
 import io.github.keibai.models.User;
 import io.github.keibai.models.meta.Error;
-
 import io.github.keibai.runnable.RunnableToast;
 import okhttp3.Call;
 
@@ -55,22 +48,12 @@ public class HomeFragment extends MainFragmentAbstract {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        http = new Http(getContext());
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        http.close();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+
+        if (http == null) {
+            http = new Http(getContext());
+        }
     }
 
     @Override
@@ -92,6 +75,13 @@ public class HomeFragment extends MainFragmentAbstract {
         fetchUser();
         fetchAuctionList();
         fetchBidList();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        http.close();
     }
 
     public void renderUser(User user) {
