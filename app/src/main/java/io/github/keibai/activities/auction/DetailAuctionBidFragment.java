@@ -718,7 +718,8 @@ public class DetailAuctionBidFragment extends Fragment{
     }
 
     private void setSeekBar() {
-        seekBarBid.setMax((int) ((user.credit - minBid) / STEP));
+        double range = Math.min(auction.startingPrice, user.credit - minBid);
+        seekBarBid.setMax((int) (range / STEP));
         seekBarBid.setProgress(0);
         editTextBid.setText(String.format("%.2f", minBid + (seekBarBid.getProgress() * STEP)));
     }
