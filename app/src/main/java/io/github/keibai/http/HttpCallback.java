@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 
+import io.github.keibai.gson.BetterGson;
 import io.github.keibai.models.meta.Error;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -62,7 +63,7 @@ public abstract class HttpCallback<T> implements Callback {
 
     private <E> E fromJson(String content, Class<E> className) {
         try {
-            return new Gson().fromJson(content, className);
+            return new BetterGson().newInstance().fromJson(content, className);
         } catch (JsonSyntaxException e) {
             return null;
         }

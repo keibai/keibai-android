@@ -18,15 +18,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.gson.BetterGson;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
@@ -59,7 +59,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private List<Good> availableGoods;
     private List<Good> selectedGoods;
 
-    private Chronometer timeChronometer;
+    private Chronometer auctionTimeChronometer;
     private ListView availableGoodsListView;
     private ListView selectedGoodsListView;
     private TextView userCreditText;
@@ -119,7 +119,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private void wsSubscribeToAuction() {
         BodyWS bodySubscription = new BodyWS();
         bodySubscription.type = DetailAuctionBidFragment.TYPE_AUCTION_SUBSCRIBE;
-        bodySubscription.json = new Gson().toJson(auction);
+        bodySubscription.json = new BetterGson().newInstance().toJson(auction);
         wsConnection.send(bodySubscription, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
@@ -132,7 +132,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_NEW_CONNECTION, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
-                User user = new Gson().fromJson(body.json, User.class);
+                User user = new BetterGson().newInstance().fromJson(body.json, User.class);
                 final String msg = "User " + user.name + " connected";
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -151,7 +151,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        final Bid newBid = new Gson().fromJson(body.json, Bid.class);
+                        final Bid newBid = new BetterGson().newInstance().fromJson(body.json, Bid.class);
                         String msg = String.format(res.getString(R.string.bid_msg_placeholder), String.valueOf(newBid.ownerId), newBid.amount);
                         showToast(msg);
                     }
@@ -165,7 +165,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
                 try {
-                    final Auction startedAuction = new Gson().fromJson(body.json, Auction.class);
+                    final Auction startedAuction = new BetterGson().newInstance().fromJson(body.json, Auction.class);
                     System.out.println(startedAuction);
                     // Start chronometer
                     getActivity().runOnUiThread(new Runnable() {
@@ -192,14 +192,14 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_CLOSED, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
-                Auction closedAuction = new Gson().fromJson(body.json, Auction.class);
+                Auction closedAuction = new BetterGson().newInstance().fromJson(body.json, Auction.class);
                 renderCombinatorialWinners(closedAuction.combinatorialWinners);
             }
         });
     }
 
     private void renderCombinatorialWinners(final String combinatorialWinners) {
-        timeChronometer.stop();
+        auctionTimeChronometer.stop();
         infoTextView.setVisibility(View.VISIBLE);
         if (combinatorialWinners == null || combinatorialWinners.equals("")) {
             getActivity().runOnUiThread(new Runnable() {
@@ -225,7 +225,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_detail_auction_combinatorial_bid, container, false);
         res = getResources();
 
-        timeChronometer = view.findViewById(R.id.comb_auction_time_chronometer);
+        auctionTimeChronometer = view.findViewById(R.id.comb_auction_time_chronometer);
         availableGoodsListView = view.findViewById(R.id.comb_available_goods_list);
         selectedGoodsListView = view.findViewById(R.id.comb_selected_goods_list);
         userCreditText = view.findViewById(R.id.comb_auction_user_credit_text);
@@ -459,7 +459,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
             // Send start auction to server
             BodyWS bodyStart = new BodyWS();
             bodyStart.type = DetailAuctionBidFragment.TYPE_AUCTION_START;
-            bodyStart.json = new Gson().toJson(auction);
+            bodyStart.json = new BetterGson().newInstance().toJson(auction);
             wsConnection.send(bodyStart);
 
             startAuctionButton.setVisibility(View.GONE);
@@ -472,10 +472,10 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         @Override
         public void onClick(View view) {
             stopAuctionButton.setVisibility(View.GONE);
-            timeChronometer.stop();
+            auctionTimeChronometer.stop();
             BodyWS bodyClose = new BodyWS();
             bodyClose.type = DetailAuctionBidFragment.TYPE_AUCTION_CLOSE;
-            bodyClose.json = new Gson().toJson(auction);
+            bodyClose.json = new BetterGson().newInstance().toJson(auction);
             wsConnection.send(bodyClose);
             infoTextView.setText("");
         }
@@ -511,7 +511,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
                 bids.add(bid);
             }
             System.out.println(bids);
-            bodyBid.json = new Gson().toJson(bids.toArray(new Bid[bids.size()]));
+            bodyBid.json = new BetterGson().newInstance().toJson(bids.toArray(new Bid[bids.size()]));
             wsConnection.send(bodyBid);
             hideBidUi();
             infoTextView.setText("You have already bidded");
@@ -568,12 +568,15 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         currentToast.show();
     }
 
+    // https://stackoverflow.com/questions/526524/android-get-time-of-chronometer-widget
     private void setChronometerTime() {
-        /* https://stackoverflow.com/questions/21561110/how-to-use-timestamp-in-chronometr-android */
-        long system = SystemClock.elapsedRealtime();
-        long t = auction.startTime.getTime() - System.currentTimeMillis();
-        timeChronometer.setBase((system+t)); // TODO: Check this!
-        timeChronometer.start();
+        long realtime = SystemClock.elapsedRealtime();
+        Date auctionTime = auction.startTime;
+        Date currentTime = new Date();
+        long difference = currentTime.getTime() - auctionTime.getTime();
+
+        auctionTimeChronometer.setBase(realtime - difference);
+        auctionTimeChronometer.start();
     }
 
     private void setSeekBar() {

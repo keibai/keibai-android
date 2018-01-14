@@ -16,12 +16,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
+import java.util.Date;
 
 import io.github.keibai.R;
 import io.github.keibai.SaveSharedPreference;
+import io.github.keibai.gson.BetterGson;
 import io.github.keibai.http.Http;
 import io.github.keibai.http.HttpCallback;
 import io.github.keibai.http.HttpUrl;
@@ -132,7 +132,7 @@ public class DetailAuctionBidFragment extends Fragment{
     private void wsSubscribeToAuction() {
         BodyWS bodySubscription = new BodyWS();
         bodySubscription.type = TYPE_AUCTION_SUBSCRIBE;
-        bodySubscription.json = new Gson().toJson(auction);
+        bodySubscription.json = new BetterGson().newInstance().toJson(auction);
         wsConnection.send(bodySubscription, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
@@ -148,7 +148,7 @@ public class DetailAuctionBidFragment extends Fragment{
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
                 // Returns the number of online users at a given time.
-                Msg msg = new Gson().fromJson(body.json, Msg.class);
+                Msg msg = new BetterGson().newInstance().fromJson(body.json, Msg.class);
                 connections = Integer.valueOf(msg.msg);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -166,7 +166,7 @@ public class DetailAuctionBidFragment extends Fragment{
         wsConnection.on(TYPE_AUCTION_NEW_CONNECTION, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
-                User user = new Gson().fromJson(body.json, User.class);
+                User user = new BetterGson().newInstance().fromJson(body.json, User.class);
                 final String msg = "User " + user.name + " connected";
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -212,7 +212,7 @@ public class DetailAuctionBidFragment extends Fragment{
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        final Bid newBid = new Gson().fromJson(body.json, Bid.class);
+                        final Bid newBid = new BetterGson().newInstance().fromJson(body.json, Bid.class);
                         User bidder = userMap.get(newBid.ownerId);
                         if (bidder == null) {
                             bidder = new User() {{ name = String.valueOf(newBid.ownerId); }};
@@ -240,7 +240,7 @@ public class DetailAuctionBidFragment extends Fragment{
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
                 try {
-                    final Auction startedAuction = new Gson().fromJson(body.json, Auction.class);
+                    final Auction startedAuction = new BetterGson().newInstance().fromJson(body.json, Auction.class);
                     System.out.println(startedAuction);
                     // Start chronometer
                     getActivity().runOnUiThread(new Runnable() {
@@ -267,7 +267,7 @@ public class DetailAuctionBidFragment extends Fragment{
         wsConnection.on(TYPE_AUCTION_CLOSED, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
-                final Auction closedAuction = new Gson().fromJson(body.json, Auction.class);
+                final Auction closedAuction = new BetterGson().newInstance().fromJson(body.json, Auction.class);
                 fetchWinnerAndRenderName(closedAuction.winnerId);
             }
         });
@@ -343,7 +343,7 @@ public class DetailAuctionBidFragment extends Fragment{
             // Send start auction to server
             BodyWS bodyStart = new BodyWS();
             bodyStart.type = TYPE_AUCTION_START;
-            bodyStart.json = new Gson().toJson(auction);
+            bodyStart.json = new BetterGson().newInstance().toJson(auction);
             wsConnection.send(bodyStart);
 
             startAuctionButton.setVisibility(View.GONE);
@@ -359,7 +359,7 @@ public class DetailAuctionBidFragment extends Fragment{
             auctionTimeChronometer.stop();
             BodyWS bodyClose = new BodyWS();
             bodyClose.type = TYPE_AUCTION_CLOSE;
-            bodyClose.json = new Gson().toJson(auction);
+            bodyClose.json = new BetterGson().newInstance().toJson(auction);
             wsConnection.send(bodyClose);
             bidInfoText.setText("");
         }
@@ -378,12 +378,12 @@ public class DetailAuctionBidFragment extends Fragment{
                 bid.ownerId = user.id;
                 bid.goodId = good.id;
                 Bid[] bids = new Bid[] {bid};
-                bodyBid.json = new Gson().toJson(bids);
+                bodyBid.json = new BetterGson().newInstance().toJson(bids);
                 wsConnection.send(bodyBid, new WebSocketBodyCallback() {
                     @Override
                     public void onMessage(WebSocketConnection connection, BodyWS body) {
                         if (body.status != 200) {
-                            final Error error = new Gson().fromJson(body.json, Error.class);
+                            final Error error = new BetterGson().newInstance().fromJson(body.json, Error.class);
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -700,11 +700,14 @@ public class DetailAuctionBidFragment extends Fragment{
         setSeekBar();
     }
 
+    // https://stackoverflow.com/questions/526524/android-get-time-of-chronometer-widget
     private void setChronometerTime() {
-        /* https://stackoverflow.com/questions/21561110/how-to-use-timestamp-in-chronometr-android */
-        long system = SystemClock.elapsedRealtime();
-        long t = auction.startTime.getTime() - System.currentTimeMillis();
-        auctionTimeChronometer.setBase((system+t)); // TODO: Check this!
+        long realtime = SystemClock.elapsedRealtime();
+        Date auctionTime = auction.startTime;
+        Date currentTime = new Date();
+        long difference = currentTime.getTime() - auctionTime.getTime();
+
+        auctionTimeChronometer.setBase(realtime - difference);
         auctionTimeChronometer.start();
     }
 

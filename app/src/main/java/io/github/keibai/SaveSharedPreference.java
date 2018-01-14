@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import io.github.keibai.gson.BetterGson;
 import io.github.keibai.models.Auction;
 import io.github.keibai.models.Event;
 
@@ -44,24 +45,24 @@ public class SaveSharedPreference {
 
     public static void setCurrentEvent(Context ctx, Event event) {
         Editor editor = getSharedPreferences(ctx).edit();
-        editor.putString(PREF_CURRENT_EVENT, new Gson().toJson(event));
+        editor.putString(PREF_CURRENT_EVENT, new BetterGson().newInstance().toJson(event));
         editor.apply();
     }
 
     public static Event getCurrentEvent(Context ctx) {
         String jsonEvent = getSharedPreferences(ctx).getString(PREF_CURRENT_EVENT, "{}");
-        return new Gson().fromJson(jsonEvent, Event.class);
+        return new BetterGson().newInstance().fromJson(jsonEvent, Event.class);
     }
 
     public static void setCurrentAuction(Context ctx, Auction auction) {
         Editor editor = getSharedPreferences(ctx).edit();
-        editor.putString(PREF_CURRENT_AUCTION, new Gson().toJson(auction));
+        editor.putString(PREF_CURRENT_AUCTION, new BetterGson().newInstance().toJson(auction));
         editor.apply();
     }
 
     public static Auction getCurrentAuction(Context ctx) {
         String jsonEvent = getSharedPreferences(ctx).getString(PREF_CURRENT_AUCTION, "{}");
-        return new Gson().fromJson(jsonEvent, Auction.class);
+        return new BetterGson().newInstance().fromJson(jsonEvent, Auction.class);
     }
 
     public static void setAutofillEmail(Context ctx, String email) {
