@@ -1,6 +1,7 @@
 package io.github.keibai.activities.auction;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -53,6 +54,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
     private Auction auction;
     private Event event;
     private User user;
+    private List<String> winnerNames;
 
     private List<Good> availableGoods;
     private List<Good> selectedGoods;
@@ -93,6 +95,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         auction = SaveSharedPreference.getCurrentAuction(getContext());
         event = SaveSharedPreference.getCurrentEvent(getContext());
         user = new User() {{ id = (int) SaveSharedPreference.getUserId(getContext()); }};
+        winnerNames = new ArrayList<>();
 
         wsSubscribe();
     }
@@ -189,14 +192,30 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         wsConnection.on(DetailAuctionBidFragment.TYPE_AUCTION_CLOSED, new WebSocketBodyCallback() {
             @Override
             public void onMessage(WebSocketConnection connection, BodyWS body) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        infoTextView.setText(res.getString(R.string.waiting_resolution_combinatorial));
-                    }
-                });
+                Auction closedAuction = new Gson().fromJson(body.json, Auction.class);
+                renderCombinatorialWinners(closedAuction.combinatorialWinners);
             }
         });
+    }
+
+    private void renderCombinatorialWinners(final String combinatorialWinners) {
+        timeChronometer.stop();
+        infoTextView.setVisibility(View.VISIBLE);
+        if (combinatorialWinners == null || combinatorialWinners.equals("")) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    infoTextView.setText(res.getString(R.string.auction_finished_without_winners));
+                }
+            });
+        } else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    infoTextView.setText("Winners IDs: " + combinatorialWinners);
+                }
+            });
+        }
     }
 
     @Override
@@ -298,7 +317,7 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
                     infoTextView.setText(res.getString(R.string.ready_stop_auction));
                     break;
                 case Auction.FINISHED:
-                    // TODO
+                    renderCombinatorialWinners(auction.combinatorialWinners);
                     break;
                 case Auction.PENDING:
                     infoTextView.setText(res.getString(R.string.auction_should_be_accepted));
@@ -366,15 +385,15 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         switch (auction.status) {
             case Auction.PENDING:
                 hideBidUi();
-                bidTextView.setText(res.getString(R.string.auction_not_accepted_yet));
+                infoTextView.setText(res.getString(R.string.auction_not_accepted_yet));
                 break;
             case Auction.ACCEPTED:
                 hideBidUi();
-                bidTextView.setText(res.getString(R.string.auction_not_started_yet));
+                infoTextView.setText(res.getString(R.string.auction_not_started_yet));
                 break;
             case Auction.FINISHED:
                 hideBidUi();
-                bidTextView.setText(res.getString(R.string.auction_finished));
+                renderCombinatorialWinners(auction.combinatorialWinners);
                 break;
             case Auction.IN_PROGRESS:
                 setChronometerTime();
@@ -454,6 +473,10 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         public void onClick(View view) {
             stopAuctionButton.setVisibility(View.GONE);
             timeChronometer.stop();
+            BodyWS bodyClose = new BodyWS();
+            bodyClose.type = DetailAuctionBidFragment.TYPE_AUCTION_CLOSE;
+            bodyClose.json = new Gson().toJson(auction);
+            wsConnection.send(bodyClose);
             infoTextView.setText("");
         }
     };
@@ -506,6 +529,8 @@ public class DetailAuctionCombinatorialBidFragment extends Fragment {
         editTextBid.setVisibility(View.VISIBLE);
         seekBarBid.setVisibility(View.VISIBLE);
         bidButton.setVisibility(View.VISIBLE);
+        selectedGoodsListView.setEnabled(true);
+        selectedGoodsListView.setEnabled(true);
 
         infoTextView.setVisibility(View.GONE);
 
