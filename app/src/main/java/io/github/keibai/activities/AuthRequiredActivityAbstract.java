@@ -66,7 +66,7 @@ public abstract class AuthRequiredActivityAbstract extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
+                //runOnUiThread(new RunnableToast(getApplicationContext(), e.toString()));
             }
         });
     }

@@ -118,7 +118,7 @@ public class HomeFragment extends MainFragmentAbstract {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+                //getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
             }
         });
     }
@@ -143,7 +143,7 @@ public class HomeFragment extends MainFragmentAbstract {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+                //getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
             }
         });
     }
@@ -174,7 +174,7 @@ public class HomeFragment extends MainFragmentAbstract {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
+                //getActivity().runOnUiThread(new RunnableToast(getContext(), e.toString()));
             }
         });
     }
